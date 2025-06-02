@@ -2,16 +2,16 @@
 members = [
 ]
 [package]
-name = "librustv2g"
-authors = ["Terence Stenvold @ChargeX GmbH"]
+name = "rustv2g"
+authors = ["Terence Stenvold"]
 version = "0.1.0"
 publish = false
 edition = "2021"
 autobins = false
 
 [lib]
-name = "librustv2g"
-path = "rustv2g-lib.rs"
+name = "rustv2g"
+path = "src/rustv2g.rs"
 crate-type = ["staticlib", "rlib"]
 [dependencies]
 panic-probe = { version = "1.0.0", default-features = false }
