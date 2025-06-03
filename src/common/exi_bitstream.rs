@@ -12,6 +12,19 @@ pub struct ExiBitstream<'a> {
     pub status_callback: StatusCallback,
 }
 
+impl<'a> ExiBitstream<'a> {
+    pub fn new(data: &'a mut [u8]) -> Self {
+        ExiBitstream {
+            data,
+            bit_count: 0,
+            byte_pos: 0,
+            init_called: false,
+            flag_byte_pos: 0,
+            status_callback: None,
+        }
+    }
+}
+
 fn exi_bitstream_has_overflow(stream: &mut ExiBitstream) -> Result<u8, i16> {
     if stream.bit_count == 8 {
         if stream.byte_pos < stream.data.len() {

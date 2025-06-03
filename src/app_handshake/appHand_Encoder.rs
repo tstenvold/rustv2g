@@ -6,7 +6,7 @@ use crate::common::exi_bitstream::*;
 use crate::common::exi_error_codes::*;
 use crate::common::exi_header::*;
 
-fn encode_appHand_AppProtocolType(
+pub fn encode_appHand_AppProtocolType(
     stream: &mut ExiBitstream,
     AppProtocolType: AppHandAppProtocolType,
 ) -> Result<u8, i16> {
@@ -81,7 +81,7 @@ fn encode_appHand_AppProtocolType(
     }
 }
 
-fn encode_appHand_supportedAppProtocolReq(
+pub fn encode_appHand_supportedAppProtocolReq(
     stream: &mut ExiBitstream,
     supportedAppProtocolReq: AppHandSupportedAppProtocolReq,
 ) -> Result<u8, i16> {
@@ -140,7 +140,7 @@ fn encode_appHand_supportedAppProtocolReq(
     }
 }
 
-fn encode_appHand_supportedAppProtocolRes(
+pub fn encode_appHand_supportedAppProtocolRes(
     stream: &mut ExiBitstream,
     supportedAppProtocolRes: AppHandSupportedAppProtocolRes,
 ) -> Result<i8, i16> {

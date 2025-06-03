@@ -1,17 +1,24 @@
-[workspace]
-members = [
-]
 [package]
 name = "rustv2g"
-authors = ["Terence Stenvold"]
 version = "0.1.0"
-publish = false
 edition = "2021"
-autobins = false
+authors = ["Terence Stenvold"]
+description = "A no-std V2G communication library"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/tstenvold/rustv2g"
+keywords = ["v2g", "exi", "embedded", "no-std"]
+categories = ["embedded", "no-std"]
 
 [lib]
 name = "rustv2g"
-path = "src/rustv2g.rs"
-crate-type = ["staticlib", "rlib"]
+path = "src/lib.rs"
+
+[features]
+default = []
+std = []
+
 [dependencies]
-panic-probe = { version = "1.0.0", default-features = false }
+# Keep empty for no-std compatibility
+
+[dev-dependencies]
+# Test dependencies go here
