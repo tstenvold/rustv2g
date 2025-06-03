@@ -11,11 +11,10 @@ pub struct ExiBitstream<'a> {
     pub flag_byte_pos: usize,
     pub status_callback: StatusCallback,
 }
-
-impl<'a> ExiBitstream<'a> {
-    pub fn new(data: &'a mut [u8]) -> Self {
+impl<'a> Default for ExiBitstream<'a> {
+    fn default() -> Self {
         ExiBitstream {
-            data,
+            data: &mut [],
             bit_count: 0,
             byte_pos: 0,
             init_called: false,

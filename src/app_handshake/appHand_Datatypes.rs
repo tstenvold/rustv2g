@@ -1,4 +1,4 @@
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Eq, PartialEq, Debug)]
 #[repr(u8)]
 pub enum AppHandResponseCodeType {
     AppHandResponseCodeTypeFailedNoNegotiation = 2,
@@ -19,7 +19,7 @@ impl From<u32> for AppHandResponseCodeType {
     }
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Eq, PartialEq)]
 pub struct AppHandAppProtocolType {
     pub ProtocolNamespace: AppHandProtocolNamespaceType,
     pub VersionNumberMajor: u32,
@@ -28,13 +28,49 @@ pub struct AppHandAppProtocolType {
     pub Priority: u8,
 }
 
-#[derive(Copy, Clone)]
-pub struct AppHandProtocolNamespaceType {
-    pub characters: [u8; 100],
-    pub charactersLen: u16,
+impl Default for AppHandAppProtocolType {
+    fn default() -> Self {
+        AppHandAppProtocolType {
+            ProtocolNamespace: AppHandProtocolNamespaceType::default(),
+            VersionNumberMajor: 0,
+            VersionNumberMinor: 0,
+            SchemaID: 0,
+            Priority: 0,
+        }
+    }
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Eq, PartialEq)]
+pub struct AppHandProtocolNamespaceType {
+    pub characters: [u8; 100],
+    pub charactersLen: usize,
+}
+
+impl Default for AppHandProtocolNamespaceType {
+    fn default() -> Self {
+        AppHandProtocolNamespaceType {
+            characters: [0; 100],
+            charactersLen: 0,
+        }
+    }
+}
+
+// Allow easy conversion from u8 array to AppHandProtocolNamespaceType
+impl From<&[u8]> for AppHandProtocolNamespaceType {
+    fn from(value: &[u8]) -> Self {
+        if value.len() > 100 {
+            panic!("Input value exceeds maximum length of 100 bytes");
+        }
+        let mut characters = [0; 100];
+        characters[..value.len()].copy_from_slice(value);
+        AppHandProtocolNamespaceType {
+            characters,
+            charactersLen: value.len(),
+        }
+    }
+}
+
+#[derive(Copy, Clone, Eq, PartialEq)]
 pub struct AppHandSupportedAppProtocolReq {
     pub AppProtocol: AppHandSupportedAppProtocolReqArray,
 }
@@ -60,13 +96,13 @@ impl Default for AppHandSupportedAppProtocolReq {
     }
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Eq, PartialEq)]
 pub struct AppHandSupportedAppProtocolReqArray {
     pub array: [AppHandAppProtocolType; 5],
     pub arrayLen: u16,
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Eq, PartialEq)]
 pub struct AppHandSupportedAppProtocolRes {
     pub ResponseCode: AppHandResponseCodeType,
     pub SchemaID: Option<u8>,
@@ -82,7 +118,7 @@ impl Default for AppHandSupportedAppProtocolRes {
     }
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Eq, PartialEq)]
 pub struct AppHandExiDocument {
     pub SupportedAppProtocolReq: Option<AppHandSupportedAppProtocolReq>,
     pub SupportedAppProtocolRes: Option<AppHandSupportedAppProtocolRes>,

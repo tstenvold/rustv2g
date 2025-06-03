@@ -7,7 +7,7 @@ use crate::common::exi_error_codes::*;
 use crate::common::exi_header::*;
 use crate::common::exi_types_decoder::*;
 
-fn decode_appHand_AppProtocolType(
+pub fn decode_appHand_AppProtocolType(
     stream: &mut ExiBitstream,
     mut AppProtocolType: &mut AppHandAppProtocolType,
 ) -> Result<u8, i16> {
@@ -24,12 +24,11 @@ fn decode_appHand_AppProtocolType(
                         if eventCode == 0 {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut AppProtocolType.ProtocolNamespace.charactersLen,
+                                &mut (AppProtocolType.ProtocolNamespace.charactersLen as u16),
                             )?;
-
                             if AppProtocolType.ProtocolNamespace.charactersLen as i32 >= 2 as i32 {
                                 AppProtocolType.ProtocolNamespace.charactersLen =
-                                    (AppProtocolType.ProtocolNamespace.charactersLen - 2) as u16;
+                                    (AppProtocolType.ProtocolNamespace.charactersLen - 2) as usize;
                                 exi_basetypes_decoder_characters(
                                     stream,
                                     AppProtocolType.ProtocolNamespace.charactersLen as usize,
@@ -156,7 +155,7 @@ fn decode_appHand_AppProtocolType(
     }
 }
 
-fn decode_appHand_supportedAppProtocolReq(
+pub fn decode_appHand_supportedAppProtocolReq(
     stream: &mut ExiBitstream,
     mut supportedAppProtocolReq: &mut AppHandSupportedAppProtocolReq,
 ) -> Result<u8, i16> {
@@ -236,7 +235,7 @@ fn decode_appHand_supportedAppProtocolReq(
     }
 }
 
-fn decode_appHand_supportedAppProtocolRes(
+pub fn decode_appHand_supportedAppProtocolRes(
     stream: &mut ExiBitstream,
     mut supportedAppProtocolRes: &mut AppHandSupportedAppProtocolRes,
 ) -> Result<u8, i16> {
@@ -344,3 +343,4 @@ pub fn decode_appHand_exiDocument(
     }
     Ok(NO_ERROR)
 }
+
