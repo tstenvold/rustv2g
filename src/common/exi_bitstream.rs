@@ -11,7 +11,8 @@ pub struct ExiBitstream<'a> {
     pub flag_byte_pos: usize,
     pub status_callback: StatusCallback,
 }
-impl<'a> Default for ExiBitstream<'a> {
+
+impl Default for ExiBitstream<'_> {
     fn default() -> Self {
         ExiBitstream {
             data: &mut [],

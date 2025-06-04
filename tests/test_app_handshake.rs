@@ -6,6 +6,7 @@ mod tests {
     use rustv2g::app_handshake::appHand_Encoder::*;
     use rustv2g::common::exi_error_codes::*;
     use rustv2g::common::exi_bitstream::*;
+    use rustv2g::app_handshake::appHand_Decoder::*;
 
 
     fn make_protocol_type() -> AppHandAppProtocolType {
@@ -138,8 +139,6 @@ mod tests {
     }
 
     // Decoder Tests
-    use rustv2g::app_handshake::appHand_Decoder::*;
-    use rustv2g::common::exi_bitstream::ExiBitstream;
 
     #[test]
     fn test_decode_appHand_supportedAppProtocolReq_too_many() {
@@ -193,7 +192,7 @@ mod tests {
         ];
         let mut stream = ExiBitstream::default();
         exi_bitstream_init(&mut stream, &mut data, 0, None);
-        let mut proto = AppHandAppProtocolType::default();
+        let mut proto: AppHandAppProtocolType = AppHandAppProtocolType::default();
         let result = decode_appHand_AppProtocolType(&mut stream, &mut proto);
         assert_eq!(result, Err(-200));
     }
@@ -246,8 +245,15 @@ mod tests {
     #[test]
     fn test_app_handshake_process_req() {
 
-        let namespace: &[u8] = b"urn:iso:15118:2:2013:MsgDef";
-        let app_protocol_name: AppHandProtocolNamespaceType = AppHandProtocolNamespaceType::from(&namespace[..]);
+        let app_protocol_name= AppHandProtocolNamespaceType {
+            characters: {
+                let mut arr = [0u8; 100];
+                let bytes = b"urn:iso:15118:3:2015:MsgDef";
+                arr[..bytes.len()].copy_from_slice(bytes);
+                arr
+            },
+            charactersLen: 27,
+        };
 
         let proto = AppHandAppProtocolType {
             ProtocolNamespace: app_protocol_name,

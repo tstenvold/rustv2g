@@ -162,8 +162,13 @@ pub fn encode_appHand_supportedAppProtocolRes(
             }
             10 => {
                 if supportedAppProtocolRes.SchemaID == Some(1) {
+
                     exi_basetypes_encoder_nbit_uint(stream, 2, 0)?;
-                    exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+                    exi_basetypes_encoder_nbit_uint(
+                        stream,
+                        1,
+                        0,
+                    )?;
 
                     exi_basetypes_encoder_nbit_uint(
                         stream,
@@ -174,6 +179,7 @@ pub fn encode_appHand_supportedAppProtocolRes(
                     exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
                     grammar_id = 5;
                     continue;
+
                 } else {
                     exi_basetypes_encoder_nbit_uint(stream, 2, 1)?;
                     //grammar_id = 6 as i32;
@@ -190,6 +196,7 @@ pub fn encode_appHand_supportedAppProtocolRes(
             }
         }
     }
+
 }
 
 pub fn encode_appHand_exiDocument(

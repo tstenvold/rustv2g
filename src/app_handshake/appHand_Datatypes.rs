@@ -31,7 +31,10 @@ pub struct AppHandAppProtocolType {
 impl Default for AppHandAppProtocolType {
     fn default() -> Self {
         AppHandAppProtocolType {
-            ProtocolNamespace: AppHandProtocolNamespaceType::default(),
+            ProtocolNamespace: AppHandProtocolNamespaceType {
+                characters: [0; 100],
+                charactersLen: 0,
+            },
             VersionNumberMajor: 0,
             VersionNumberMinor: 0,
             SchemaID: 0,
@@ -43,31 +46,7 @@ impl Default for AppHandAppProtocolType {
 #[derive(Copy, Clone, Eq, PartialEq)]
 pub struct AppHandProtocolNamespaceType {
     pub characters: [u8; 100],
-    pub charactersLen: usize,
-}
-
-impl Default for AppHandProtocolNamespaceType {
-    fn default() -> Self {
-        AppHandProtocolNamespaceType {
-            characters: [0; 100],
-            charactersLen: 0,
-        }
-    }
-}
-
-// Allow easy conversion from u8 array to AppHandProtocolNamespaceType
-impl From<&[u8]> for AppHandProtocolNamespaceType {
-    fn from(value: &[u8]) -> Self {
-        if value.len() > 100 {
-            panic!("Input value exceeds maximum length of 100 bytes");
-        }
-        let mut characters = [0; 100];
-        characters[..value.len()].copy_from_slice(value);
-        AppHandProtocolNamespaceType {
-            characters,
-            charactersLen: value.len(),
-        }
-    }
+    pub charactersLen: u16,
 }
 
 #[derive(Copy, Clone, Eq, PartialEq)]
@@ -121,14 +100,14 @@ impl Default for AppHandSupportedAppProtocolRes {
 #[derive(Copy, Clone, Eq, PartialEq)]
 pub struct AppHandExiDocument {
     pub SupportedAppProtocolReq: Option<AppHandSupportedAppProtocolReq>,
-    pub SupportedAppProtocolRes: Option<AppHandSupportedAppProtocolRes>,
+    pub SupportedAppProtocolRes: Option<AppHandSupportedAppProtocolRes>
 }
 
 impl Default for AppHandExiDocument {
     fn default() -> Self {
         AppHandExiDocument {
             SupportedAppProtocolReq: None,
-            SupportedAppProtocolRes: None,
+            SupportedAppProtocolRes: None
         }
     }
 }

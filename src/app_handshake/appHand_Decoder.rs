@@ -24,11 +24,12 @@ pub fn decode_appHand_AppProtocolType(
                         if eventCode == 0 {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (AppProtocolType.ProtocolNamespace.charactersLen as u16),
+                                &mut AppProtocolType.ProtocolNamespace.charactersLen,
                             )?;
+
                             if AppProtocolType.ProtocolNamespace.charactersLen as i32 >= 2 as i32 {
                                 AppProtocolType.ProtocolNamespace.charactersLen =
-                                    (AppProtocolType.ProtocolNamespace.charactersLen - 2) as usize;
+                                    (AppProtocolType.ProtocolNamespace.charactersLen - 2) as u16;
                                 exi_basetypes_decoder_characters(
                                     stream,
                                     AppProtocolType.ProtocolNamespace.charactersLen as usize,
@@ -343,4 +344,3 @@ pub fn decode_appHand_exiDocument(
     }
     Ok(NO_ERROR)
 }
-
