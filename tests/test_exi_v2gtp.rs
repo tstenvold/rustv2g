@@ -12,7 +12,7 @@ mod tests {
         let mut buf = [0u8; 8];
         let payload_length = 0x12345678;
         let res = v2gtp_write_header(&mut buf, payload_length);
-        assert_eq!(res, Ok(0));
+        assert_eq!(res, Ok(NO_ERROR));
         assert_eq!(buf, [0x1, 0xfe, 0x80, 0x01, 0x12, 0x34, 0x56, 0x78]);
     }
 
@@ -27,7 +27,7 @@ mod tests {
     fn test_v2gtp20_write_header_custom_payload_id() {
         let mut buf = [0u8; 8];
         let res = v2gtp20_write_header(&mut buf, 0x01020304, 0x1234);
-        assert_eq!(res, Ok(0));
+        assert_eq!(res, Ok(NO_ERROR));
         assert_eq!(buf, [0x1, 0xfe, 0x12, 0x34, 0x01, 0x02, 0x03, 0x04]);
     }
 

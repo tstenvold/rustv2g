@@ -36,7 +36,7 @@ pub fn decode_iso2_CostType(
                                         (*cost_type).costKind = value as Iso2CostKindType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -49,13 +49,13 @@ pub fn decode_iso2_CostType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 1 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -71,7 +71,7 @@ pub fn decode_iso2_CostType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -99,7 +99,7 @@ pub fn decode_iso2_CostType(
                                             Some(value_0.wrapping_sub(3) as i8);
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -112,16 +112,16 @@ pub fn decode_iso2_CostType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 3 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -131,16 +131,16 @@ pub fn decode_iso2_CostType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -175,13 +175,13 @@ pub fn decode_iso2_TransformType(
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
-                                    return Err(-200);
+                                    return Err(STRINGVALUES_NOT_SUPPORTED);
                                 }
                             }
                             grammar_id = 6 as i32;
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -213,11 +213,11 @@ pub fn decode_iso2_TransformType(
                                                 (64 as i32 + 1 as i32) as usize,
                                             )?;
                                         } else {
-                                            return Err(-200);
+                                            return Err(STRINGVALUES_NOT_SUPPORTED);
                                         }
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -230,16 +230,16 @@ pub fn decode_iso2_TransformType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 3 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         1 => {
-                            return Err(-50);
+                            return Err(UNKNOWN_EVENT_FOR_DECODING);
                         }
                         2 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         3 => {
                             decode_exi_type_hex_binary(
@@ -253,7 +253,7 @@ pub fn decode_iso2_TransformType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -263,16 +263,16 @@ pub fn decode_iso2_TransformType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -284,10 +284,10 @@ pub fn decode_iso2_IntervalType(
     let mut eventCode: u32 = 0;
     exi_basetypes_decoder_nbit_uint(stream, 1, &mut eventCode)?;
     if eventCode != 0 as i32 as u32 {
-        return Err(-150);
+        return Err(UNKNOWN_EVENT_CODE);
     }
 
-    return Ok(0);
+    return Ok(NO_ERROR);
 }
 pub fn decode_iso2_TransformsType(
     stream: &mut ExiBitstream,
@@ -307,7 +307,7 @@ pub fn decode_iso2_TransformsType(
                             grammar_id = 8;
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -317,13 +317,13 @@ pub fn decode_iso2_TransformsType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Err(-110);
+                            return Err(ARRAY_OUT_OF_BOUNDS);
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -333,16 +333,16 @@ pub fn decode_iso2_TransformsType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -394,7 +394,7 @@ pub fn decode_iso2_DSAKeyValueType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -415,7 +415,7 @@ pub fn decode_iso2_DSAKeyValueType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -447,7 +447,7 @@ pub fn decode_iso2_DSAKeyValueType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -468,7 +468,7 @@ pub fn decode_iso2_DSAKeyValueType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -500,10 +500,10 @@ pub fn decode_iso2_DSAKeyValueType(
                             }
                         }
                         2 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -524,10 +524,10 @@ pub fn decode_iso2_DSAKeyValueType(
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -548,10 +548,10 @@ pub fn decode_iso2_DSAKeyValueType(
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -561,16 +561,16 @@ pub fn decode_iso2_DSAKeyValueType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -614,11 +614,11 @@ pub fn decode_iso2_X509IssuerSerialType(
                                                 (64 as i32 + 1 as i32) as usize,
                                             )?;
                                         } else {
-                                            return Err(-200);
+                                            return Err(STRINGVALUES_NOT_SUPPORTED);
                                         }
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -631,13 +631,13 @@ pub fn decode_iso2_X509IssuerSerialType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 17 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -668,7 +668,7 @@ pub fn decode_iso2_X509IssuerSerialType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -678,16 +678,16 @@ pub fn decode_iso2_X509IssuerSerialType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -715,7 +715,7 @@ pub fn decode_iso2_RelativeTimeIntervalType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -734,10 +734,10 @@ pub fn decode_iso2_RelativeTimeIntervalType(
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -747,16 +747,16 @@ pub fn decode_iso2_RelativeTimeIntervalType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -790,13 +790,13 @@ pub fn decode_iso2_DigestMethodType(
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
-                                    return Err(-200);
+                                    return Err(STRINGVALUES_NOT_SUPPORTED);
                                 }
                             }
                             grammar_id = 21 as i32;
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -806,10 +806,10 @@ pub fn decode_iso2_DigestMethodType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Err(-50);
+                            return Err(UNKNOWN_EVENT_FOR_DECODING);
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         2 => {
                             decode_exi_type_hex_binary(
@@ -823,7 +823,7 @@ pub fn decode_iso2_DigestMethodType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -833,16 +833,16 @@ pub fn decode_iso2_DigestMethodType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -871,7 +871,7 @@ pub fn decode_iso2_RSAKeyValueType(
                                 grammar_id = 23 as i32;
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -892,7 +892,7 @@ pub fn decode_iso2_RSAKeyValueType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -902,16 +902,16 @@ pub fn decode_iso2_RSAKeyValueType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -948,13 +948,13 @@ pub fn decode_iso2_CanonicalizationMethodType(
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
-                                    return Err(-200);
+                                    return Err(STRINGVALUES_NOT_SUPPORTED);
                                 }
                             }
                             grammar_id = 25 as i32;
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -964,10 +964,10 @@ pub fn decode_iso2_CanonicalizationMethodType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Err(-50);
+                            return Err(UNKNOWN_EVENT_FOR_DECODING);
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         2 => {
                             decode_exi_type_hex_binary(
@@ -981,7 +981,7 @@ pub fn decode_iso2_CanonicalizationMethodType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -991,16 +991,16 @@ pub fn decode_iso2_CanonicalizationMethodType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -1035,13 +1035,13 @@ pub fn decode_iso2_SignatureMethodType(
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
-                                    return Err(-200);
+                                    return Err(STRINGVALUES_NOT_SUPPORTED);
                                 }
                             }
                             grammar_id = 27 as i32;
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -1072,10 +1072,10 @@ pub fn decode_iso2_SignatureMethodType(
                             }
                         }
                         1 => {
-                            return Err(-50);
+                            return Err(UNKNOWN_EVENT_FOR_DECODING);
                         }
                         2 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         3 => {
                             decode_exi_type_hex_binary(
@@ -1089,7 +1089,7 @@ pub fn decode_iso2_SignatureMethodType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -1099,10 +1099,10 @@ pub fn decode_iso2_SignatureMethodType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Err(-50);
+                            return Err(UNKNOWN_EVENT_FOR_DECODING);
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         2 => {
                             decode_exi_type_hex_binary(
@@ -1116,7 +1116,7 @@ pub fn decode_iso2_SignatureMethodType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -1126,16 +1126,16 @@ pub fn decode_iso2_SignatureMethodType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -1184,7 +1184,7 @@ pub fn decode_iso2_KeyValueType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -1194,16 +1194,16 @@ pub fn decode_iso2_KeyValueType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -1240,7 +1240,7 @@ pub fn decode_iso2_PhysicalValueType(
                                             value.wrapping_add(-(3 as i32) as u32) as i8;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -1253,13 +1253,13 @@ pub fn decode_iso2_PhysicalValueType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 31 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -1286,7 +1286,7 @@ pub fn decode_iso2_PhysicalValueType(
                                         (*physical_value).Unit = value_0 as Iso2UnitSymbolType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -1299,13 +1299,13 @@ pub fn decode_iso2_PhysicalValueType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 32 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -1321,7 +1321,7 @@ pub fn decode_iso2_PhysicalValueType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -1331,16 +1331,16 @@ pub fn decode_iso2_PhysicalValueType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -1368,7 +1368,7 @@ pub fn decode_iso2_ConsumptionCostType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -1389,15 +1389,15 @@ pub fn decode_iso2_ConsumptionCostType(
                                 {
                                     decode_iso2_CostType(stream, cost)?;
                                 } else {
-                                    return Err(-110);
+                                    return Err(ARRAY_OUT_OF_BOUNDS);
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                             grammar_id = 35 as i32;
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -1418,10 +1418,10 @@ pub fn decode_iso2_ConsumptionCostType(
                                 {
                                     decode_iso2_CostType(stream, cost)?;
                                 } else {
-                                    return Err(-110);
+                                    return Err(ARRAY_OUT_OF_BOUNDS);
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                             if ((*ConsumptionCostType).Cost.arrayLen as i32) < 3 as i32 {
                                 grammar_id = 35 as i32;
@@ -1430,10 +1430,10 @@ pub fn decode_iso2_ConsumptionCostType(
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -1443,16 +1443,16 @@ pub fn decode_iso2_ConsumptionCostType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -1489,7 +1489,7 @@ pub fn decode_iso2_PMaxScheduleEntryType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -1508,7 +1508,7 @@ pub fn decode_iso2_PMaxScheduleEntryType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -1518,16 +1518,16 @@ pub fn decode_iso2_PMaxScheduleEntryType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -1565,7 +1565,7 @@ pub fn decode_iso2_SalesTariffEntryType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -1592,7 +1592,7 @@ pub fn decode_iso2_SalesTariffEntryType(
                                         (*SalesTariffEntryType).EPriceLevel = Some(value as u8);
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -1605,7 +1605,7 @@ pub fn decode_iso2_SalesTariffEntryType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 41 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
@@ -1623,18 +1623,18 @@ pub fn decode_iso2_SalesTariffEntryType(
                                         consumption_cost,
                                     )?;
                                 } else {
-                                    return Err(-110);
+                                    return Err(ARRAY_OUT_OF_BOUNDS);
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                             grammar_id = 40 as i32;
                         }
                         2 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -1660,10 +1660,10 @@ pub fn decode_iso2_SalesTariffEntryType(
                                         consumption_cost,
                                     )?;
                                 } else {
-                                    return Err(-110);
+                                    return Err(ARRAY_OUT_OF_BOUNDS);
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                             if ((*SalesTariffEntryType).ConsumptionCost.arrayLen as i32) < 3 as i32
                             {
@@ -1673,10 +1673,10 @@ pub fn decode_iso2_SalesTariffEntryType(
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -1702,18 +1702,18 @@ pub fn decode_iso2_SalesTariffEntryType(
                                         consumption_cost,
                                     )?;
                                 } else {
-                                    return Err(-110);
+                                    return Err(ARRAY_OUT_OF_BOUNDS);
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                             grammar_id = 42 as i32;
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -1739,10 +1739,10 @@ pub fn decode_iso2_SalesTariffEntryType(
                                         consumption_cost,
                                     )?;
                                 } else {
-                                    return Err(-110);
+                                    return Err(ARRAY_OUT_OF_BOUNDS);
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                             if ((*SalesTariffEntryType).ConsumptionCost.arrayLen as i32) < 3 as i32
                             {
@@ -1752,10 +1752,10 @@ pub fn decode_iso2_SalesTariffEntryType(
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -1765,16 +1765,16 @@ pub fn decode_iso2_SalesTariffEntryType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -1808,13 +1808,13 @@ pub fn decode_iso2_ParameterType(
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
-                                    return Err(-200);
+                                    return Err(STRINGVALUES_NOT_SUPPORTED);
                                 }
                             }
                             grammar_id = 44 as i32;
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -1841,7 +1841,7 @@ pub fn decode_iso2_ParameterType(
                                         (*ParameterType).boolValue = Some(value as i32);
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -1854,7 +1854,7 @@ pub fn decode_iso2_ParameterType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 3 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
@@ -1878,7 +1878,7 @@ pub fn decode_iso2_ParameterType(
                                             Some(value_0.wrapping_sub(128) as i8);
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -1891,7 +1891,7 @@ pub fn decode_iso2_ParameterType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 3 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
@@ -1941,11 +1941,11 @@ pub fn decode_iso2_ParameterType(
                                                 (64 as i32 + 1 as i32) as usize,
                                             )?;
                                         } else {
-                                            return Err(-200);
+                                            return Err(STRINGVALUES_NOT_SUPPORTED);
                                         }
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -1958,13 +1958,13 @@ pub fn decode_iso2_ParameterType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 3 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -1974,16 +1974,16 @@ pub fn decode_iso2_ParameterType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -2015,15 +2015,15 @@ pub fn decode_iso2_PMaxScheduleType(
                                 {
                                     decode_iso2_PMaxScheduleEntryType(stream, entry)?;
                                 } else {
-                                    return Err(-110);
+                                    return Err(ARRAY_OUT_OF_BOUNDS);
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                             grammar_id = 46 as i32;
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -2045,10 +2045,10 @@ pub fn decode_iso2_PMaxScheduleType(
                                 {
                                     decode_iso2_PMaxScheduleEntryType(stream, entry)?;
                                 } else {
-                                    return Err(-110);
+                                    return Err(ARRAY_OUT_OF_BOUNDS);
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                             if ((*PMaxScheduleType).PMaxScheduleEntry.arrayLen as i32) < 1024 as i32
                             {
@@ -2058,10 +2058,10 @@ pub fn decode_iso2_PMaxScheduleType(
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -2071,16 +2071,16 @@ pub fn decode_iso2_PMaxScheduleType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -2114,7 +2114,7 @@ pub fn decode_iso2_ReferenceType(
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
-                                    return Err(-200);
+                                    return Err(STRINGVALUES_NOT_SUPPORTED);
                                 }
                             }
                             grammar_id = 48 as i32;
@@ -2134,7 +2134,7 @@ pub fn decode_iso2_ReferenceType(
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
-                                    return Err(-200);
+                                    return Err(STRINGVALUES_NOT_SUPPORTED);
                                 }
                             }
                             grammar_id = 49 as i32;
@@ -2154,7 +2154,7 @@ pub fn decode_iso2_ReferenceType(
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
-                                    return Err(-200);
+                                    return Err(STRINGVALUES_NOT_SUPPORTED);
                                 }
                             }
                             grammar_id = 50 as i32;
@@ -2178,7 +2178,7 @@ pub fn decode_iso2_ReferenceType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -2202,7 +2202,7 @@ pub fn decode_iso2_ReferenceType(
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
-                                    return Err(-200);
+                                    return Err(STRINGVALUES_NOT_SUPPORTED);
                                 }
                             }
                             grammar_id = 49 as i32;
@@ -2222,7 +2222,7 @@ pub fn decode_iso2_ReferenceType(
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
-                                    return Err(-200);
+                                    return Err(STRINGVALUES_NOT_SUPPORTED);
                                 }
                             }
                             grammar_id = 50 as i32;
@@ -2246,7 +2246,7 @@ pub fn decode_iso2_ReferenceType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -2270,7 +2270,7 @@ pub fn decode_iso2_ReferenceType(
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
-                                    return Err(-200);
+                                    return Err(STRINGVALUES_NOT_SUPPORTED);
                                 }
                             }
                             grammar_id = 50 as i32;
@@ -2294,7 +2294,7 @@ pub fn decode_iso2_ReferenceType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -2322,7 +2322,7 @@ pub fn decode_iso2_ReferenceType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -2341,7 +2341,7 @@ pub fn decode_iso2_ReferenceType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -2362,7 +2362,7 @@ pub fn decode_iso2_ReferenceType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -2372,16 +2372,16 @@ pub fn decode_iso2_ReferenceType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -2415,7 +2415,7 @@ pub fn decode_iso2_RetrievalMethodType(
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
-                                    return Err(-200);
+                                    return Err(STRINGVALUES_NOT_SUPPORTED);
                                 }
                             }
                             grammar_id = 54 as i32;
@@ -2435,7 +2435,7 @@ pub fn decode_iso2_RetrievalMethodType(
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
-                                    return Err(-200);
+                                    return Err(STRINGVALUES_NOT_SUPPORTED);
                                 }
                             }
                             grammar_id = 55 as i32;
@@ -2450,10 +2450,10 @@ pub fn decode_iso2_RetrievalMethodType(
                             }
                         }
                         3 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -2477,7 +2477,7 @@ pub fn decode_iso2_RetrievalMethodType(
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
-                                    return Err(-200);
+                                    return Err(STRINGVALUES_NOT_SUPPORTED);
                                 }
                             }
                             grammar_id = 55 as i32;
@@ -2492,10 +2492,10 @@ pub fn decode_iso2_RetrievalMethodType(
                             }
                         }
                         2 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -2514,10 +2514,10 @@ pub fn decode_iso2_RetrievalMethodType(
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -2527,16 +2527,16 @@ pub fn decode_iso2_RetrievalMethodType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -2570,7 +2570,7 @@ pub fn decode_iso2_SalesTariffType(
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
-                                    return Err(-200);
+                                    return Err(STRINGVALUES_NOT_SUPPORTED);
                                 }
                             }
                             grammar_id = 57 as i32;
@@ -2594,7 +2594,7 @@ pub fn decode_iso2_SalesTariffType(
                                             value.wrapping_add(1 as i32 as u32) as u8;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -2607,13 +2607,13 @@ pub fn decode_iso2_SalesTariffType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 58 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -2641,7 +2641,7 @@ pub fn decode_iso2_SalesTariffType(
                                             value_0.wrapping_add(1 as i32 as u32) as u8;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -2654,13 +2654,13 @@ pub fn decode_iso2_SalesTariffType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 58 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -2702,11 +2702,11 @@ pub fn decode_iso2_SalesTariffType(
                                                 (32 as i32 + 1 as i32) as usize,
                                             )?;
                                         } else {
-                                            return Err(-200);
+                                            return Err(STRINGVALUES_NOT_SUPPORTED);
                                         }
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -2719,7 +2719,7 @@ pub fn decode_iso2_SalesTariffType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 60 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
@@ -2742,7 +2742,7 @@ pub fn decode_iso2_SalesTariffType(
                                         (*SalesTariffType).NumEPriceLevels = Some(value_1 as u8);
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -2755,7 +2755,7 @@ pub fn decode_iso2_SalesTariffType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 62 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
@@ -2772,15 +2772,15 @@ pub fn decode_iso2_SalesTariffType(
                                 {
                                     decode_iso2_SalesTariffEntryType(stream, entry)?;
                                 } else {
-                                    return Err(-110);
+                                    return Err(ARRAY_OUT_OF_BOUNDS);
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                             grammar_id = 59 as i32;
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -2801,10 +2801,10 @@ pub fn decode_iso2_SalesTariffType(
                                 {
                                     decode_iso2_SalesTariffEntryType(stream, entry)?;
                                 } else {
-                                    return Err(-110);
+                                    return Err(ARRAY_OUT_OF_BOUNDS);
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                             if ((*SalesTariffType).SalesTariffEntry.arrayLen as i32) < 1024 as i32 {
                                 grammar_id = 59 as i32;
@@ -2813,10 +2813,10 @@ pub fn decode_iso2_SalesTariffType(
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -2843,7 +2843,7 @@ pub fn decode_iso2_SalesTariffType(
                                         (*SalesTariffType).NumEPriceLevels = Some(value_2 as u8);
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -2856,7 +2856,7 @@ pub fn decode_iso2_SalesTariffType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 62 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
@@ -2873,15 +2873,15 @@ pub fn decode_iso2_SalesTariffType(
                                 {
                                     decode_iso2_SalesTariffEntryType(stream, entry)?;
                                 } else {
-                                    return Err(-110);
+                                    return Err(ARRAY_OUT_OF_BOUNDS);
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                             grammar_id = 61 as i32;
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -2902,10 +2902,10 @@ pub fn decode_iso2_SalesTariffType(
                                 {
                                     decode_iso2_SalesTariffEntryType(stream, entry)?;
                                 } else {
-                                    return Err(-110);
+                                    return Err(ARRAY_OUT_OF_BOUNDS);
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                             if ((*SalesTariffType).SalesTariffEntry.arrayLen as i32) < 1024 as i32 {
                                 grammar_id = 61 as i32;
@@ -2914,10 +2914,10 @@ pub fn decode_iso2_SalesTariffType(
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -2938,15 +2938,15 @@ pub fn decode_iso2_SalesTariffType(
                                 {
                                     decode_iso2_SalesTariffEntryType(stream, entry)?;
                                 } else {
-                                    return Err(-110);
+                                    return Err(ARRAY_OUT_OF_BOUNDS);
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                             grammar_id = 63 as i32;
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -2967,10 +2967,10 @@ pub fn decode_iso2_SalesTariffType(
                                 {
                                     decode_iso2_SalesTariffEntryType(stream, entry)?;
                                 } else {
-                                    return Err(-110);
+                                    return Err(ARRAY_OUT_OF_BOUNDS);
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                             if ((*SalesTariffType).SalesTariffEntry.arrayLen as i32) < 1024 as i32 {
                                 grammar_id = 63 as i32;
@@ -2979,10 +2979,10 @@ pub fn decode_iso2_SalesTariffType(
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -2992,16 +2992,16 @@ pub fn decode_iso2_SalesTariffType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -3065,11 +3065,11 @@ pub fn decode_iso2_X509DataType(
                                                 (64 as i32 + 1 as i32) as usize,
                                             )?;
                                         } else {
-                                            return Err(-200);
+                                            return Err(STRINGVALUES_NOT_SUPPORTED);
                                         }
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -3082,7 +3082,7 @@ pub fn decode_iso2_X509DataType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 3 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
@@ -3121,7 +3121,7 @@ pub fn decode_iso2_X509DataType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -3131,16 +3131,16 @@ pub fn decode_iso2_X509DataType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -3161,7 +3161,7 @@ pub fn decode_iso2_PGPDataType(
                         0 => {
                             let pgp_data = match &mut (*PGPDataType).PGPComponent {
                                 Iso2PGPComponentType::Choice1(ref mut c1) => c1,
-                                _ => return Err(-150),
+                                _ => return Err(UNKNOWN_EVENT_CODE),
                             };
                             decode_exi_type_hex_binary(
                                 stream,
@@ -3176,7 +3176,7 @@ pub fn decode_iso2_PGPDataType(
                         1 => {
                             let pgp_data = match &mut (*PGPDataType).PGPComponent {
                                 Iso2PGPComponentType::Choice1(ref mut c1) => c1,
-                                _ => return Err(-150),
+                                _ => return Err(UNKNOWN_EVENT_CODE),
                             };
                             decode_exi_type_hex_binary(
                                 stream,
@@ -3189,7 +3189,7 @@ pub fn decode_iso2_PGPDataType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -3201,7 +3201,7 @@ pub fn decode_iso2_PGPDataType(
                         0 => {
                             let pgp_data = match &mut (*PGPDataType).PGPComponent {
                                 Iso2PGPComponentType::Choice1(ref mut c1) => c1,
-                                _ => return Err(-150),
+                                _ => return Err(UNKNOWN_EVENT_CODE),
                             };
                             decode_exi_type_hex_binary(
                                 stream,
@@ -3212,15 +3212,15 @@ pub fn decode_iso2_PGPDataType(
                             grammar_id = 67 as i32;
                         }
                         1 => {
-                            return Err(-50);
+                            return Err(UNKNOWN_EVENT_FOR_DECODING);
                         }
                         2 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         3 => {
                             let pgp_data = match &mut (*PGPDataType).PGPComponent {
                                 Iso2PGPComponentType::Choice1(ref mut c1) => c1,
-                                _ => return Err(-150),
+                                _ => return Err(UNKNOWN_EVENT_CODE),
                             };
                             decode_exi_type_hex_binary(
                                 stream,
@@ -3233,7 +3233,7 @@ pub fn decode_iso2_PGPDataType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -3243,18 +3243,18 @@ pub fn decode_iso2_PGPDataType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Err(-50);
+                            return Err(UNKNOWN_EVENT_FOR_DECODING);
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         2 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         3 => {
                             let pgp_data = match &mut (*PGPDataType).PGPComponent {
                                 Iso2PGPComponentType::Choice1(ref mut c1) => c1,
-                                _ => return Err(-150),
+                                _ => return Err(UNKNOWN_EVENT_CODE),
                             };
                             decode_exi_type_hex_binary(
                                 stream,
@@ -3267,7 +3267,7 @@ pub fn decode_iso2_PGPDataType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -3280,7 +3280,7 @@ pub fn decode_iso2_PGPDataType(
                             // Ensure we are using PGPChoice2Type
                             let pgp_data = match &mut (*PGPDataType).PGPComponent {
                                 Iso2PGPComponentType::Choice2(ref mut c2) => c2,
-                                _ => return Err(-150),
+                                _ => return Err(UNKNOWN_EVENT_CODE),
                             };
 
                             decode_exi_type_hex_binary(
@@ -3294,7 +3294,7 @@ pub fn decode_iso2_PGPDataType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -3304,15 +3304,15 @@ pub fn decode_iso2_PGPDataType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Err(-50);
+                            return Err(UNKNOWN_EVENT_FOR_DECODING);
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         2 => {
                             let pgp_data = match &mut (*PGPDataType).PGPComponent {
                                 Iso2PGPComponentType::Choice2(ref mut c2) => c2,
-                                _ => return Err(-150),
+                                _ => return Err(UNKNOWN_EVENT_CODE),
                             };
                             decode_exi_type_hex_binary(
                                 stream,
@@ -3323,7 +3323,7 @@ pub fn decode_iso2_PGPDataType(
                             grammar_id = 68 as i32;
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -3333,16 +3333,16 @@ pub fn decode_iso2_PGPDataType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -3373,7 +3373,7 @@ pub fn decode_iso2_SPKIDataType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -3383,10 +3383,10 @@ pub fn decode_iso2_SPKIDataType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Err(-50);
+                            return Err(UNKNOWN_EVENT_FOR_DECODING);
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         2 => {
                             decode_exi_type_hex_binary(
@@ -3400,7 +3400,7 @@ pub fn decode_iso2_SPKIDataType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -3410,16 +3410,16 @@ pub fn decode_iso2_SPKIDataType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -3453,7 +3453,7 @@ pub fn decode_iso2_SignedInfoType(
                                         65,
                                     )?;
                                 } else {
-                                    return Err(-200);
+                                    return Err(STRINGVALUES_NOT_SUPPORTED);
                                 }
                             }
                             grammar_id = 73 as i32;
@@ -3468,7 +3468,7 @@ pub fn decode_iso2_SignedInfoType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -3487,7 +3487,7 @@ pub fn decode_iso2_SignedInfoType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -3506,7 +3506,7 @@ pub fn decode_iso2_SignedInfoType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -3525,15 +3525,15 @@ pub fn decode_iso2_SignedInfoType(
                                     decode_iso2_ReferenceType(stream, reference)?;
                                     (*SignedInfoType).ReferenceLen += 1;
                                 } else {
-                                    return Err(-110);
+                                    return Err(ARRAY_OUT_OF_BOUNDS);
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                             grammar_id = 76 as i32;
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -3553,18 +3553,18 @@ pub fn decode_iso2_SignedInfoType(
                                 {
                                     decode_iso2_ReferenceType(stream, reference)?;
                                 } else {
-                                    return Err(-110);
+                                    return Err(ARRAY_OUT_OF_BOUNDS);
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                             grammar_id = 76 as i32;
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -3574,16 +3574,16 @@ pub fn decode_iso2_SignedInfoType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -3612,7 +3612,7 @@ pub fn decode_iso2_ProfileEntryType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -3631,7 +3631,7 @@ pub fn decode_iso2_ProfileEntryType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -3660,7 +3660,7 @@ pub fn decode_iso2_ProfileEntryType(
                                             Some(value.wrapping_add(1) as i8);
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -3673,16 +3673,16 @@ pub fn decode_iso2_ProfileEntryType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 3 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -3692,16 +3692,16 @@ pub fn decode_iso2_ProfileEntryType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -3738,7 +3738,7 @@ pub fn decode_iso2_DC_EVStatusType(
                                         (*DC_EVStatusType).EVReady = value as i32;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -3751,13 +3751,13 @@ pub fn decode_iso2_DC_EVStatusType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 81 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -3785,7 +3785,7 @@ pub fn decode_iso2_DC_EVStatusType(
                                             value_0 as Iso2DcEvErrorCodeType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -3798,13 +3798,13 @@ pub fn decode_iso2_DC_EVStatusType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 82 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -3831,7 +3831,7 @@ pub fn decode_iso2_DC_EVStatusType(
                                         (*DC_EVStatusType).EVRESSSOC = value_1 as i8;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -3844,13 +3844,13 @@ pub fn decode_iso2_DC_EVStatusType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 3 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -3860,16 +3860,16 @@ pub fn decode_iso2_DC_EVStatusType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -3898,7 +3898,7 @@ pub fn decode_iso2_ParameterSetType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -3918,15 +3918,15 @@ pub fn decode_iso2_ParameterSetType(
                                         param,
                                     )?;
                                 } else {
-                                    return Err(-110);
+                                    return Err(ARRAY_OUT_OF_BOUNDS);
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                             grammar_id = 85 as i32;
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -3946,10 +3946,10 @@ pub fn decode_iso2_ParameterSetType(
                                         param,
                                     )?;
                                 } else {
-                                    return Err(-110);
+                                    return Err(ARRAY_OUT_OF_BOUNDS);
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                             if ((*ParameterSetType).Parameter.arrayLen as i32) < 16 as i32 {
                                 grammar_id = 85 as i32;
@@ -3958,10 +3958,10 @@ pub fn decode_iso2_ParameterSetType(
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -3971,16 +3971,16 @@ pub fn decode_iso2_ParameterSetType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -4018,7 +4018,7 @@ pub fn decode_iso2_SAScheduleTupleType(
                                             value.wrapping_add(1 as i32 as u32) as u8;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -4031,13 +4031,13 @@ pub fn decode_iso2_SAScheduleTupleType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 87 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -4056,7 +4056,7 @@ pub fn decode_iso2_SAScheduleTupleType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -4075,10 +4075,10 @@ pub fn decode_iso2_SAScheduleTupleType(
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -4088,16 +4088,16 @@ pub fn decode_iso2_SAScheduleTupleType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -4126,7 +4126,7 @@ pub fn decode_iso2_SelectedServiceType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -4145,10 +4145,10 @@ pub fn decode_iso2_SelectedServiceType(
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -4158,16 +4158,16 @@ pub fn decode_iso2_SelectedServiceType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -4193,7 +4193,7 @@ pub fn decode_iso2_ServiceType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -4226,11 +4226,11 @@ pub fn decode_iso2_ServiceType(
                                                 33,
                                             )?;
                                         } else {
-                                            return Err(-200);
+                                            return Err(STRINGVALUES_NOT_SUPPORTED);
                                         }
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -4243,7 +4243,7 @@ pub fn decode_iso2_ServiceType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 93 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
@@ -4267,7 +4267,7 @@ pub fn decode_iso2_ServiceType(
                                             value as Iso2ServiceCategoryType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -4280,13 +4280,13 @@ pub fn decode_iso2_ServiceType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 94 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -4314,7 +4314,7 @@ pub fn decode_iso2_ServiceType(
                                             value_0 as Iso2ServiceCategoryType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -4327,13 +4327,13 @@ pub fn decode_iso2_ServiceType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 94 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -4366,11 +4366,11 @@ pub fn decode_iso2_ServiceType(
                                                 65,
                                             )?;
                                         } else {
-                                            return Err(-200);
+                                            return Err(STRINGVALUES_NOT_SUPPORTED);
                                         }
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -4383,7 +4383,7 @@ pub fn decode_iso2_ServiceType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 95 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
@@ -4406,7 +4406,7 @@ pub fn decode_iso2_ServiceType(
                                         (*ServiceType).FreeService = value_1 as i32;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -4419,13 +4419,13 @@ pub fn decode_iso2_ServiceType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 3 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -4452,7 +4452,7 @@ pub fn decode_iso2_ServiceType(
                                         (*ServiceType).FreeService = value_2 as i32;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -4465,13 +4465,13 @@ pub fn decode_iso2_ServiceType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 3 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -4481,16 +4481,16 @@ pub fn decode_iso2_ServiceType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -4524,7 +4524,7 @@ pub fn decode_iso2_SignatureValueType(
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
-                                    return Err(-200);
+                                    return Err(STRINGVALUES_NOT_SUPPORTED);
                                 }
                             }
                             grammar_id = 97 as i32;
@@ -4546,7 +4546,7 @@ pub fn decode_iso2_SignatureValueType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -4572,7 +4572,7 @@ pub fn decode_iso2_SignatureValueType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -4582,16 +4582,16 @@ pub fn decode_iso2_SignatureValueType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -4627,14 +4627,14 @@ pub fn decode_iso2_SubCertificatesType(
                                         grammar_id = 99 as i32;
                                     }
                                 } else {
-                                    return Err(-110);
+                                    return Err(ARRAY_OUT_OF_BOUNDS);
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -4660,17 +4660,17 @@ pub fn decode_iso2_SubCertificatesType(
                                         grammar_id = 99 as i32;
                                     }
                                 } else {
-                                    return Err(-110);
+                                    return Err(ARRAY_OUT_OF_BOUNDS);
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -4680,16 +4680,16 @@ pub fn decode_iso2_SubCertificatesType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -4723,7 +4723,7 @@ pub fn decode_iso2_KeyInfoType(
                                         65,
                                     )?;
                                 } else {
-                                    return Err(-200);
+                                    return Err(STRINGVALUES_NOT_SUPPORTED);
                                 }
                             }
                             grammar_id = 101 as i32;
@@ -4750,11 +4750,11 @@ pub fn decode_iso2_KeyInfoType(
                                                 (64 as i32 + 1 as i32) as usize,
                                             )?;
                                         } else {
-                                            return Err(-200);
+                                            return Err(STRINGVALUES_NOT_SUPPORTED);
                                         }
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -4767,7 +4767,7 @@ pub fn decode_iso2_KeyInfoType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 3 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
@@ -4828,11 +4828,11 @@ pub fn decode_iso2_KeyInfoType(
                                                 65,
                                             )?;
                                         } else {
-                                            return Err(-200);
+                                            return Err(STRINGVALUES_NOT_SUPPORTED);
                                         }
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -4845,7 +4845,7 @@ pub fn decode_iso2_KeyInfoType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 3 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
@@ -4862,7 +4862,7 @@ pub fn decode_iso2_KeyInfoType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -4893,11 +4893,11 @@ pub fn decode_iso2_KeyInfoType(
                                                 65,
                                             )?;
                                         } else {
-                                            return Err(-200);
+                                            return Err(STRINGVALUES_NOT_SUPPORTED);
                                         }
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -4910,7 +4910,7 @@ pub fn decode_iso2_KeyInfoType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 3 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
@@ -4971,11 +4971,11 @@ pub fn decode_iso2_KeyInfoType(
                                                 (64 as i32 + 1 as i32) as usize,
                                             )?;
                                         } else {
-                                            return Err(-200);
+                                            return Err(STRINGVALUES_NOT_SUPPORTED);
                                         }
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -4988,7 +4988,7 @@ pub fn decode_iso2_KeyInfoType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 3 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
@@ -5005,7 +5005,7 @@ pub fn decode_iso2_KeyInfoType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -5015,16 +5015,16 @@ pub fn decode_iso2_KeyInfoType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -5057,7 +5057,7 @@ pub fn decode_iso2_ObjectType(
                                         65,
                                     )?;
                                 } else {
-                                    return Err(-200);
+                                    return Err(STRINGVALUES_NOT_SUPPORTED);
                                 }
                             }
                             grammar_id = 103 as i32;
@@ -5077,7 +5077,7 @@ pub fn decode_iso2_ObjectType(
                                         65,
                                     )?;
                                 } else {
-                                    return Err(-200);
+                                    return Err(STRINGVALUES_NOT_SUPPORTED);
                                 }
                             }
                             grammar_id = 104 as i32;
@@ -5097,16 +5097,16 @@ pub fn decode_iso2_ObjectType(
                                         65,
                                     )?;
                                 } else {
-                                    return Err(-200);
+                                    return Err(STRINGVALUES_NOT_SUPPORTED);
                                 }
                             }
                             grammar_id = 105 as i32;
                         }
                         3 => {
-                            return Err(-50);
+                            return Err(UNKNOWN_EVENT_FOR_DECODING);
                         }
                         4 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         5 => {
                             decode_exi_type_hex_binary(
@@ -5120,7 +5120,7 @@ pub fn decode_iso2_ObjectType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -5144,7 +5144,7 @@ pub fn decode_iso2_ObjectType(
                                         65,
                                     )?;
                                 } else {
-                                    return Err(-200);
+                                    return Err(STRINGVALUES_NOT_SUPPORTED);
                                 }
                             }
                             grammar_id = 104 as i32;
@@ -5164,16 +5164,16 @@ pub fn decode_iso2_ObjectType(
                                         65,
                                     )?;
                                 } else {
-                                    return Err(-200);
+                                    return Err(STRINGVALUES_NOT_SUPPORTED);
                                 }
                             }
                             grammar_id = 105 as i32;
                         }
                         2 => {
-                            return Err(-50);
+                            return Err(UNKNOWN_EVENT_FOR_DECODING);
                         }
                         3 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         4 => {
                             decode_exi_type_hex_binary(
@@ -5187,7 +5187,7 @@ pub fn decode_iso2_ObjectType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -5211,16 +5211,16 @@ pub fn decode_iso2_ObjectType(
                                         65,
                                     )?;
                                 } else {
-                                    return Err(-200);
+                                    return Err(STRINGVALUES_NOT_SUPPORTED);
                                 }
                             }
                             grammar_id = 105 as i32;
                         }
                         1 => {
-                            return Err(-50);
+                            return Err(UNKNOWN_EVENT_FOR_DECODING);
                         }
                         2 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         3 => {
                             decode_exi_type_hex_binary(
@@ -5234,7 +5234,7 @@ pub fn decode_iso2_ObjectType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -5244,10 +5244,10 @@ pub fn decode_iso2_ObjectType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Err(-50);
+                            return Err(UNKNOWN_EVENT_FOR_DECODING);
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         2 => {
                             decode_exi_type_hex_binary(
@@ -5261,7 +5261,7 @@ pub fn decode_iso2_ObjectType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -5271,16 +5271,16 @@ pub fn decode_iso2_ObjectType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -5337,11 +5337,11 @@ pub fn decode_iso2_SupportedEnergyTransferModeType(
                                                 .arrayLen;
                                         }
                                     } else {
-                                        return Err(-151);
+                                        return Err(UNSUPPORTED_SUB_EVENT);
                                     }
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                             if error == 0 as i32 {
                                 exi_basetypes_decoder_nbit_uint(
@@ -5353,13 +5353,13 @@ pub fn decode_iso2_SupportedEnergyTransferModeType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 107 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -5407,11 +5407,11 @@ pub fn decode_iso2_SupportedEnergyTransferModeType(
                                                 .arrayLen;
                                         }
                                     } else {
-                                        return Err(-151);
+                                        return Err(UNSUPPORTED_SUB_EVENT);
                                     }
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                             if error == 0 as i32 {
                                 exi_basetypes_decoder_nbit_uint(
@@ -5423,16 +5423,16 @@ pub fn decode_iso2_SupportedEnergyTransferModeType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 107 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -5442,16 +5442,16 @@ pub fn decode_iso2_SupportedEnergyTransferModeType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -5485,7 +5485,7 @@ pub fn decode_iso2_CertificateChainType(
                                         65,
                                     )?;
                                 } else {
-                                    return Err(-200);
+                                    return Err(STRINGVALUES_NOT_SUPPORTED);
                                 }
                             }
                             grammar_id = 109 as i32;
@@ -5502,7 +5502,7 @@ pub fn decode_iso2_CertificateChainType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -5523,7 +5523,7 @@ pub fn decode_iso2_CertificateChainType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -5542,10 +5542,10 @@ pub fn decode_iso2_CertificateChainType(
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -5555,16 +5555,16 @@ pub fn decode_iso2_CertificateChainType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -5576,9 +5576,9 @@ pub fn decode_iso2_BodyBaseType(
     let mut eventCode: u32 = 0;
     exi_basetypes_decoder_nbit_uint(stream, 1, &mut eventCode)?;
     if eventCode != 0 as i32 as u32 {
-        return Err(-150);
+        return Err(UNKNOWN_EVENT_CODE);
     }
-    return Ok(0);
+    return Ok(NO_ERROR);
 }
 pub fn decode_iso2_NotificationType(
     stream: &mut ExiBitstream,
@@ -5612,7 +5612,7 @@ pub fn decode_iso2_NotificationType(
                                         (*NotificationType).FaultCode = value as Iso2FaultCodeType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -5625,13 +5625,13 @@ pub fn decode_iso2_NotificationType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 112 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -5664,11 +5664,11 @@ pub fn decode_iso2_NotificationType(
                                                 65,
                                             )?;
                                         } else {
-                                            return Err(-200);
+                                            return Err(STRINGVALUES_NOT_SUPPORTED);
                                         }
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -5681,16 +5681,16 @@ pub fn decode_iso2_NotificationType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 3 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -5700,16 +5700,16 @@ pub fn decode_iso2_NotificationType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -5738,7 +5738,7 @@ pub fn decode_iso2_DC_EVSEStatusType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -5766,7 +5766,7 @@ pub fn decode_iso2_DC_EVSEStatusType(
                                             value as Iso2EvseNotificationType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -5779,13 +5779,13 @@ pub fn decode_iso2_DC_EVSEStatusType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 115 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -5813,7 +5813,7 @@ pub fn decode_iso2_DC_EVSEStatusType(
                                             Some(value_0 as Iso2IsolationLevelType);
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -5826,7 +5826,7 @@ pub fn decode_iso2_DC_EVSEStatusType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 116 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
@@ -5850,7 +5850,7 @@ pub fn decode_iso2_DC_EVSEStatusType(
                                             value_1 as Iso2DcEvseStatusCodeType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -5863,13 +5863,13 @@ pub fn decode_iso2_DC_EVSEStatusType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 3 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -5897,7 +5897,7 @@ pub fn decode_iso2_DC_EVSEStatusType(
                                             value_2 as Iso2DcEvseStatusCodeType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -5910,13 +5910,13 @@ pub fn decode_iso2_DC_EVSEStatusType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 3 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -5926,16 +5926,16 @@ pub fn decode_iso2_DC_EVSEStatusType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -5966,15 +5966,15 @@ pub fn decode_iso2_SelectedServiceListType(
                                 {
                                     decode_iso2_SelectedServiceType(stream, selected_service)?;
                                 } else {
-                                    return Err(-110);
+                                    return Err(ARRAY_OUT_OF_BOUNDS);
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                             grammar_id = 118 as i32;
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -5998,10 +5998,10 @@ pub fn decode_iso2_SelectedServiceListType(
                                 {
                                     decode_iso2_SelectedServiceType(stream, selected_service)?;
                                 } else {
-                                    return Err(-110);
+                                    return Err(ARRAY_OUT_OF_BOUNDS);
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                             if ((*SelectedServiceListType).SelectedService.arrayLen as i32)
                                 < 16 as i32
@@ -6012,10 +6012,10 @@ pub fn decode_iso2_SelectedServiceListType(
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -6025,16 +6025,16 @@ pub fn decode_iso2_SelectedServiceListType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -6078,11 +6078,11 @@ pub fn decode_iso2_PaymentOptionListType(
                                             (*PaymentOptionListType).PaymentOption.arrayLen;
                                         }
                                     } else {
-                                        return Err(-151);
+                                        return Err(UNSUPPORTED_SUB_EVENT);
                                     }
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                             if error == 0 as i32 {
                                 exi_basetypes_decoder_nbit_uint(
@@ -6094,13 +6094,13 @@ pub fn decode_iso2_PaymentOptionListType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 120 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -6134,11 +6134,11 @@ pub fn decode_iso2_PaymentOptionListType(
                                             (*PaymentOptionListType).PaymentOption.arrayLen;
                                         }
                                     } else {
-                                        return Err(-151);
+                                        return Err(UNSUPPORTED_SUB_EVENT);
                                     }
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                             if error == 0 as i32 {
                                 exi_basetypes_decoder_nbit_uint(
@@ -6150,16 +6150,16 @@ pub fn decode_iso2_PaymentOptionListType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 3 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -6169,16 +6169,16 @@ pub fn decode_iso2_PaymentOptionListType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -6212,7 +6212,7 @@ pub fn decode_iso2_SignatureType(
                                         65,
                                     )?;
                                 } else {
-                                    return Err(-200);
+                                    return Err(STRINGVALUES_NOT_SUPPORTED);
                                 }
                             }
                             grammar_id = 122 as i32;
@@ -6227,7 +6227,7 @@ pub fn decode_iso2_SignatureType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -6246,7 +6246,7 @@ pub fn decode_iso2_SignatureType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -6265,7 +6265,7 @@ pub fn decode_iso2_SignatureType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -6287,10 +6287,10 @@ pub fn decode_iso2_SignatureType(
                             }
                         }
                         2 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -6300,13 +6300,13 @@ pub fn decode_iso2_SignatureType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Err(-110);
+                            return Err(ARRAY_OUT_OF_BOUNDS);
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -6322,10 +6322,10 @@ pub fn decode_iso2_SignatureType(
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -6335,13 +6335,13 @@ pub fn decode_iso2_SignatureType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Err(-110);
+                            return Err(ARRAY_OUT_OF_BOUNDS);
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -6351,16 +6351,16 @@ pub fn decode_iso2_SignatureType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -6391,15 +6391,15 @@ pub fn decode_iso2_ChargingProfileType(
                                 {
                                     decode_iso2_ProfileEntryType(stream, entry)?;
                                 } else {
-                                    return Err(-110);
+                                    return Err(ARRAY_OUT_OF_BOUNDS);
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                             grammar_id = 129 as i32;
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -6420,10 +6420,10 @@ pub fn decode_iso2_ChargingProfileType(
                                 {
                                     decode_iso2_ProfileEntryType(stream, entry)?;
                                 } else {
-                                    return Err(-110);
+                                    return Err(ARRAY_OUT_OF_BOUNDS);
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                             if ((*ChargingProfileType).ProfileEntry.arrayLen as i32) < 24 as i32 {
                                 grammar_id = 129 as i32;
@@ -6432,10 +6432,10 @@ pub fn decode_iso2_ChargingProfileType(
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -6445,16 +6445,16 @@ pub fn decode_iso2_ChargingProfileType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -6487,15 +6487,15 @@ pub fn decode_iso2_ServiceParameterListType(
                                 {
                                     decode_iso2_ParameterSetType(stream, param_set)?;
                                 } else {
-                                    return Err(-110);
+                                    return Err(ARRAY_OUT_OF_BOUNDS);
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                             grammar_id = 131 as i32;
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -6518,10 +6518,10 @@ pub fn decode_iso2_ServiceParameterListType(
                                 {
                                     decode_iso2_ParameterSetType(stream, param_set)?;
                                 } else {
-                                    return Err(-110);
+                                    return Err(ARRAY_OUT_OF_BOUNDS);
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                             if ((*ServiceParameterListType).ParameterSet.arrayLen as i32)
                                 < 255 as i32
@@ -6532,10 +6532,10 @@ pub fn decode_iso2_ServiceParameterListType(
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -6545,16 +6545,16 @@ pub fn decode_iso2_ServiceParameterListType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -6592,15 +6592,15 @@ pub fn decode_iso2_ListOfRootCertificateIDsType(
                                         root_cert,
                                     )?;
                                 } else {
-                                    return Err(-110);
+                                    return Err(ARRAY_OUT_OF_BOUNDS);
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                             grammar_id = 133 as i32;
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -6628,10 +6628,10 @@ pub fn decode_iso2_ListOfRootCertificateIDsType(
                                         root_cert,
                                     )?;
                                 } else {
-                                    return Err(-110);
+                                    return Err(ARRAY_OUT_OF_BOUNDS);
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                             if ((*ListOfRootCertificateIDsType).RootCertificateID.arrayLen as i32)
                                 < 20 as i32
@@ -6642,10 +6642,10 @@ pub fn decode_iso2_ListOfRootCertificateIDsType(
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -6655,16 +6655,16 @@ pub fn decode_iso2_ListOfRootCertificateIDsType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -6702,7 +6702,7 @@ pub fn decode_iso2_AC_EVChargeParameterType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -6721,7 +6721,7 @@ pub fn decode_iso2_AC_EVChargeParameterType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -6740,7 +6740,7 @@ pub fn decode_iso2_AC_EVChargeParameterType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -6759,7 +6759,7 @@ pub fn decode_iso2_AC_EVChargeParameterType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -6778,7 +6778,7 @@ pub fn decode_iso2_AC_EVChargeParameterType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -6788,16 +6788,16 @@ pub fn decode_iso2_AC_EVChargeParameterType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -6835,7 +6835,7 @@ pub fn decode_iso2_DC_EVChargeParameterType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -6854,7 +6854,7 @@ pub fn decode_iso2_DC_EVChargeParameterType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -6873,7 +6873,7 @@ pub fn decode_iso2_DC_EVChargeParameterType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -6901,7 +6901,7 @@ pub fn decode_iso2_DC_EVChargeParameterType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -6920,7 +6920,7 @@ pub fn decode_iso2_DC_EVChargeParameterType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -6965,7 +6965,7 @@ pub fn decode_iso2_DC_EVChargeParameterType(
                                         (*DC_EVChargeParameterType).FullSOC = Some(value as i8);
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -6978,7 +6978,7 @@ pub fn decode_iso2_DC_EVChargeParameterType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 147 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
@@ -7001,7 +7001,7 @@ pub fn decode_iso2_DC_EVChargeParameterType(
                                         (*DC_EVChargeParameterType).BulkSOC = Some(value_0 as i8);
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -7014,16 +7014,16 @@ pub fn decode_iso2_DC_EVChargeParameterType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 3 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         4 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -7059,7 +7059,7 @@ pub fn decode_iso2_DC_EVChargeParameterType(
                                         (*DC_EVChargeParameterType).FullSOC = Some(value_1 as i8);
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -7072,7 +7072,7 @@ pub fn decode_iso2_DC_EVChargeParameterType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 147 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
@@ -7095,7 +7095,7 @@ pub fn decode_iso2_DC_EVChargeParameterType(
                                         (*DC_EVChargeParameterType).BulkSOC = Some(value_2 as i8);
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -7108,16 +7108,16 @@ pub fn decode_iso2_DC_EVChargeParameterType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 3 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         3 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -7144,7 +7144,7 @@ pub fn decode_iso2_DC_EVChargeParameterType(
                                         (*DC_EVChargeParameterType).FullSOC = Some(value_3 as i8);
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -7157,7 +7157,7 @@ pub fn decode_iso2_DC_EVChargeParameterType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 147 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
@@ -7180,7 +7180,7 @@ pub fn decode_iso2_DC_EVChargeParameterType(
                                         (*DC_EVChargeParameterType).BulkSOC = Some(value_4 as i8);
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -7193,16 +7193,16 @@ pub fn decode_iso2_DC_EVChargeParameterType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 3 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         2 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -7229,7 +7229,7 @@ pub fn decode_iso2_DC_EVChargeParameterType(
                                         (*DC_EVChargeParameterType).BulkSOC = Some(value_5 as i8);
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -7242,16 +7242,16 @@ pub fn decode_iso2_DC_EVChargeParameterType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 3 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -7261,16 +7261,16 @@ pub fn decode_iso2_DC_EVChargeParameterType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -7308,7 +7308,7 @@ pub fn decode_iso2_EVChargeParameterType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -7327,7 +7327,7 @@ pub fn decode_iso2_EVChargeParameterType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -7346,7 +7346,7 @@ pub fn decode_iso2_EVChargeParameterType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -7356,16 +7356,16 @@ pub fn decode_iso2_EVChargeParameterType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -7377,9 +7377,9 @@ pub fn decode_iso2_SASchedulesType(
     let mut eventCode: u32 = 0;
     exi_basetypes_decoder_nbit_uint(stream, 1, &mut eventCode)?;
     if eventCode != 0 as i32 as u32 {
-        return Err(-150);
+        return Err(UNKNOWN_EVENT_CODE);
     }
-    return Ok(0);
+    return Ok(NO_ERROR);
 }
 pub fn decode_iso2_SAScheduleListType(
     stream: &mut ExiBitstream,
@@ -7408,15 +7408,15 @@ pub fn decode_iso2_SAScheduleListType(
                                 {
                                     decode_iso2_SAScheduleTupleType(stream, tuple)?;
                                 } else {
-                                    return Err(-110);
+                                    return Err(ARRAY_OUT_OF_BOUNDS);
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                             grammar_id = 152 as i32;
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -7438,10 +7438,10 @@ pub fn decode_iso2_SAScheduleListType(
                                 {
                                     decode_iso2_SAScheduleTupleType(stream, tuple)?;
                                 } else {
-                                    return Err(-110);
+                                    return Err(ARRAY_OUT_OF_BOUNDS);
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                             if ((*SAScheduleListType).SAScheduleTuple.arrayLen as i32) < 3 as i32 {
                                 grammar_id = 152 as i32;
@@ -7450,10 +7450,10 @@ pub fn decode_iso2_SAScheduleListType(
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -7463,16 +7463,16 @@ pub fn decode_iso2_SAScheduleListType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -7495,7 +7495,7 @@ pub fn decode_iso2_ChargeServiceType(
                             grammar_id = 154 as i32;
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -7528,11 +7528,11 @@ pub fn decode_iso2_ChargeServiceType(
                                                 33,
                                             )?;
                                         } else {
-                                            return Err(-200);
+                                            return Err(STRINGVALUES_NOT_SUPPORTED);
                                         }
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -7545,7 +7545,7 @@ pub fn decode_iso2_ChargeServiceType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 155 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
@@ -7569,7 +7569,7 @@ pub fn decode_iso2_ChargeServiceType(
                                             value as Iso2ServiceCategoryType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -7582,13 +7582,13 @@ pub fn decode_iso2_ChargeServiceType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 156 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -7616,7 +7616,7 @@ pub fn decode_iso2_ChargeServiceType(
                                             value_0 as Iso2ServiceCategoryType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -7629,13 +7629,13 @@ pub fn decode_iso2_ChargeServiceType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 156 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -7667,11 +7667,11 @@ pub fn decode_iso2_ChargeServiceType(
                                                 65,
                                             )?;
                                         } else {
-                                            return Err(-200);
+                                            return Err(STRINGVALUES_NOT_SUPPORTED);
                                         }
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -7684,7 +7684,7 @@ pub fn decode_iso2_ChargeServiceType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 157 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
@@ -7707,7 +7707,7 @@ pub fn decode_iso2_ChargeServiceType(
                                         (*ChargeServiceType).FreeService = value_1 as i32;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -7720,13 +7720,13 @@ pub fn decode_iso2_ChargeServiceType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 158 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -7753,7 +7753,7 @@ pub fn decode_iso2_ChargeServiceType(
                                         (*ChargeServiceType).FreeService = value_2 as i32;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -7766,13 +7766,13 @@ pub fn decode_iso2_ChargeServiceType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 158 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -7791,7 +7791,7 @@ pub fn decode_iso2_ChargeServiceType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -7801,16 +7801,16 @@ pub fn decode_iso2_ChargeServiceType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -7822,9 +7822,9 @@ pub fn decode_iso2_EVPowerDeliveryParameterType(
     let mut eventCode: u32 = 0;
     exi_basetypes_decoder_nbit_uint(stream, 1, &mut eventCode)?;
     if eventCode != 0 as i32 as u32 {
-        return Err(-150);
+        return Err(UNKNOWN_EVENT_CODE);
     }
-    return Ok(0);
+    return Ok(NO_ERROR);
 }
 pub fn decode_iso2_DC_EVPowerDeliveryParameterType(
     stream: &mut ExiBitstream,
@@ -7850,7 +7850,7 @@ pub fn decode_iso2_DC_EVPowerDeliveryParameterType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -7879,7 +7879,7 @@ pub fn decode_iso2_DC_EVPowerDeliveryParameterType(
                                         );
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -7892,7 +7892,7 @@ pub fn decode_iso2_DC_EVPowerDeliveryParameterType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 161 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
@@ -7916,7 +7916,7 @@ pub fn decode_iso2_DC_EVPowerDeliveryParameterType(
                                             value_0 as i32;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -7929,13 +7929,13 @@ pub fn decode_iso2_DC_EVPowerDeliveryParameterType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 3 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -7963,7 +7963,7 @@ pub fn decode_iso2_DC_EVPowerDeliveryParameterType(
                                             value_1 as i32;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -7976,13 +7976,13 @@ pub fn decode_iso2_DC_EVPowerDeliveryParameterType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 3 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -7992,16 +7992,16 @@ pub fn decode_iso2_DC_EVPowerDeliveryParameterType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -8037,13 +8037,13 @@ pub fn decode_iso2_ContractSignatureEncryptedPrivateKeyType(
                                         65,
                                     )?;
                                 } else {
-                                    return Err(-200);
+                                    return Err(STRINGVALUES_NOT_SUPPORTED);
                                 }
                             }
                             grammar_id = 163 as i32;
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -8069,7 +8069,7 @@ pub fn decode_iso2_ContractSignatureEncryptedPrivateKeyType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -8079,16 +8079,16 @@ pub fn decode_iso2_ContractSignatureEncryptedPrivateKeyType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -8100,9 +8100,9 @@ pub fn decode_iso2_EVSEChargeParameterType(
     let mut eventCode: u32 = 0;
     exi_basetypes_decoder_nbit_uint(stream, 1, &mut eventCode)?;
     if eventCode != 0 as i32 as u32 {
-        return Err(-150);
+        return Err(UNKNOWN_EVENT_CODE);
     }
-    return Ok(0);
+    return Ok(NO_ERROR);
 }
 pub fn decode_iso2_DC_EVSEChargeParameterType(
     stream: &mut ExiBitstream,
@@ -8127,7 +8127,7 @@ pub fn decode_iso2_DC_EVSEChargeParameterType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -8146,7 +8146,7 @@ pub fn decode_iso2_DC_EVSEChargeParameterType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -8165,7 +8165,7 @@ pub fn decode_iso2_DC_EVSEChargeParameterType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -8184,7 +8184,7 @@ pub fn decode_iso2_DC_EVSEChargeParameterType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -8203,7 +8203,7 @@ pub fn decode_iso2_DC_EVSEChargeParameterType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -8222,7 +8222,7 @@ pub fn decode_iso2_DC_EVSEChargeParameterType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -8250,7 +8250,7 @@ pub fn decode_iso2_DC_EVSEChargeParameterType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -8269,7 +8269,7 @@ pub fn decode_iso2_DC_EVSEChargeParameterType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -8288,10 +8288,10 @@ pub fn decode_iso2_DC_EVSEChargeParameterType(
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -8301,16 +8301,16 @@ pub fn decode_iso2_DC_EVSEChargeParameterType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -8342,15 +8342,15 @@ pub fn decode_iso2_ServiceListType(
                                 {
                                     decode_iso2_ServiceType(stream, service)?;
                                 } else {
-                                    return Err(-110);
+                                    return Err(ARRAY_OUT_OF_BOUNDS);
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                             grammar_id = 174 as i32;
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -8372,10 +8372,10 @@ pub fn decode_iso2_ServiceListType(
                                 {
                                     decode_iso2_ServiceType(stream, service)?;
                                 } else {
-                                    return Err(-110);
+                                    return Err(ARRAY_OUT_OF_BOUNDS);
                                 }
                             } else {
-                                return Err(-110);
+                                return Err(ARRAY_OUT_OF_BOUNDS);
                             }
                             if ((*ServiceListType).Service.arrayLen as i32) < 8 as i32 {
                                 grammar_id = 174 as i32;
@@ -8384,10 +8384,10 @@ pub fn decode_iso2_ServiceListType(
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -8397,16 +8397,16 @@ pub fn decode_iso2_ServiceListType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -8440,13 +8440,13 @@ pub fn decode_iso2_DiffieHellmanPublickeyType(
                                         65,
                                     )?;
                                 } else {
-                                    return Err(-200);
+                                    return Err(STRINGVALUES_NOT_SUPPORTED);
                                 }
                             }
                             grammar_id = 176 as i32;
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -8469,7 +8469,7 @@ pub fn decode_iso2_DiffieHellmanPublickeyType(
 
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -8479,16 +8479,16 @@ pub fn decode_iso2_DiffieHellmanPublickeyType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -8522,13 +8522,13 @@ pub fn decode_iso2_EMAIDType(
                                         65,
                                     )?;
                                 } else {
-                                    return Err(-200);
+                                    return Err(STRINGVALUES_NOT_SUPPORTED);
                                 }
                             }
                             grammar_id = 178 as i32;
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -8552,13 +8552,13 @@ pub fn decode_iso2_EMAIDType(
                                         65,
                                     )?;
                                 } else {
-                                    return Err(-200);
+                                    return Err(STRINGVALUES_NOT_SUPPORTED);
                                 }
                             }
                             grammar_id = 3 as i32;
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -8568,16 +8568,16 @@ pub fn decode_iso2_EMAIDType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -8606,7 +8606,7 @@ pub fn decode_iso2_AC_EVSEStatusType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -8634,7 +8634,7 @@ pub fn decode_iso2_AC_EVSEStatusType(
                                             value as Iso2EvseNotificationType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -8647,13 +8647,13 @@ pub fn decode_iso2_AC_EVSEStatusType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 181 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -8680,7 +8680,7 @@ pub fn decode_iso2_AC_EVSEStatusType(
                                         (*AC_EVSEStatusType).RCD = value_0 as i32;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -8693,13 +8693,13 @@ pub fn decode_iso2_AC_EVSEStatusType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 3 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -8709,16 +8709,16 @@ pub fn decode_iso2_AC_EVSEStatusType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -8747,7 +8747,7 @@ pub fn decode_iso2_EVSEStatusType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -8775,7 +8775,7 @@ pub fn decode_iso2_EVSEStatusType(
                                             value as Iso2EvseNotificationType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -8788,13 +8788,13 @@ pub fn decode_iso2_EVSEStatusType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 184 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -8813,7 +8813,7 @@ pub fn decode_iso2_EVSEStatusType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -8832,7 +8832,7 @@ pub fn decode_iso2_EVSEStatusType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -8842,16 +8842,16 @@ pub fn decode_iso2_EVSEStatusType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -8880,7 +8880,7 @@ pub fn decode_iso2_AC_EVSEChargeParameterType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -8899,7 +8899,7 @@ pub fn decode_iso2_AC_EVSEChargeParameterType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -8918,7 +8918,7 @@ pub fn decode_iso2_AC_EVSEChargeParameterType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -8928,16 +8928,16 @@ pub fn decode_iso2_AC_EVSEChargeParameterType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -8978,11 +8978,11 @@ pub fn decode_iso2_MeterInfoType(
                                                 33,
                                             )?;
                                         } else {
-                                            return Err(-200);
+                                            return Err(STRINGVALUES_NOT_SUPPORTED);
                                         }
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -8995,13 +8995,13 @@ pub fn decode_iso2_MeterInfoType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 190 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -9041,10 +9041,10 @@ pub fn decode_iso2_MeterInfoType(
                             }
                         }
                         4 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -9080,10 +9080,10 @@ pub fn decode_iso2_MeterInfoType(
                             }
                         }
                         3 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -9108,10 +9108,10 @@ pub fn decode_iso2_MeterInfoType(
                             }
                         }
                         2 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -9127,10 +9127,10 @@ pub fn decode_iso2_MeterInfoType(
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -9140,16 +9140,16 @@ pub fn decode_iso2_MeterInfoType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -9180,7 +9180,7 @@ pub fn decode_iso2_MessageHeaderType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -9208,10 +9208,10 @@ pub fn decode_iso2_MessageHeaderType(
                             }
                         }
                         2 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -9230,10 +9230,10 @@ pub fn decode_iso2_MessageHeaderType(
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -9243,16 +9243,16 @@ pub fn decode_iso2_MessageHeaderType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -9290,7 +9290,7 @@ pub fn decode_iso2_PowerDeliveryReqType(
                                             value as Iso2ChargeProgressType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -9303,13 +9303,13 @@ pub fn decode_iso2_PowerDeliveryReqType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 198 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -9337,7 +9337,7 @@ pub fn decode_iso2_PowerDeliveryReqType(
                                             value_0.wrapping_add(1) as u8;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -9350,13 +9350,13 @@ pub fn decode_iso2_PowerDeliveryReqType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 199 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -9393,10 +9393,10 @@ pub fn decode_iso2_PowerDeliveryReqType(
                             }
                         }
                         3 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -9424,10 +9424,10 @@ pub fn decode_iso2_PowerDeliveryReqType(
                             }
                         }
                         2 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -9437,16 +9437,16 @@ pub fn decode_iso2_PowerDeliveryReqType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -9484,7 +9484,7 @@ pub fn decode_iso2_CurrentDemandResType(
                                             value as Iso2ResponseCodeType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -9497,13 +9497,13 @@ pub fn decode_iso2_CurrentDemandResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 202 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -9522,7 +9522,7 @@ pub fn decode_iso2_CurrentDemandResType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -9541,7 +9541,7 @@ pub fn decode_iso2_CurrentDemandResType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -9560,7 +9560,7 @@ pub fn decode_iso2_CurrentDemandResType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -9588,7 +9588,7 @@ pub fn decode_iso2_CurrentDemandResType(
                                             value_0 as i32;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -9601,13 +9601,13 @@ pub fn decode_iso2_CurrentDemandResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 206 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -9635,7 +9635,7 @@ pub fn decode_iso2_CurrentDemandResType(
                                             value_1 as i32;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -9648,13 +9648,13 @@ pub fn decode_iso2_CurrentDemandResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 207 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -9682,7 +9682,7 @@ pub fn decode_iso2_CurrentDemandResType(
                                             value_2 as i32;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -9695,13 +9695,13 @@ pub fn decode_iso2_CurrentDemandResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 208 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -9762,11 +9762,11 @@ pub fn decode_iso2_CurrentDemandResType(
                                                 38,
                                             )?;
                                         } else {
-                                            return Err(-200);
+                                            return Err(STRINGVALUES_NOT_SUPPORTED);
                                         }
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -9779,13 +9779,13 @@ pub fn decode_iso2_CurrentDemandResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 212 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -9837,11 +9837,11 @@ pub fn decode_iso2_CurrentDemandResType(
                                                 38,
                                             )?;
                                         } else {
-                                            return Err(-200);
+                                            return Err(STRINGVALUES_NOT_SUPPORTED);
                                         }
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -9854,13 +9854,13 @@ pub fn decode_iso2_CurrentDemandResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 212 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -9903,11 +9903,11 @@ pub fn decode_iso2_CurrentDemandResType(
                                                 38,
                                             )?;
                                         } else {
-                                            return Err(-200);
+                                            return Err(STRINGVALUES_NOT_SUPPORTED);
                                         }
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -9920,13 +9920,13 @@ pub fn decode_iso2_CurrentDemandResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 212 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -9959,11 +9959,11 @@ pub fn decode_iso2_CurrentDemandResType(
                                                 38,
                                             )?;
                                         } else {
-                                            return Err(-200);
+                                            return Err(STRINGVALUES_NOT_SUPPORTED);
                                         }
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -9976,13 +9976,13 @@ pub fn decode_iso2_CurrentDemandResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 212 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -10010,7 +10010,7 @@ pub fn decode_iso2_CurrentDemandResType(
                                             value_3.wrapping_add(1 as i32 as u32) as u8;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -10023,13 +10023,13 @@ pub fn decode_iso2_CurrentDemandResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 213 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -10065,7 +10065,7 @@ pub fn decode_iso2_CurrentDemandResType(
                                         (*CurrentDemandResType).ReceiptRequired = Some(value_4 as i32);
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -10078,16 +10078,16 @@ pub fn decode_iso2_CurrentDemandResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 3 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         2 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -10114,7 +10114,7 @@ pub fn decode_iso2_CurrentDemandResType(
                                         (*CurrentDemandResType).ReceiptRequired = Some(value_5 as i32);
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -10127,16 +10127,16 @@ pub fn decode_iso2_CurrentDemandResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 3 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -10146,16 +10146,16 @@ pub fn decode_iso2_CurrentDemandResType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -10193,7 +10193,7 @@ pub fn decode_iso2_ChargingStatusResType(
                                             value as Iso2ResponseCodeType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -10206,13 +10206,13 @@ pub fn decode_iso2_ChargingStatusResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 216 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -10245,11 +10245,11 @@ pub fn decode_iso2_ChargingStatusResType(
                                                 38,
                                             )?;
                                         } else {
-                                            return Err(-200);
+                                            return Err(STRINGVALUES_NOT_SUPPORTED);
                                         }
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -10262,13 +10262,13 @@ pub fn decode_iso2_ChargingStatusResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 217 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -10296,7 +10296,7 @@ pub fn decode_iso2_ChargingStatusResType(
                                             value_0.wrapping_add(1 as i32 as u32) as u8;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -10309,13 +10309,13 @@ pub fn decode_iso2_ChargingStatusResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 218 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -10360,7 +10360,7 @@ pub fn decode_iso2_ChargingStatusResType(
                                         (*ChargingStatusResType).ReceiptRequired = Some(value_1 as i32);
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -10373,7 +10373,7 @@ pub fn decode_iso2_ChargingStatusResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 221 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
@@ -10388,7 +10388,7 @@ pub fn decode_iso2_ChargingStatusResType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -10424,7 +10424,7 @@ pub fn decode_iso2_ChargingStatusResType(
                                         (*ChargingStatusResType).ReceiptRequired = Some(value_2 as i32);
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -10437,7 +10437,7 @@ pub fn decode_iso2_ChargingStatusResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 221 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
@@ -10452,7 +10452,7 @@ pub fn decode_iso2_ChargingStatusResType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -10479,7 +10479,7 @@ pub fn decode_iso2_ChargingStatusResType(
                                         (*ChargingStatusResType).ReceiptRequired = Some(value_3 as i32);
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -10492,7 +10492,7 @@ pub fn decode_iso2_ChargingStatusResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 221 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
@@ -10507,7 +10507,7 @@ pub fn decode_iso2_ChargingStatusResType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -10526,7 +10526,7 @@ pub fn decode_iso2_ChargingStatusResType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -10536,16 +10536,16 @@ pub fn decode_iso2_ChargingStatusResType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -10579,7 +10579,7 @@ pub fn decode_iso2_AuthorizationReqType(
                                     65,
                                     )?;
                                 } else {
-                                    return Err(-200);
+                                    return Err(STRINGVALUES_NOT_SUPPORTED);
                                 }
                             }
                             grammar_id = 223 as i32;
@@ -10596,10 +10596,10 @@ pub fn decode_iso2_AuthorizationReqType(
                             }
                         }
                         2 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -10620,10 +10620,10 @@ pub fn decode_iso2_AuthorizationReqType(
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -10633,16 +10633,16 @@ pub fn decode_iso2_AuthorizationReqType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -10671,7 +10671,7 @@ pub fn decode_iso2_PreChargeReqType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -10690,7 +10690,7 @@ pub fn decode_iso2_PreChargeReqType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -10709,7 +10709,7 @@ pub fn decode_iso2_PreChargeReqType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -10719,16 +10719,16 @@ pub fn decode_iso2_PreChargeReqType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -10766,7 +10766,7 @@ pub fn decode_iso2_ServiceDetailResType(
                                             value as Iso2ResponseCodeType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -10779,13 +10779,13 @@ pub fn decode_iso2_ServiceDetailResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 228 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -10804,7 +10804,7 @@ pub fn decode_iso2_ServiceDetailResType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -10823,10 +10823,10 @@ pub fn decode_iso2_ServiceDetailResType(
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -10836,16 +10836,16 @@ pub fn decode_iso2_ServiceDetailResType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -10883,7 +10883,7 @@ pub fn decode_iso2_PaymentServiceSelectionResType(
                                             value as Iso2ResponseCodeType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -10896,13 +10896,13 @@ pub fn decode_iso2_PaymentServiceSelectionResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 3 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -10912,16 +10912,16 @@ pub fn decode_iso2_PaymentServiceSelectionResType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -10955,13 +10955,13 @@ pub fn decode_iso2_CertificateUpdateReqType(
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
-                                    return Err(-200);
+                                    return Err(STRINGVALUES_NOT_SUPPORTED);
                                 }
                             }
                             grammar_id = 232 as i32;
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -10980,7 +10980,7 @@ pub fn decode_iso2_CertificateUpdateReqType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -11013,11 +11013,11 @@ pub fn decode_iso2_CertificateUpdateReqType(
                                                 (15 as i32 + 1 as i32) as usize,
                                             )?;
                                         } else {
-                                            return Err(-200);
+                                            return Err(STRINGVALUES_NOT_SUPPORTED);
                                         }
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -11030,13 +11030,13 @@ pub fn decode_iso2_CertificateUpdateReqType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 234 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -11055,7 +11055,7 @@ pub fn decode_iso2_CertificateUpdateReqType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -11065,16 +11065,16 @@ pub fn decode_iso2_CertificateUpdateReqType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -11112,7 +11112,7 @@ pub fn decode_iso2_SessionSetupResType(
                                             value as Iso2ResponseCodeType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -11125,13 +11125,13 @@ pub fn decode_iso2_SessionSetupResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 236 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -11164,11 +11164,11 @@ pub fn decode_iso2_SessionSetupResType(
                                                 38,
                                             )?;
                                         } else {
-                                            return Err(-200);
+                                            return Err(STRINGVALUES_NOT_SUPPORTED);
                                         }
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -11181,13 +11181,13 @@ pub fn decode_iso2_SessionSetupResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 237 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -11206,10 +11206,10 @@ pub fn decode_iso2_SessionSetupResType(
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -11219,16 +11219,16 @@ pub fn decode_iso2_SessionSetupResType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -11264,13 +11264,13 @@ pub fn decode_iso2_CertificateInstallationReqType(
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
-                                    return Err(-200);
+                                    return Err(STRINGVALUES_NOT_SUPPORTED);
                                 }
                             }
                             grammar_id = 239 as i32;
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -11293,7 +11293,7 @@ pub fn decode_iso2_CertificateInstallationReqType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -11312,7 +11312,7 @@ pub fn decode_iso2_CertificateInstallationReqType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -11322,16 +11322,16 @@ pub fn decode_iso2_CertificateInstallationReqType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -11369,7 +11369,7 @@ pub fn decode_iso2_CertificateInstallationResType(
                                             value as Iso2ResponseCodeType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -11382,13 +11382,13 @@ pub fn decode_iso2_CertificateInstallationResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 242 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -11408,7 +11408,7 @@ pub fn decode_iso2_CertificateInstallationResType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -11427,7 +11427,7 @@ pub fn decode_iso2_CertificateInstallationResType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -11447,7 +11447,7 @@ pub fn decode_iso2_CertificateInstallationResType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -11466,7 +11466,7 @@ pub fn decode_iso2_CertificateInstallationResType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -11485,7 +11485,7 @@ pub fn decode_iso2_CertificateInstallationResType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -11495,16 +11495,16 @@ pub fn decode_iso2_CertificateInstallationResType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -11542,7 +11542,7 @@ pub fn decode_iso2_WeldingDetectionResType(
                                             value as Iso2ResponseCodeType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -11555,13 +11555,13 @@ pub fn decode_iso2_WeldingDetectionResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 248 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -11580,7 +11580,7 @@ pub fn decode_iso2_WeldingDetectionResType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -11599,7 +11599,7 @@ pub fn decode_iso2_WeldingDetectionResType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -11609,16 +11609,16 @@ pub fn decode_iso2_WeldingDetectionResType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -11647,7 +11647,7 @@ pub fn decode_iso2_CurrentDemandReqType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -11666,7 +11666,7 @@ pub fn decode_iso2_CurrentDemandReqType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -11720,7 +11720,7 @@ pub fn decode_iso2_CurrentDemandReqType(
                                         (*CurrentDemandReqType).BulkChargingComplete = Some(value as i32);
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -11733,7 +11733,7 @@ pub fn decode_iso2_CurrentDemandReqType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 256 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
@@ -11756,7 +11756,7 @@ pub fn decode_iso2_CurrentDemandReqType(
                                         (*CurrentDemandReqType).ChargingComplete = value_0 as i32;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -11769,13 +11769,13 @@ pub fn decode_iso2_CurrentDemandReqType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 257 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -11821,7 +11821,7 @@ pub fn decode_iso2_CurrentDemandReqType(
                                             Some(value_1 as i32);
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -11834,7 +11834,7 @@ pub fn decode_iso2_CurrentDemandReqType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 256 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
@@ -11857,7 +11857,7 @@ pub fn decode_iso2_CurrentDemandReqType(
                                         (*CurrentDemandReqType).ChargingComplete = value_2 as i32;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -11870,13 +11870,13 @@ pub fn decode_iso2_CurrentDemandReqType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 257 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -11913,7 +11913,7 @@ pub fn decode_iso2_CurrentDemandReqType(
                                             Some(value_3 as i32);
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -11926,7 +11926,7 @@ pub fn decode_iso2_CurrentDemandReqType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 256 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
@@ -11949,7 +11949,7 @@ pub fn decode_iso2_CurrentDemandReqType(
                                         (*CurrentDemandReqType).ChargingComplete = value_4 as i32;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -11962,13 +11962,13 @@ pub fn decode_iso2_CurrentDemandReqType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 257 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -11995,7 +11995,7 @@ pub fn decode_iso2_CurrentDemandReqType(
                                         (*CurrentDemandReqType).BulkChargingComplete = Some(value_5 as i32);
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -12008,7 +12008,7 @@ pub fn decode_iso2_CurrentDemandReqType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 256 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
@@ -12031,7 +12031,7 @@ pub fn decode_iso2_CurrentDemandReqType(
                                         (*CurrentDemandReqType).ChargingComplete = value_6 as i32;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -12044,13 +12044,13 @@ pub fn decode_iso2_CurrentDemandReqType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 257 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -12077,7 +12077,7 @@ pub fn decode_iso2_CurrentDemandReqType(
                                         (*CurrentDemandReqType).ChargingComplete = value_7 as i32;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -12090,13 +12090,13 @@ pub fn decode_iso2_CurrentDemandReqType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 257 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -12133,7 +12133,7 @@ pub fn decode_iso2_CurrentDemandReqType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -12161,7 +12161,7 @@ pub fn decode_iso2_CurrentDemandReqType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -12180,7 +12180,7 @@ pub fn decode_iso2_CurrentDemandReqType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -12190,16 +12190,16 @@ pub fn decode_iso2_CurrentDemandReqType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -12237,7 +12237,7 @@ pub fn decode_iso2_PreChargeResType(
                                             value as Iso2ResponseCodeType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -12250,13 +12250,13 @@ pub fn decode_iso2_PreChargeResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 261 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -12275,7 +12275,7 @@ pub fn decode_iso2_PreChargeResType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -12294,7 +12294,7 @@ pub fn decode_iso2_PreChargeResType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -12304,16 +12304,16 @@ pub fn decode_iso2_PreChargeResType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -12351,7 +12351,7 @@ pub fn decode_iso2_CertificateUpdateResType(
                                             value as Iso2ResponseCodeType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -12364,13 +12364,13 @@ pub fn decode_iso2_CertificateUpdateResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 264 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -12389,7 +12389,7 @@ pub fn decode_iso2_CertificateUpdateResType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -12408,7 +12408,7 @@ pub fn decode_iso2_CertificateUpdateResType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -12428,7 +12428,7 @@ pub fn decode_iso2_CertificateUpdateResType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -12447,7 +12447,7 @@ pub fn decode_iso2_CertificateUpdateResType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -12466,7 +12466,7 @@ pub fn decode_iso2_CertificateUpdateResType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -12485,10 +12485,10 @@ pub fn decode_iso2_CertificateUpdateResType(
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -12498,16 +12498,16 @@ pub fn decode_iso2_CertificateUpdateResType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -12541,7 +12541,7 @@ pub fn decode_iso2_MeteringReceiptReqType(
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
-                                    return Err(-200);
+                                    return Err(STRINGVALUES_NOT_SUPPORTED);
                                 }
                             }
                             grammar_id = 271 as i32;
@@ -12558,7 +12558,7 @@ pub fn decode_iso2_MeteringReceiptReqType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -12579,7 +12579,7 @@ pub fn decode_iso2_MeteringReceiptReqType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -12607,7 +12607,7 @@ pub fn decode_iso2_MeteringReceiptReqType(
                                             value.wrapping_add(1 as i32 as u32) as u8);
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -12620,7 +12620,7 @@ pub fn decode_iso2_MeteringReceiptReqType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 273 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
@@ -12635,7 +12635,7 @@ pub fn decode_iso2_MeteringReceiptReqType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -12654,7 +12654,7 @@ pub fn decode_iso2_MeteringReceiptReqType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -12664,16 +12664,16 @@ pub fn decode_iso2_MeteringReceiptReqType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -12685,10 +12685,10 @@ pub fn decode_iso2_ChargingStatusReqType(
     let mut eventCode: u32 = 0;
     exi_basetypes_decoder_nbit_uint(stream, 1, &mut eventCode)?;
     if eventCode != 0 {
-        return Err(-150);
+        return Err(UNKNOWN_EVENT_CODE);
     }
 
-    return Ok(0);
+    return Ok(NO_ERROR);
 }
 pub fn decode_iso2_SessionStopResType(
     stream: &mut ExiBitstream,
@@ -12723,7 +12723,7 @@ pub fn decode_iso2_SessionStopResType(
                                             value as Iso2ResponseCodeType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -12736,13 +12736,13 @@ pub fn decode_iso2_SessionStopResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 3 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -12752,16 +12752,16 @@ pub fn decode_iso2_SessionStopResType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -12809,7 +12809,7 @@ pub fn decode_iso2_ChargeParameterDiscoveryReqType(
                                             value as Iso2EnergyTransferModeType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -12822,13 +12822,13 @@ pub fn decode_iso2_ChargeParameterDiscoveryReqType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 277 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -12857,7 +12857,7 @@ pub fn decode_iso2_ChargeParameterDiscoveryReqType(
                                             value_0 as Iso2EnergyTransferModeType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -12870,13 +12870,13 @@ pub fn decode_iso2_ChargeParameterDiscoveryReqType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 277 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -12913,7 +12913,7 @@ pub fn decode_iso2_ChargeParameterDiscoveryReqType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -12923,16 +12923,16 @@ pub fn decode_iso2_ChargeParameterDiscoveryReqType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -12961,7 +12961,7 @@ pub fn decode_iso2_CableCheckReqType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -12971,16 +12971,16 @@ pub fn decode_iso2_CableCheckReqType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -13008,7 +13008,7 @@ pub fn decode_iso2_WeldingDetectionReqType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -13018,16 +13018,16 @@ pub fn decode_iso2_WeldingDetectionReqType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -13065,7 +13065,7 @@ pub fn decode_iso2_PowerDeliveryResType(
                                             value as Iso2ResponseCodeType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -13078,13 +13078,13 @@ pub fn decode_iso2_PowerDeliveryResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 281 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -13121,7 +13121,7 @@ pub fn decode_iso2_PowerDeliveryResType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -13131,16 +13131,16 @@ pub fn decode_iso2_PowerDeliveryResType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -13178,7 +13178,7 @@ pub fn decode_iso2_ChargeParameterDiscoveryResType(
                                             value as Iso2ResponseCodeType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -13191,13 +13191,13 @@ pub fn decode_iso2_ChargeParameterDiscoveryResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 283 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -13225,7 +13225,7 @@ pub fn decode_iso2_ChargeParameterDiscoveryResType(
                                             value_0 as Iso2EvseProcessingType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -13238,13 +13238,13 @@ pub fn decode_iso2_ChargeParameterDiscoveryResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 284 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -13299,7 +13299,7 @@ pub fn decode_iso2_ChargeParameterDiscoveryResType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -13336,7 +13336,7 @@ pub fn decode_iso2_ChargeParameterDiscoveryResType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -13346,16 +13346,16 @@ pub fn decode_iso2_ChargeParameterDiscoveryResType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -13393,7 +13393,7 @@ pub fn decode_iso2_PaymentServiceSelectionReqType(
                                             value as Iso2PaymentOptionType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -13406,13 +13406,13 @@ pub fn decode_iso2_PaymentServiceSelectionReqType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 287 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -13431,7 +13431,7 @@ pub fn decode_iso2_PaymentServiceSelectionReqType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -13441,16 +13441,16 @@ pub fn decode_iso2_PaymentServiceSelectionReqType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -13488,7 +13488,7 @@ pub fn decode_iso2_MeteringReceiptResType(
                                             value as Iso2ResponseCodeType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -13501,13 +13501,13 @@ pub fn decode_iso2_MeteringReceiptResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 289 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -13544,7 +13544,7 @@ pub fn decode_iso2_MeteringReceiptResType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -13554,16 +13554,16 @@ pub fn decode_iso2_MeteringReceiptResType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -13601,7 +13601,7 @@ pub fn decode_iso2_CableCheckResType(
                                             value as Iso2ResponseCodeType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -13614,13 +13614,13 @@ pub fn decode_iso2_CableCheckResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 291 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -13639,7 +13639,7 @@ pub fn decode_iso2_CableCheckResType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -13667,7 +13667,7 @@ pub fn decode_iso2_CableCheckResType(
                                             value_0 as Iso2EvseProcessingType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -13680,13 +13680,13 @@ pub fn decode_iso2_CableCheckResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 3 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -13696,16 +13696,16 @@ pub fn decode_iso2_CableCheckResType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -13743,7 +13743,7 @@ pub fn decode_iso2_ServiceDiscoveryResType(
                                             value as Iso2ResponseCodeType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -13756,13 +13756,13 @@ pub fn decode_iso2_ServiceDiscoveryResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 294 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -13781,7 +13781,7 @@ pub fn decode_iso2_ServiceDiscoveryResType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -13800,7 +13800,7 @@ pub fn decode_iso2_ServiceDiscoveryResType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -13819,10 +13819,10 @@ pub fn decode_iso2_ServiceDiscoveryResType(
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -13832,16 +13832,16 @@ pub fn decode_iso2_ServiceDiscoveryResType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -13870,7 +13870,7 @@ pub fn decode_iso2_ServiceDetailReqType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -13880,16 +13880,16 @@ pub fn decode_iso2_ServiceDetailReqType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -13920,7 +13920,7 @@ pub fn decode_iso2_SessionSetupReqType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -13930,16 +13930,16 @@ pub fn decode_iso2_SessionSetupReqType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -13977,7 +13977,7 @@ pub fn decode_iso2_SessionStopReqType(
                                             value as Iso2ChargingSessionType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -13990,13 +13990,13 @@ pub fn decode_iso2_SessionStopReqType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 3 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -14006,16 +14006,16 @@ pub fn decode_iso2_SessionStopReqType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -14066,11 +14066,11 @@ pub fn decode_iso2_ServiceDiscoveryReqType(
                                                 (64 as i32 + 1 as i32) as usize,
                                             )?;
                                         } else {
-                                            return Err(-200);
+                                            return Err(STRINGVALUES_NOT_SUPPORTED);
                                         }
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -14083,7 +14083,7 @@ pub fn decode_iso2_ServiceDiscoveryReqType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 301 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
@@ -14107,7 +14107,7 @@ pub fn decode_iso2_ServiceDiscoveryReqType(
                                             value as Iso2ServiceCategoryType);
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -14120,16 +14120,16 @@ pub fn decode_iso2_ServiceDiscoveryReqType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 3 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         2 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -14157,7 +14157,7 @@ pub fn decode_iso2_ServiceDiscoveryReqType(
                                             value_0 as Iso2ServiceCategoryType);
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -14170,16 +14170,16 @@ pub fn decode_iso2_ServiceDiscoveryReqType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 3 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         1 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -14189,16 +14189,16 @@ pub fn decode_iso2_ServiceDiscoveryReqType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -14236,7 +14236,7 @@ pub fn decode_iso2_AuthorizationResType(
                                             value as Iso2ResponseCodeType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -14249,13 +14249,13 @@ pub fn decode_iso2_AuthorizationResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 303 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -14283,7 +14283,7 @@ pub fn decode_iso2_AuthorizationResType(
                                             value_0 as Iso2EvseProcessingType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -14296,13 +14296,13 @@ pub fn decode_iso2_AuthorizationResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 3 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -14312,16 +14312,16 @@ pub fn decode_iso2_AuthorizationResType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -14368,11 +14368,11 @@ pub fn decode_iso2_PaymentDetailsReqType(
                                                 (15 as i32 + 1 as i32) as usize,
                                             )?;
                                         } else {
-                                            return Err(-200);
+                                            return Err(STRINGVALUES_NOT_SUPPORTED);
                                         }
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -14385,13 +14385,13 @@ pub fn decode_iso2_PaymentDetailsReqType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 305 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -14410,7 +14410,7 @@ pub fn decode_iso2_PaymentDetailsReqType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -14420,16 +14420,16 @@ pub fn decode_iso2_PaymentDetailsReqType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -14466,7 +14466,7 @@ pub fn decode_iso2_PaymentDetailsResType(
                                             value as Iso2ResponseCodeType;
                                     }
                                 } else {
-                                    return Err(-151);
+                                    return Err(UNSUPPORTED_SUB_EVENT);
                                 }
                             }
                             if error == 0 as i32 {
@@ -14479,13 +14479,13 @@ pub fn decode_iso2_PaymentDetailsResType(
                                     if eventCode == 0 as i32 as u32 {
                                         grammar_id = 307 as i32;
                                     } else {
-                                        return Err(-170);
+                                        return Err(DEVIANTS_NOT_SUPPORTED);
                                     }
                                 }
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -14506,7 +14506,7 @@ pub fn decode_iso2_PaymentDetailsResType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -14525,7 +14525,7 @@ pub fn decode_iso2_PaymentDetailsResType(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -14535,16 +14535,16 @@ pub fn decode_iso2_PaymentDetailsResType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -14734,14 +14734,14 @@ pub fn decode_iso2_BodyType(
             BodyType.BodyTypeComponent = Iso2BodyTypeEnum::WeldingDetectionRes(welding_detection_res);
         }
         _ => {
-            return Err(-150);
+            return Err(UNKNOWN_EVENT_CODE);
         }
     }
     let mut eventCode2: u32 = 0;
     exi_basetypes_decoder_nbit_uint(stream, 1, &mut eventCode2)?;
     match eventCode2 {
-        0 => Ok(0),
-        _ => Err(-150),
+        0 => Ok(NO_ERROR),
+        _ => Err(UNKNOWN_EVENT_CODE),
     }
 }
 pub fn decode_iso2_V2G_Message(
@@ -14764,7 +14764,7 @@ pub fn decode_iso2_V2G_Message(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -14780,7 +14780,7 @@ pub fn decode_iso2_V2G_Message(
                             }
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
@@ -14790,16 +14790,16 @@ pub fn decode_iso2_V2G_Message(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            return Ok(0);
+                            return Ok(NO_ERROR);
                         }
                         _ => {
-                            return Err(-150);
+                            return Err(UNKNOWN_EVENT_CODE);
                         }
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -14815,10 +14815,10 @@ pub fn decode_iso2_exiDocument(
     match eventCode {
         0 | 76 => {
             decode_iso2_V2G_Message(stream, &mut (*exiDoc).V2G_Message)?;
-            return Ok(0);
+            return Ok(NO_ERROR);
         }
         _ => {
-            return Err(-151);
+            return Err(UNSUPPORTED_SUB_EVENT);
         }
     }
 }
@@ -14830,7 +14830,7 @@ pub fn decode_iso2_exiFragment(
     let mut eventCode: u32 = 0;
     exi_header_read_and_check(stream)?;
     exi_basetypes_decoder_nbit_uint(stream, 8 as i32 as usize, &mut eventCode)?;
-    return Err(-299);
+    return Err(NOT_IMPLEMENTED_YET);
     // match eventCode {
     //     0 => {}
     //     1 => {}
@@ -15135,14 +15135,14 @@ pub fn decode_iso2_exiFragment(
     //     241 => {}
     //     242 => {}
     //     _ => {
-    //         return Err(-151);
+    //         return Err(UNSUPPORTED_SUB_EVENT);
     //     }
     // }
     // if error == 0 as i32 {
     //     exi_basetypes_decoder_nbit_uint(stream, 8 as i32 as usize, &mut eventCode)?;
     //     if error == 0 as i32 {
     //         if eventCode != 244 as i32 as u32 {
-    //             return Err(-230);
+    //             return Err(INCORRECT_END_FRAGMENT_VALUE);
     //         }
     //     }
     // }
@@ -15155,7 +15155,7 @@ pub fn decode_iso2_xmldsigFragment(
     let mut eventCode: u32 = 0;
     exi_header_read_and_check(stream)?;
     exi_basetypes_decoder_nbit_uint(stream, 6 as i32 as usize, &mut eventCode)?;
-    return Err(-299);
+    return Err(NOT_IMPLEMENTED_YET);
     // match eventCode {
     //     0 => {
     //         decode_iso2_CanonicalizationMethodType(
@@ -15311,14 +15311,14 @@ pub fn decode_iso2_xmldsigFragment(
     //     43 => {}
     //     44 => {}
     //     _ => {
-    //         return Err(-151);
+    //         return Err(UNSUPPORTED_SUB_EVENT);
     //     }
     // }
     // if error == 0 as i32 {
     //     exi_basetypes_decoder_nbit_uint(stream, 6 as i32 as usize, &mut eventCode)?;
     //     if error == 0 as i32 {
     //         if eventCode != 46 as i32 as u32 {
-    //             return Err(-230);
+    //             return Err(INCORRECT_END_FRAGMENT_VALUE);
     //         }
     //     }
     // }

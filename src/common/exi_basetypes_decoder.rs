@@ -26,7 +26,7 @@ fn exi_basetypes_decoder_read_unsigned(
     if found_sequence_end {
         Ok(NO_ERROR)
     } else {
-        Err(-30)
+        Err(SUPPORTED_MAX_OCTETS_OVERRUN)
     }
 }
 
@@ -43,7 +43,7 @@ pub fn exi_basetypes_decoder_bytes(
     bytes: &mut [u8],
 ) -> Result<u8, i16> {
     if bytes_len > bytes.len() {
-        return Err(-112);
+        return Err(BYTE_BUFFER_TOO_SMALL);
     }
     for i in 0..bytes_len {
         exi_bitstream_read_octet(stream, &mut bytes[i]).map_err(|e| e)?;
@@ -210,12 +210,12 @@ pub fn exi_basetypes_decoder_characters(
 ) -> Result<u8, i16> {
     let ascii_max_value: u8 = 127;
     if characters_len + 1 > characters_size {
-        return Err(-111);
+        return Err(CHARACTER_BUFFER_TOO_SMALL);
     }
     for n in 0..characters_len {
         exi_bitstream_read_octet(stream, &mut characters[n]).map_err(|e| e)?;
         if characters[n] > ascii_max_value {
-            return Err(-212);
+            return Err(UNSUPPORTED_CHARACTER_VALUE);
         }
     }
     characters[characters_len] = 0;

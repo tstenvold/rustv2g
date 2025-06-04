@@ -16,7 +16,7 @@ pub fn exi_header_read_and_check(mut stream: &mut ExiBitstream) -> Result<u8, i1
     match exi_header_read(&mut stream, &mut header) {
         Ok(_) => {
             if header != 0x80 {
-                return Err(-22);
+                return Err(HEADER_INCORRECT);
             }
         }
         Err(e) => {

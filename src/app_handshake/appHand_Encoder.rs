@@ -75,7 +75,7 @@ pub fn encode_appHand_AppProtocolType(
                 return Ok(NO_ERROR);
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -134,7 +134,7 @@ pub fn encode_appHand_supportedAppProtocolReq(
                 return Ok(NO_ERROR);
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -143,7 +143,7 @@ pub fn encode_appHand_supportedAppProtocolReq(
 pub fn encode_appHand_supportedAppProtocolRes(
     stream: &mut ExiBitstream,
     supportedAppProtocolRes: AppHandSupportedAppProtocolRes,
-) -> Result<i8, i16> {
+) -> Result<u8, i16> {
     let mut grammar_id: i32 = 9;
     loop {
         match grammar_id {
@@ -183,16 +183,16 @@ pub fn encode_appHand_supportedAppProtocolRes(
                 } else {
                     exi_basetypes_encoder_nbit_uint(stream, 2, 1)?;
                     //grammar_id = 6 as i32;
-                    return Ok(0);
+                    return Ok(NO_ERROR);
                 }
             }
             5 => {
                 exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
                 //grammar_id = 6 as i32;
-                return Ok(0);
+                return Ok(NO_ERROR);
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }

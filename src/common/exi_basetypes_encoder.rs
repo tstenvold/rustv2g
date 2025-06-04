@@ -145,7 +145,7 @@ pub fn exi_basetypes_encoder_characters(
     for &ch in characters.iter() {
         let byte = ch as u8;
         if byte > ASCII_MAX_VALUE {
-            return Err(-212);
+            return Err(UNSUPPORTED_CHARACTER_VALUE);
         }
         exi_bitstream_write_octet(stream, byte)?;
     }

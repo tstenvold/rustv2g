@@ -71,7 +71,7 @@ mod tests {
         exi_bitstream_init(&mut stream, &mut buffer, 0, None);
         let res = make_supported_app_protocol_res(Some(1));
         let result = encode_appHand_supportedAppProtocolRes(&mut stream, res);
-        assert_eq!(result, Ok(0));
+        assert_eq!(result, Ok(NO_ERROR));
     }
 
     #[test]
@@ -81,7 +81,7 @@ mod tests {
         exi_bitstream_init(&mut stream, &mut buffer, 0, None);
         let res = make_supported_app_protocol_res(None);
         let result = encode_appHand_supportedAppProtocolRes(&mut stream, res);
-        assert_eq!(result, Ok(0));
+        assert_eq!(result, Ok(NO_ERROR));
     }
 
     #[test]
@@ -148,7 +148,7 @@ mod tests {
         let mut stream = ExiBitstream::default();
         exi_bitstream_init(&mut stream, &mut data, 0, None);
         let result = decode_appHand_supportedAppProtocolReq(&mut stream, &mut req);
-        assert_eq!(result, Err(-110));
+        assert_eq!(result, Err(ARRAY_OUT_OF_BOUNDS));
     }
 
     #[test]
@@ -179,7 +179,7 @@ mod tests {
 
         let mut doc = AppHandExiDocument::default();
         let result = decode_appHand_exiDocument(&mut stream, &mut doc);
-        assert_eq!(result, Err(-22));
+        assert_eq!(result, Err(HEADER_INCORRECT));
     }
 
     #[test]
@@ -194,7 +194,7 @@ mod tests {
         exi_bitstream_init(&mut stream, &mut data, 0, None);
         let mut proto: AppHandAppProtocolType = AppHandAppProtocolType::default();
         let result = decode_appHand_AppProtocolType(&mut stream, &mut proto);
-        assert_eq!(result, Err(-200));
+        assert_eq!(result, Err(STRINGVALUES_NOT_SUPPORTED));
     }
 
     // Integration tests for the entire handshake process

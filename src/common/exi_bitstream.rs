@@ -106,7 +106,7 @@ pub fn exi_bitstream_write_bits(
     value: u32,
 ) -> Result<u8, i16> {
     if bit_count > 32 {
-        return Err(-100);
+        return Err(BIT_COUNT_LARGER_THAN_TYPE_SIZE);
     }
 
     for idx in 0..bit_count {
@@ -130,7 +130,7 @@ pub fn exi_bitstream_read_bits(
     value: &mut u32,
 ) -> Result<u8, i16> {
     if bit_count > 32 {
-        return Err(-100);
+        return Err(BIT_COUNT_LARGER_THAN_TYPE_SIZE);
     }
     *value = 0;
     for _ in 0..bit_count {

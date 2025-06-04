@@ -54,7 +54,7 @@ pub fn exi_basetypes_convert_to_unsigned(
     while n < 5 {
         if exi_unsigned.octets_count >= exi_unsigned.octets.len() {
             // Prevent overflow
-            return Err(-31);
+            return Err(OCTET_COUNT_LARGER_THAN_TYPE_SUPPORTS);
         }
         let mut octet = (value & 0x7f) as u8;
         value >>= 7;
@@ -71,7 +71,7 @@ pub fn exi_basetypes_convert_to_unsigned(
     if exi_unsigned.octets_count <= max_octets {
         Ok(NO_ERROR)
     } else {
-        Err(-31)
+        Err(OCTET_COUNT_LARGER_THAN_TYPE_SUPPORTS)
     }
 }
 
@@ -84,7 +84,7 @@ pub fn exi_basetypes_convert_64_to_unsigned(
     while n < 10 {
         if exi_unsigned.octets_count >= exi_unsigned.octets.len() {
             // Prevent overflow
-            return Err(-31);
+            return Err(OCTET_COUNT_LARGER_THAN_TYPE_SUPPORTS);
         }
         let mut octet = (value & 0x7f) as u8;
         value >>= 7;
@@ -101,7 +101,7 @@ pub fn exi_basetypes_convert_64_to_unsigned(
     if exi_unsigned.octets_count <= 10 {
         Ok(NO_ERROR)
     } else {
-        Err(-31)
+        Err(OCTET_COUNT_LARGER_THAN_TYPE_SUPPORTS)
     }
 }
 
@@ -138,7 +138,7 @@ pub fn exi_basetypes_convert_from_unsigned(
     max_octets: usize,
 ) -> Result<u8, i16> {
     if exi_unsigned.octets_count > max_octets {
-        return Err(-31);
+        return Err(OCTET_COUNT_LARGER_THAN_TYPE_SUPPORTS);
     }
     *value = 0;
     for (n, &octet) in exi_unsigned
@@ -157,7 +157,7 @@ pub fn exi_basetypes_convert_64_from_unsigned(
     value: &mut u64,
 ) -> Result<u8, i16> {
     if exi_unsigned.octets_count > 10 {
-        return Err(-31);
+        return Err(OCTET_COUNT_LARGER_THAN_TYPE_SUPPORTS);
     }
     *value = 0;
     for (n, &octet) in exi_unsigned
@@ -220,7 +220,7 @@ pub fn exi_basetypes_convert_bytes_from_unsigned(
         total_offset += 7;
         if total_offset >= 8 {
             if *data_len >= data.len() {
-                return Err(-113);
+                return Err(ENCODED_INTEGER_SIZE_LARGER_THAN_DESTINATION);
             }
             total_offset -= 8;
             data[*data_len] = (temp & 0xff) as u8;
@@ -231,7 +231,7 @@ pub fn exi_basetypes_convert_bytes_from_unsigned(
     }
     if total_offset != 0 && (temp & 0xff) != 0 {
         if *data_len >= data.len() {
-            return Err(-113);
+            return Err(ENCODED_INTEGER_SIZE_LARGER_THAN_DESTINATION);
         }
         data[*data_len] = (temp & 0xff) as u8;
         *data_len += 1;

@@ -37,7 +37,7 @@ pub fn decode_appHand_AppProtocolType(
                                     100,
                                 )?;
                             } else {
-                                return Err(-200);
+                                return Err(STRINGVALUES_NOT_SUPPORTED);
                             }
                         } else {
                             return Err(UNSUPPORTED_SUB_EVENT);
@@ -150,7 +150,7 @@ pub fn decode_appHand_AppProtocolType(
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -176,13 +176,13 @@ pub fn decode_appHand_supportedAppProtocolReq(
                                 &mut supportedAppProtocolReq.AppProtocol.array[idx],
                             )?;
                         } else {
-                            return Err(-110);
+                            return Err(ARRAY_OUT_OF_BOUNDS);
                         }
                         grammar_id = 8;
                         continue;
                     }
                     _ => {
-                        return Err(-150);
+                        return Err(UNKNOWN_EVENT_CODE);
                     }
                 }
             }
@@ -198,7 +198,7 @@ pub fn decode_appHand_supportedAppProtocolReq(
                                 &mut supportedAppProtocolReq.AppProtocol.array[idx],
                             )?;
                         } else {
-                            return Err(-110);
+                            return Err(ARRAY_OUT_OF_BOUNDS);
                         }
                         if (supportedAppProtocolReq.AppProtocol.arrayLen as i32) < 20 as i32 {
                             grammar_id = 8;
@@ -213,7 +213,7 @@ pub fn decode_appHand_supportedAppProtocolReq(
                         return Ok(NO_ERROR);
                     }
                     _ => {
-                        return Err(-150);
+                        return Err(UNKNOWN_EVENT_CODE);
                     }
                 }
             }
@@ -225,12 +225,12 @@ pub fn decode_appHand_supportedAppProtocolReq(
                         return Ok(NO_ERROR);
                     }
                     _ => {
-                        return Err(-150);
+                        return Err(UNKNOWN_EVENT_CODE);
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
@@ -255,7 +255,7 @@ pub fn decode_appHand_supportedAppProtocolRes(
                             supportedAppProtocolRes.ResponseCode =
                                 AppHandResponseCodeType::from(value);
                         } else {
-                            return Err(-151);
+                            return Err(UNSUPPORTED_SUB_EVENT);
                         }
 
                         exi_basetypes_decoder_nbit_uint(stream, 1, &mut eventCode)?;
@@ -264,11 +264,11 @@ pub fn decode_appHand_supportedAppProtocolRes(
                             grammar_id = 10;
                             continue;
                         } else {
-                            return Err(-170);
+                            return Err(DEVIANTS_NOT_SUPPORTED);
                         }
                     }
                     _ => {
-                        return Err(-150);
+                        return Err(UNKNOWN_EVENT_CODE);
                     }
                 }
             }
@@ -283,14 +283,14 @@ pub fn decode_appHand_supportedAppProtocolRes(
 
                             supportedAppProtocolRes.SchemaID = Some(value_0 as u8);
                         } else {
-                            return Err(-151);
+                            return Err(UNSUPPORTED_SUB_EVENT);
                         }
                         exi_basetypes_decoder_nbit_uint(stream, 1, &mut eventCode)?;
                         if eventCode == 0 {
                             grammar_id = 5;
                             continue;
                         } else {
-                            return Err(-170);
+                            return Err(DEVIANTS_NOT_SUPPORTED);
                         }
                     }
                     1 => {
@@ -298,7 +298,7 @@ pub fn decode_appHand_supportedAppProtocolRes(
                         return Ok(NO_ERROR);
                     }
                     _ => {
-                        return Err(-150);
+                        return Err(UNKNOWN_EVENT_CODE);
                     }
                 }
             }
@@ -310,12 +310,12 @@ pub fn decode_appHand_supportedAppProtocolRes(
                         return Ok(NO_ERROR);
                     }
                     _ => {
-                        return Err(-150);
+                        return Err(UNKNOWN_EVENT_CODE);
                     }
                 }
             }
             _ => {
-                return Err(-130);
+                return Err(UNKNOWN_GRAMMAR_ID);
             }
         }
     }
