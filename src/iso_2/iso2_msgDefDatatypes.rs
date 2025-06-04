@@ -209,7 +209,7 @@ impl Default for Iso2TransformsType {
     }
 }
 #[derive(Copy, Clone)]
-pub struct Iso2DsakeyValueType {
+pub struct Iso2DSAKeyValueType {
     pub P: Option<Iso2u8FixedBufType<350>>,
     pub Q: Option<Iso2u8FixedBufType<350>>,
     pub G: Option<Iso2u8FixedBufType<350>>,
@@ -219,9 +219,9 @@ pub struct Iso2DsakeyValueType {
     pub PgenCounter: Option<Iso2u8FixedBufType<350>>,
 }
 
-impl Default for Iso2DsakeyValueType {
+impl Default for Iso2DSAKeyValueType {
     fn default() -> Self {
-        Iso2DsakeyValueType {
+        Iso2DSAKeyValueType {
             P: None,
             Q: None,
             G: None,
@@ -321,7 +321,7 @@ impl Default for Iso2SignatureMethodType {
 }
 #[derive(Copy, Clone)]
 pub struct Iso2KeyValueType {
-    pub DSAKeyValue: Option<Iso2DsakeyValueType>,
+    pub DSAKeyValue: Option<Iso2DSAKeyValueType>,
     pub RSAKeyValue: Option<Iso2RSAKeyValueType>,
     pub ANY: Option<Iso2u8FixedBufType<4>>,
 }
@@ -2155,7 +2155,7 @@ pub enum Iso2ExiFragmentEnum {
     MeteringReceiptReq(Iso2MeteringReceiptReqType),
     SalesTariff(Iso2SalesTariffType),
     SignedInfo(Iso2SignedInfoType),
-    eMaid(Iso2EMAIDType),
+    eMaid(Iso2EMAIDType), // Allow eMaid to not have UpperCamelCase
 }
 
 #[derive(Copy, Clone)]
@@ -2166,7 +2166,7 @@ pub struct Iso2XmlDSigFragment {
 #[derive(Copy, Clone)]
 pub enum Iso2XmlDSigEnum {
     CanonicalizationMethod(Iso2CanonicalizationMethodType),
-    DSAKeyValue(Iso2DsakeyValueType),
+    DSAKeyValue(Iso2DSAKeyValueType),
     DigestMethod(Iso2DigestMethodType),
     KeyInfo(Iso2KeyInfoType),
     KeyValue(Iso2KeyValueType),
