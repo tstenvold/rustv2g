@@ -22,3 +22,7 @@ pub mod common {
     pub mod exi_header;
     pub mod exi_types_decoder;
 } // mod common
+pub mod iso_2 {
+    pub mod iso2_msgDefDatatypes;
+    pub mod iso2_msgDefDecoder;
+}

@@ -6,15 +6,16 @@ use crate::common::exi_error_codes::*;
 
 pub fn decode_exi_type_hex_binary(
     stream: &mut ExiBitstream,
-    value_len: &mut u16,
+    value_len: &mut usize,
     value_buffer: &mut [u8],
+    value_max_len: usize,
 ) -> Result<u8, i16> {
     let mut event_code: u32 = 0;
     exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
     if event_code == 0 {
-        exi_basetypes_decoder_uint_16(stream, value_len)?;
+        exi_basetypes_decoder_uint_16(stream, &mut(*value_len as u16))?;
         let len = *value_len as usize;
-        if len > value_buffer.len() {
+        if len > value_max_len {
             return Err(-152); // buffer overflow
         }
         exi_basetypes_decoder_bytes(stream, len, &mut value_buffer[..len])?;

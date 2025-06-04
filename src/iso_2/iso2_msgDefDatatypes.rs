@@ -649,7 +649,8 @@ pub struct Iso2SignedInfoType {
     pub Id: Option<Iso2u8FixedBufType<65>>,
     pub CanonicalizationMethod: Iso2CanonicalizationMethodType,
     pub SignatureMethod: Iso2SignatureMethodType,
-    pub Reference: Iso2u8FixedBufType<4>,
+    pub Reference: [Iso2ReferenceType; 4],
+    pub ReferenceLen: usize,
 }
 
 impl Default for Iso2SignedInfoType {
@@ -658,7 +659,8 @@ impl Default for Iso2SignedInfoType {
             Id: None,
             CanonicalizationMethod: Iso2CanonicalizationMethodType::default(),
             SignatureMethod: Iso2SignatureMethodType::default(),
-            Reference: Iso2u8FixedBufType::<4>::default(),
+            Reference: Default::default(),
+            ReferenceLen: 0,
         }
     }
 }

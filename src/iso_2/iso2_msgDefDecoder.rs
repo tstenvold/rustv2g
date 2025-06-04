@@ -2,6 +2,7 @@ use crate::common::exi_basetypes_decoder::*;
 use crate::common::exi_bitstream::*;
 use crate::common::exi_error_codes::*;
 use crate::common::exi_types_decoder::*;
+use crate::common::exi_header::*;
 use crate::iso_2::iso2_msgDefDatatypes::*;
 
 pub fn decode_iso2_CostType(
@@ -199,19 +200,16 @@ pub fn decode_iso2_TransformType(
                                 if eventCode == 0 as i32 as u32 {
                                     exi_basetypes_decoder_uint_16(
                                         stream,
-                                        &mut (*transform_type).XPath.len,
+                                        &mut ((*transform_type).XPath.unwrap().len as u16),
                                     )?;
                                     if error == 0 as i32 {
-                                        if (*transform_type).XPath.len as i32 >= 2 as i32
+                                        if (*transform_type).XPath.unwrap().len as i32 >= 2 as i32
                                         {
-                                            (*transform_type).XPath.len =
-                                                ((*transform_type).XPath.len as i32
-                                                    - 2 as i32)
-                                                    as u16;
+                                            (*transform_type).XPath.unwrap().len -= 2;
                                             exi_basetypes_decoder_characters(
                                                 stream,
-                                                (*transform_type).XPath.len as usize,
-                                                ((*transform_type).XPath.data).as_mut_ptr(),
+                                                (*transform_type).XPath.unwrap().len,
+                                                &mut (*transform_type).XPath.unwrap().data,
                                                 (64 as i32 + 1 as i32) as usize,
                                             )?;
                                         } else {
@@ -246,10 +244,8 @@ pub fn decode_iso2_TransformType(
                         3 => {
                             decode_exi_type_hex_binary(
                                 stream,
-                                &mut (*transform_type).ANY.len,
-                                &mut *((*transform_type).ANY.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*transform_type).ANY.unwrap().len,
+                                &mut (*transform_type).ANY.unwrap().data,
                                 4 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -286,13 +282,12 @@ pub fn decode_iso2_IntervalType(
     mut interval_type: &mut Iso2IntervalType,
 ) -> Result<u8, i16> {
     let mut eventCode: u32 = 0;
-    let mut error: i32 = 0;
     exi_basetypes_decoder_nbit_uint(stream, 1, &mut eventCode)?;
-    if error == 0 as i32 {
-        if eventCode != 0 as i32 as u32 {
-            return Err(-150);
-        }
+    if eventCode != 0 as i32 as u32 {
+        return Err(-150);
     }
+
+    return Ok(0);
 }
 pub fn decode_iso2_TransformsType(
     stream: &mut ExiBitstream,
@@ -308,11 +303,8 @@ pub fn decode_iso2_TransformsType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            error =
-                                decode_iso2_TransformType(stream, &mut (*transform_type).Transform);
-                            if error == 0 as i32 {
-                                grammar_id = 8 as i32;
-                            }
+                            decode_iso2_TransformType(stream, &mut (*transform_type).Transform)?;
+                            grammar_id = 8;
                         }
                         _ => {
                             return Err(-150);
@@ -372,9 +364,7 @@ pub fn decode_iso2_DSAKeyValueType(
                             decode_exi_type_hex_binary(
                                 stream,
                                 &mut (*DSA_key_value).P.len,
-                                &mut *((*DSA_key_value).P.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*DSA_key_value).P.data,
                                 350 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -385,9 +375,7 @@ pub fn decode_iso2_DSAKeyValueType(
                             decode_exi_type_hex_binary(
                                 stream,
                                 &mut (*DSA_key_value).G.len,
-                                &mut *((*DSA_key_value).G.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*DSA_key_value).G.data,
                                 350 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -398,9 +386,7 @@ pub fn decode_iso2_DSAKeyValueType(
                             decode_exi_type_hex_binary(
                                 stream,
                                 &mut (*DSA_key_value).Y.len,
-                                &mut *((*DSA_key_value).Y.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*DSA_key_value).Y.data,
                                 350 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -421,9 +407,7 @@ pub fn decode_iso2_DSAKeyValueType(
                             decode_exi_type_hex_binary(
                                 stream,
                                 &mut (*DSA_key_value).Q.len,
-                                &mut *((*DSA_key_value).Q.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*DSA_key_value).Q.data,
                                 350 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -444,9 +428,7 @@ pub fn decode_iso2_DSAKeyValueType(
                             decode_exi_type_hex_binary(
                                 stream,
                                 &mut (*DSA_key_value).G.len,
-                                &mut *((*DSA_key_value).G.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*DSA_key_value).G.data,
                                 350 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -457,9 +439,7 @@ pub fn decode_iso2_DSAKeyValueType(
                             decode_exi_type_hex_binary(
                                 stream,
                                 &mut (*DSA_key_value).Y.len,
-                                &mut *((*DSA_key_value).Y.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*DSA_key_value).Y.data,
                                 350 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -480,9 +460,7 @@ pub fn decode_iso2_DSAKeyValueType(
                             decode_exi_type_hex_binary(
                                 stream,
                                 &mut (*DSA_key_value).Y.len,
-                                &mut *((*DSA_key_value).Y.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*DSA_key_value).Y.data,
                                 350 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -503,9 +481,7 @@ pub fn decode_iso2_DSAKeyValueType(
                             decode_exi_type_hex_binary(
                                 stream,
                                 &mut (*DSA_key_value).J.len,
-                                &mut *((*DSA_key_value).J.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*DSA_key_value).J.data,
                                 350 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -516,9 +492,7 @@ pub fn decode_iso2_DSAKeyValueType(
                             decode_exi_type_hex_binary(
                                 stream,
                                 &mut (*DSA_key_value).Seed.len,
-                                &mut *((*DSA_key_value).Seed.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*DSA_key_value).Seed.data,
                                 350 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -542,9 +516,7 @@ pub fn decode_iso2_DSAKeyValueType(
                             decode_exi_type_hex_binary(
                                 stream,
                                 &mut (*DSA_key_value).Seed.len,
-                                &mut *((*DSA_key_value).Seed.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*DSA_key_value).Seed.data,
                                 350 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -568,9 +540,7 @@ pub fn decode_iso2_DSAKeyValueType(
                             decode_exi_type_hex_binary(
                                 stream,
                                 &mut (*DSA_key_value).PgenCounter.len,
-                                &mut *((*DSA_key_value).PgenCounter.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*DSA_key_value).PgenCounter.data,
                                 350 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -628,26 +598,19 @@ pub fn decode_iso2_X509IssuerSerialType(
                                 if eventCode == 0 as i32 as u32 {
                                     exi_basetypes_decoder_uint_16(
                                         stream,
-                                        &mut (*x509_issuer_serial).X509IssuerName.len,
+                                        &mut ((*x509_issuer_serial).X509IssuerName.len as u16),
                                     )?;
                                     if error == 0 as i32 {
                                         if (*x509_issuer_serial).X509IssuerName.len
                                             as i32
                                             >= 2 as i32
                                         {
-                                            (*x509_issuer_serial).X509IssuerName.len =
-                                                ((*x509_issuer_serial)
-                                                    .X509IssuerName
-                                                    .len
-                                                    as i32
-                                                    - 2 as i32)
-                                                    as u16;
+                                            (*x509_issuer_serial).X509IssuerName.len -= 2;
                                             exi_basetypes_decoder_characters(
                                                 stream,
                                                 (*x509_issuer_serial).X509IssuerName.len
                                                     as usize,
-                                                ((*x509_issuer_serial).X509IssuerName.data)
-                                                    .as_mut_ptr(),
+                                                &mut (*x509_issuer_serial).X509IssuerName.data,
                                                 (64 as i32 + 1 as i32) as usize,
                                             )?;
                                         } else {
@@ -764,7 +727,7 @@ pub fn decode_iso2_RelativeTimeIntervalType(
                         0 => {
                             decode_exi_type_uint32(
                                 stream,
-                                &mut (*relative_time_interval).duration,
+                                &mut (*relative_time_interval).duration.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -815,18 +778,15 @@ pub fn decode_iso2_DigestMethodType(
                         0 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*digest_method).Algorithm.len,
+                                &mut ((*digest_method).Algorithm.len as u16),
                             )?;
                             if error == 0 as i32 {
                                 if (*digest_method).Algorithm.len as i32 >= 2 as i32 {
-                                    (*digest_method).Algorithm.len =
-                                        ((*digest_method).Algorithm.len as i32
-                                            - 2 as i32)
-                                            as u16;
+                                    (*digest_method).Algorithm.len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
                                         (*digest_method).Algorithm.len as usize,
-                                        ((*digest_method).Algorithm.data).as_mut_ptr(),
+                                        &mut (*digest_method).Algorithm.data,
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
@@ -854,10 +814,8 @@ pub fn decode_iso2_DigestMethodType(
                         2 => {
                             decode_exi_type_hex_binary(
                                 stream,
-                                &mut (*digest_method).ANY.len,
-                                &mut *((*digest_method).ANY.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*digest_method).ANY.unwrap().len,
+                                &mut (*digest_method).ANY.unwrap().data,
                                 4 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -928,9 +886,7 @@ pub fn decode_iso2_RSAKeyValueType(
                             decode_exi_type_hex_binary(
                                 stream,
                                 &mut (*RSA_key_value).Exponent.len,
-                                &mut *((*RSA_key_value).Exponent.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*RSA_key_value).Exponent.data,
                                 350 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -979,23 +935,18 @@ pub fn decode_iso2_CanonicalizationMethodType(
                         0 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*canonicalization_method).Algorithm.len,
+                                &mut ((*canonicalization_method).Algorithm.len as u16),
                             )?;
                             if error == 0 as i32 {
                                 if (*canonicalization_method).Algorithm.len as i32
                                     >= 2 as i32
                                 {
-                                    (*canonicalization_method).Algorithm.len =
-                                        ((*canonicalization_method).Algorithm.len
-                                            as i32
-                                            - 2 as i32)
-                                            as u16;
+                                    (*canonicalization_method).Algorithm.len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
                                         (*canonicalization_method).Algorithm.len
                                             as usize,
-                                        ((*canonicalization_method).Algorithm.data)
-                                            .as_mut_ptr(),
+                                        &mut (*canonicalization_method).Algorithm.data,
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
@@ -1023,10 +974,8 @@ pub fn decode_iso2_CanonicalizationMethodType(
                         2 => {
                             decode_exi_type_hex_binary(
                                 stream,
-                                &mut (*canonicalization_method).ANY.len,
-                                &mut *((*canonicalization_method).ANY.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*canonicalization_method).ANY.unwrap().len,
+                                &mut (*canonicalization_method).ANY.unwrap().data,
                                 4 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -1075,19 +1024,16 @@ pub fn decode_iso2_SignatureMethodType(
                         0 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*signature_method).Algorithm.len,
+                                &mut ((*signature_method).Algorithm.len as u16),
                             )?;
                             if error == 0 as i32 {
                                 if (*signature_method).Algorithm.len as i32 >= 2 as i32
                                 {
-                                    (*signature_method).Algorithm.len =
-                                        ((*signature_method).Algorithm.len as i32
-                                            - 2 as i32)
-                                            as u16;
+                                    (*signature_method).Algorithm.len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
                                         (*signature_method).Algorithm.len as usize,
-                                        ((*signature_method).Algorithm.data).as_mut_ptr(),
+                                        &mut (*signature_method).Algorithm.data,
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
@@ -1115,7 +1061,7 @@ pub fn decode_iso2_SignatureMethodType(
                             if error == 0 as i32 {
                                 exi_basetypes_decoder_signed(
                                     stream,
-                                    &mut (*signature_method).HMACOutputLength,
+                                    &mut (*signature_method).HMACOutputLength.unwrap(),
                                 )?;
                                 if error == 0 as i32 {
                                     grammar_id = 28 as i32;
@@ -1136,10 +1082,8 @@ pub fn decode_iso2_SignatureMethodType(
                         3 => {
                             decode_exi_type_hex_binary(
                                 stream,
-                                &mut (*signature_method).ANY.len,
-                                &mut *((*signature_method).ANY.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*signature_method).ANY.unwrap().len,
+                                &mut (*signature_method).ANY.unwrap().data,
                                 4 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -1165,10 +1109,8 @@ pub fn decode_iso2_SignatureMethodType(
                         2 => {
                             decode_exi_type_hex_binary(
                                 stream,
-                                &mut (*signature_method).ANY.len,
-                                &mut *((*signature_method).ANY.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*signature_method).ANY.unwrap().len,
+                                &mut (*signature_method).ANY.unwrap().data,
                                 4 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -1217,7 +1159,7 @@ pub fn decode_iso2_KeyValueType(
                         0 => {
                             decode_iso2_DSAKeyValueType(
                                 stream,
-                                &mut (*key_value).DSAKeyValue,
+                                &mut (*key_value).DSAKeyValue.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -1226,7 +1168,7 @@ pub fn decode_iso2_KeyValueType(
                         1 => {
                             decode_iso2_RSAKeyValueType(
                                 stream,
-                                &mut (*key_value).RSAKeyValue,
+                                &mut (*key_value).RSAKeyValue.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -1235,10 +1177,8 @@ pub fn decode_iso2_KeyValueType(
                         2 => {
                             decode_exi_type_hex_binary(
                                 stream,
-                                &mut (*key_value).ANY.len,
-                                &mut *((*key_value).ANY.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*key_value).ANY.unwrap().len,
+                                &mut (*key_value).ANY.unwrap().data,
                                 4 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -1377,8 +1317,7 @@ pub fn decode_iso2_PhysicalValueType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            error =
-                                decode_exi_type_integer16(stream, &mut (*physical_value).Value);
+                            decode_exi_type_integer16(stream, &mut (*physical_value).Value)?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
                             }
@@ -1445,12 +1384,15 @@ pub fn decode_iso2_ConsumptionCostType(
                                 let fresh0 = (*ConsumptionCostType).Cost.arrayLen;
                                 (*ConsumptionCostType).Cost.arrayLen =
                                     ((*ConsumptionCostType).Cost.arrayLen).wrapping_add(1);
-                                decode_iso2_CostType(
-                                    stream,
-                                    &mut *((*ConsumptionCostType).Cost.array)
-                                        .as_mut_ptr()
-                                        .offset(fresh0 as isize),
-                                )?;
+                                if let Some(cost) = (*ConsumptionCostType)
+                                    .Cost
+                                    .array
+                                    .get_mut(fresh0 as usize)
+                                {
+                                    decode_iso2_CostType(stream, cost)?;
+                                } else {
+                                    return Err(-110);
+                                }
                             } else {
                                 return Err(-110);
                             }
@@ -1471,12 +1413,15 @@ pub fn decode_iso2_ConsumptionCostType(
                                 let fresh1 = (*ConsumptionCostType).Cost.arrayLen;
                                 (*ConsumptionCostType).Cost.arrayLen =
                                     ((*ConsumptionCostType).Cost.arrayLen).wrapping_add(1);
-                                decode_iso2_CostType(
-                                    stream,
-                                    &mut *((*ConsumptionCostType).Cost.array)
-                                        .as_mut_ptr()
-                                        .offset(fresh1 as isize),
-                                )?;
+                                if let Some(cost) = (*ConsumptionCostType)
+                                    .Cost
+                                    .array
+                                    .get_mut(fresh1 as usize)
+                                {
+                                    decode_iso2_CostType(stream, cost)?;
+                                } else {
+                                    return Err(-110);
+                                }
                             } else {
                                 return Err(-110);
                             }
@@ -1530,7 +1475,7 @@ pub fn decode_iso2_PMaxScheduleEntryType(
                         0 => {
                             decode_iso2_RelativeTimeIntervalType(
                                 stream,
-                                &mut (*PMaxScheduleEntryType).RelativeTimeInterval,
+                                &mut (*PMaxScheduleEntryType).RelativeTimeInterval.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 37 as i32;
@@ -1539,7 +1484,7 @@ pub fn decode_iso2_PMaxScheduleEntryType(
                         1 => {
                             decode_iso2_IntervalType(
                                 stream,
-                                &mut (*PMaxScheduleEntryType).TimeInterval,
+                                &mut (*PMaxScheduleEntryType).TimeInterval.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 37 as i32;
@@ -1606,7 +1551,7 @@ pub fn decode_iso2_SalesTariffEntryType(
                         0 => {
                             decode_iso2_RelativeTimeIntervalType(
                                 stream,
-                                &mut (*SalesTariffEntryType).RelativeTimeInterval,
+                                &mut (*SalesTariffEntryType).RelativeTimeInterval.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 39 as i32;
@@ -1615,7 +1560,7 @@ pub fn decode_iso2_SalesTariffEntryType(
                         1 => {
                             decode_iso2_IntervalType(
                                 stream,
-                                &mut (*SalesTariffEntryType).TimeInterval,
+                                &mut (*SalesTariffEntryType).TimeInterval.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 39 as i32;
@@ -1646,7 +1591,7 @@ pub fn decode_iso2_SalesTariffEntryType(
                                         &mut value,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*SalesTariffEntryType).EPriceLevel = value as u8;
+                                        (*SalesTariffEntryType).EPriceLevel = Some(value as u8);
                                     }
                                 } else {
                                     return Err(-151);
@@ -1674,12 +1619,14 @@ pub fn decode_iso2_SalesTariffEntryType(
                                 (*SalesTariffEntryType).ConsumptionCost.arrayLen =
                                     ((*SalesTariffEntryType).ConsumptionCost.arrayLen)
                                         .wrapping_add(1);
-                                decode_iso2_ConsumptionCostType(
-                                    stream,
-                                    &mut *((*SalesTariffEntryType).ConsumptionCost.array)
-                                        .as_mut_ptr()
-                                        .offset(fresh2 as isize),
-                                )?;
+                                if let Some(consumption_cost) = (*SalesTariffEntryType).ConsumptionCost.array.get_mut(fresh2 as usize) {
+                                    decode_iso2_ConsumptionCostType(
+                                        stream,
+                                        consumption_cost,
+                                    )?;
+                                } else {
+                                    return Err(-110);
+                                }
                             } else {
                                 return Err(-110);
                             }
@@ -1705,12 +1652,18 @@ pub fn decode_iso2_SalesTariffEntryType(
                                 (*SalesTariffEntryType).ConsumptionCost.arrayLen =
                                     ((*SalesTariffEntryType).ConsumptionCost.arrayLen)
                                         .wrapping_add(1);
-                                decode_iso2_ConsumptionCostType(
-                                    stream,
-                                    &mut *((*SalesTariffEntryType).ConsumptionCost.array)
-                                        .as_mut_ptr()
-                                        .offset(fresh3 as isize),
-                                )?;
+                                if let Some(consumption_cost) = (*SalesTariffEntryType)
+                                    .ConsumptionCost
+                                    .array
+                                    .get_mut(fresh3 as usize)
+                                {
+                                    decode_iso2_ConsumptionCostType(
+                                        stream,
+                                        consumption_cost,
+                                    )?;
+                                } else {
+                                    return Err(-110);
+                                }
                             } else {
                                 return Err(-110);
                             }
@@ -1741,12 +1694,18 @@ pub fn decode_iso2_SalesTariffEntryType(
                                 (*SalesTariffEntryType).ConsumptionCost.arrayLen =
                                     ((*SalesTariffEntryType).ConsumptionCost.arrayLen)
                                         .wrapping_add(1);
-                                decode_iso2_ConsumptionCostType(
-                                    stream,
-                                    &mut *((*SalesTariffEntryType).ConsumptionCost.array)
-                                        .as_mut_ptr()
-                                        .offset(fresh4 as isize),
-                                )?;
+                                if let Some(consumption_cost) = (*SalesTariffEntryType)
+                                    .ConsumptionCost
+                                    .array
+                                    .get_mut(fresh4 as usize)
+                                {
+                                    decode_iso2_ConsumptionCostType(
+                                        stream,
+                                        consumption_cost,
+                                    )?;
+                                } else {
+                                    return Err(-110);
+                                }
                             } else {
                                 return Err(-110);
                             }
@@ -1772,12 +1731,18 @@ pub fn decode_iso2_SalesTariffEntryType(
                                 (*SalesTariffEntryType).ConsumptionCost.arrayLen =
                                     ((*SalesTariffEntryType).ConsumptionCost.arrayLen)
                                         .wrapping_add(1);
-                                decode_iso2_ConsumptionCostType(
-                                    stream,
-                                    &mut *((*SalesTariffEntryType).ConsumptionCost.array)
-                                        .as_mut_ptr()
-                                        .offset(fresh5 as isize),
-                                )?;
+                                if let Some(consumption_cost) = (*SalesTariffEntryType)
+                                    .ConsumptionCost
+                                    .array
+                                    .get_mut(fresh5 as usize)
+                                {
+                                    decode_iso2_ConsumptionCostType(
+                                        stream,
+                                        consumption_cost,
+                                    )?;
+                                } else {
+                                    return Err(-110);
+                                }
                             } else {
                                 return Err(-110);
                             }
@@ -1833,17 +1798,15 @@ pub fn decode_iso2_ParameterType(
                         0 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*ParameterType).Name.len,
+                                &mut ((*ParameterType).Name.len as u16),
                             )?;
                             if error == 0 as i32 {
                                 if (*ParameterType).Name.len as i32 >= 2 as i32 {
-                                    (*ParameterType).Name.len =
-                                        ((*ParameterType).Name.len as i32 - 2 as i32)
-                                            as u16;
+                                    (*ParameterType).Name.len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
                                         (*ParameterType).Name.len as usize,
-                                        ((*ParameterType).Name.data).as_mut_ptr(),
+                                        &mut (*ParameterType).Name.data,
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
@@ -1877,7 +1840,7 @@ pub fn decode_iso2_ParameterType(
                                         &mut value,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*ParameterType).boolValue = value as i32;
+                                        (*ParameterType).boolValue = Some(value as i32);
                                     }
                                 } else {
                                     return Err(-151);
@@ -1914,7 +1877,7 @@ pub fn decode_iso2_ParameterType(
                                     )?;
                                     if error == 0 as i32 {
                                         (*ParameterType).byteValue =
-                                            value_0.wrapping_add(-(128 as i32) as u32) as i8;
+                                            Some(value_0.wrapping_sub(128) as i8);
                                     }
                                 } else {
                                     return Err(-151);
@@ -1936,15 +1899,13 @@ pub fn decode_iso2_ParameterType(
                             }
                         }
                         2 => {
-                            error =
-                                decode_exi_type_integer16(stream, &mut (*ParameterType).shortValue);
+                            decode_exi_type_integer16(stream, &mut (*ParameterType).shortValue.unwrap())?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
                             }
                         }
                         3 => {
-                            error =
-                                decode_exi_type_integer32(stream, &mut (*ParameterType).intValue);
+                            decode_exi_type_integer32(stream, &mut (*ParameterType).intValue.unwrap())?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
                             }
@@ -1952,7 +1913,7 @@ pub fn decode_iso2_ParameterType(
                         4 => {
                             decode_iso2_PhysicalValueType(
                                 stream,
-                                &mut (*ParameterType).physicalValue,
+                                &mut (*ParameterType).physicalValue.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -1968,21 +1929,17 @@ pub fn decode_iso2_ParameterType(
                                 if eventCode == 0 as i32 as u32 {
                                     exi_basetypes_decoder_uint_16(
                                         stream,
-                                        &mut (*ParameterType).stringValue.len,
+                                        &mut ((*ParameterType).stringValue.unwrap().len as u16),
                                     )?;
                                     if error == 0 as i32 {
-                                        if (*ParameterType).stringValue.len as i32
+                                        if (*ParameterType).stringValue.unwrap().len as i32
                                             >= 2 as i32
                                         {
-                                            (*ParameterType).stringValue.len =
-                                                ((*ParameterType).stringValue.len as i32
-                                                    - 2 as i32)
-                                                    as u16;
+                                            (*ParameterType).stringValue.unwrap().len -= 2;
                                             exi_basetypes_decoder_characters(
                                                 stream,
-                                                (*ParameterType).stringValue.len as usize,
-                                                ((*ParameterType).stringValue.data)
-                                                    .as_mut_ptr(),
+                                                (*ParameterType).stringValue.unwrap().len as usize,
+                                                &mut (*ParameterType).stringValue.unwrap().data,
                                                 (64 as i32 + 1 as i32) as usize,
                                             )?;
                                         } else {
@@ -2053,12 +2010,15 @@ pub fn decode_iso2_PMaxScheduleType(
                                 (*PMaxScheduleType).PMaxScheduleEntry.arrayLen =
                                     ((*PMaxScheduleType).PMaxScheduleEntry.arrayLen)
                                         .wrapping_add(1);
-                                decode_iso2_PMaxScheduleEntryType(
-                                    stream,
-                                    &mut *((*PMaxScheduleType).PMaxScheduleEntry.array)
-                                        .as_mut_ptr()
-                                        .offset(fresh6 as isize),
-                                )?;
+                                if let Some(entry) = (*PMaxScheduleType)
+                                    .PMaxScheduleEntry
+                                    .array
+                                    .get_mut(fresh6 as usize)
+                                {
+                                    decode_iso2_PMaxScheduleEntryType(stream, entry)?;
+                                } else {
+                                    return Err(-110);
+                                }
                             } else {
                                 return Err(-110);
                             }
@@ -2080,12 +2040,15 @@ pub fn decode_iso2_PMaxScheduleType(
                                 (*PMaxScheduleType).PMaxScheduleEntry.arrayLen =
                                     ((*PMaxScheduleType).PMaxScheduleEntry.arrayLen)
                                         .wrapping_add(1);
-                                decode_iso2_PMaxScheduleEntryType(
-                                    stream,
-                                    &mut *((*PMaxScheduleType).PMaxScheduleEntry.array)
-                                        .as_mut_ptr()
-                                        .offset(fresh7 as isize),
-                                )?;
+                                if let Some(entry) = (*PMaxScheduleType)
+                                    .PMaxScheduleEntry
+                                    .array
+                                    .get_mut(fresh7 as usize)
+                                {
+                                    decode_iso2_PMaxScheduleEntryType(stream, entry)?;
+                                } else {
+                                    return Err(-110);
+                                }
                             } else {
                                 return Err(-110);
                             }
@@ -2141,17 +2104,15 @@ pub fn decode_iso2_ReferenceType(
                         0 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*ReferenceType).Id.len,
+                                &mut ((*ReferenceType).Id.unwrap().len as u16),
                             )?;
                             if error == 0 as i32 {
-                                if (*ReferenceType).Id.len as i32 >= 2 as i32 {
-                                    (*ReferenceType).Id.len =
-                                        ((*ReferenceType).Id.len as i32 - 2 as i32)
-                                            as u16;
+                                if (*ReferenceType).Id.unwrap().len as i32 >= 2 as i32 {
+                                    (*ReferenceType).Id.unwrap().len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
-                                        (*ReferenceType).Id.len as usize,
-                                        ((*ReferenceType).Id.data).as_mut_ptr(),
+                                        (*ReferenceType).Id.unwrap().len as usize,
+                                        &mut (*ReferenceType).Id.unwrap().data,
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
@@ -2163,17 +2124,15 @@ pub fn decode_iso2_ReferenceType(
                         1 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*ReferenceType).Type.len,
+                                &mut ((*ReferenceType).Type.unwrap().len as u16),
                             )?;
                             if error == 0 as i32 {
-                                if (*ReferenceType).Type.len as i32 >= 2 as i32 {
-                                    (*ReferenceType).Type.len =
-                                        ((*ReferenceType).Type.len as i32 - 2 as i32)
-                                            as u16;
+                                if (*ReferenceType).Type.unwrap().len as i32 >= 2 as i32 {
+                                    (*ReferenceType).Type.unwrap().len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
-                                        (*ReferenceType).Type.len as usize,
-                                        ((*ReferenceType).Type.data).as_mut_ptr(),
+                                        (*ReferenceType).Type.unwrap().len as usize,
+                                        &mut (*ReferenceType).Type.unwrap().data,
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
@@ -2185,17 +2144,15 @@ pub fn decode_iso2_ReferenceType(
                         2 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*ReferenceType).URI.len,
+                                &mut ((*ReferenceType).URI.unwrap().len as u16),
                             )?;
                             if error == 0 as i32 {
-                                if (*ReferenceType).URI.len as i32 >= 2 as i32 {
-                                    (*ReferenceType).URI.len =
-                                        ((*ReferenceType).URI.len as i32 - 2 as i32)
-                                            as u16;
+                                if (*ReferenceType).URI.unwrap().len as i32 >= 2 as i32 {
+                                    (*ReferenceType).URI.unwrap().len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
-                                        (*ReferenceType).URI.len as usize,
-                                        ((*ReferenceType).URI.data).as_mut_ptr(),
+                                        (*ReferenceType).URI.unwrap().len as usize,
+                                        &mut (*ReferenceType).URI.unwrap().data,
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
@@ -2207,7 +2164,7 @@ pub fn decode_iso2_ReferenceType(
                         3 => {
                             decode_iso2_TransformsType(
                                 stream,
-                                &mut (*ReferenceType).Transforms,
+                                &mut (*ReferenceType).Transforms.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 51 as i32;
@@ -2235,17 +2192,15 @@ pub fn decode_iso2_ReferenceType(
                         0 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*ReferenceType).Type.len,
+                                &mut ((*ReferenceType).Type.unwrap().len as u16),
                             )?;
                             if error == 0 as i32 {
-                                if (*ReferenceType).Type.len as i32 >= 2 as i32 {
-                                    (*ReferenceType).Type.len =
-                                        ((*ReferenceType).Type.len as i32 - 2 as i32)
-                                            as u16;
+                                if (*ReferenceType).Type.unwrap().len as i32 >= 2 as i32 {
+                                    (*ReferenceType).Type.unwrap().len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
-                                        (*ReferenceType).Type.len as usize,
-                                        ((*ReferenceType).Type.data).as_mut_ptr(),
+                                        (*ReferenceType).Type.unwrap().len as usize,
+                                        &mut (*ReferenceType).Type.unwrap().data,
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
@@ -2257,17 +2212,15 @@ pub fn decode_iso2_ReferenceType(
                         1 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*ReferenceType).URI.len,
+                                &mut ((*ReferenceType).URI.unwrap().len as u16),
                             )?;
                             if error == 0 as i32 {
-                                if (*ReferenceType).URI.len as i32 >= 2 as i32 {
-                                    (*ReferenceType).URI.len =
-                                        ((*ReferenceType).URI.len as i32 - 2 as i32)
-                                            as u16;
+                                if (*ReferenceType).URI.unwrap().len as i32 >= 2 as i32 {
+                                    (*ReferenceType).URI.unwrap().len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
-                                        (*ReferenceType).URI.len as usize,
-                                        ((*ReferenceType).URI.data).as_mut_ptr(),
+                                        (*ReferenceType).URI.unwrap().len as usize,
+                                        &mut (*ReferenceType).URI.unwrap().data,
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
@@ -2279,7 +2232,7 @@ pub fn decode_iso2_ReferenceType(
                         2 => {
                             decode_iso2_TransformsType(
                                 stream,
-                                &mut (*ReferenceType).Transforms,
+                                &mut (*ReferenceType).Transforms.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 51 as i32;
@@ -2307,17 +2260,15 @@ pub fn decode_iso2_ReferenceType(
                         0 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*ReferenceType).URI.len,
+                                &mut ((*ReferenceType).URI.unwrap().len as u16),
                             )?;
                             if error == 0 as i32 {
-                                if (*ReferenceType).URI.len as i32 >= 2 as i32 {
-                                    (*ReferenceType).URI.len =
-                                        ((*ReferenceType).URI.len as i32 - 2 as i32)
-                                            as u16;
+                                if (*ReferenceType).URI.unwrap().len as i32 >= 2 as i32 {
+                                    (*ReferenceType).URI.unwrap().len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
-                                        (*ReferenceType).URI.len as usize,
-                                        ((*ReferenceType).URI.data).as_mut_ptr(),
+                                        (*ReferenceType).URI.unwrap().len as usize,
+                                        &mut (*ReferenceType).URI.unwrap().data,
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
@@ -2329,7 +2280,7 @@ pub fn decode_iso2_ReferenceType(
                         1 => {
                             decode_iso2_TransformsType(
                                 stream,
-                                &mut (*ReferenceType).Transforms,
+                                &mut (*ReferenceType).Transforms.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 51 as i32;
@@ -2357,7 +2308,7 @@ pub fn decode_iso2_ReferenceType(
                         0 => {
                             decode_iso2_TransformsType(
                                 stream,
-                                &mut (*ReferenceType).Transforms,
+                                &mut (*ReferenceType).Transforms.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 51 as i32;
@@ -2404,10 +2355,8 @@ pub fn decode_iso2_ReferenceType(
                         0 => {
                             decode_exi_type_hex_binary(
                                 stream,
-                                &mut (*ReferenceType).DigestValue.len,
-                                &mut *((*ReferenceType).DigestValue.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*ReferenceType).DigestValue.unwrap().len,
+                                &mut (*ReferenceType).DigestValue.unwrap().data,
                                 350 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -2456,18 +2405,15 @@ pub fn decode_iso2_RetrievalMethodType(
                         0 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*RetrievalMethodType).Type.len,
+                                &mut ((*RetrievalMethodType).Type.unwrap().len as u16),
                             )?;
                             if error == 0 as i32 {
-                                if (*RetrievalMethodType).Type.len as i32 >= 2 as i32 {
-                                    (*RetrievalMethodType).Type.len =
-                                        ((*RetrievalMethodType).Type.len as i32
-                                            - 2 as i32)
-                                            as u16;
+                                if (*RetrievalMethodType).Type.unwrap().len as i32 >= 2 as i32 {
+                                    (*RetrievalMethodType).Type.unwrap().len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
-                                        (*RetrievalMethodType).Type.len as usize,
-                                        ((*RetrievalMethodType).Type.data).as_mut_ptr(),
+                                        (*RetrievalMethodType).Type.unwrap().len as usize,
+                                        &mut (*RetrievalMethodType).Type.unwrap().data,
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
@@ -2479,17 +2425,15 @@ pub fn decode_iso2_RetrievalMethodType(
                         1 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*RetrievalMethodType).URI.len,
+                                &mut ((*RetrievalMethodType).URI.unwrap().len as u16),
                             )?;
                             if error == 0 as i32 {
-                                if (*RetrievalMethodType).URI.len as i32 >= 2 as i32 {
-                                    (*RetrievalMethodType).URI.len =
-                                        ((*RetrievalMethodType).URI.len as i32 - 2 as i32)
-                                            as u16;
+                                if (*RetrievalMethodType).URI.unwrap().len as i32 >= 2 as i32 {
+                                    (*RetrievalMethodType).URI.unwrap().len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
-                                        (*RetrievalMethodType).URI.len as usize,
-                                        ((*RetrievalMethodType).URI.data).as_mut_ptr(),
+                                        (*RetrievalMethodType).URI.unwrap().len as usize,
+                                        &mut (*RetrievalMethodType).URI.unwrap().data,
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
@@ -2501,7 +2445,7 @@ pub fn decode_iso2_RetrievalMethodType(
                         2 => {
                             decode_iso2_TransformsType(
                                 stream,
-                                &mut (*RetrievalMethodType).Transforms,
+                                &mut (*RetrievalMethodType).Transforms.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -2523,17 +2467,15 @@ pub fn decode_iso2_RetrievalMethodType(
                         0 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*RetrievalMethodType).URI.len,
+                                &mut ((*RetrievalMethodType).URI.unwrap().len as u16),
                             )?;
                             if error == 0 as i32 {
-                                if (*RetrievalMethodType).URI.len as i32 >= 2 as i32 {
-                                    (*RetrievalMethodType).URI.len =
-                                        ((*RetrievalMethodType).URI.len as i32 - 2 as i32)
-                                            as u16;
+                                if (*RetrievalMethodType).URI.unwrap().len as i32 >= 2 as i32 {
+                                    (*RetrievalMethodType).URI.unwrap().len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
-                                        (*RetrievalMethodType).URI.len as usize,
-                                        ((*RetrievalMethodType).URI.data).as_mut_ptr(),
+                                        (*RetrievalMethodType).URI.unwrap().len as usize,
+                                        &mut (*RetrievalMethodType).URI.unwrap().data,
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
@@ -2545,7 +2487,7 @@ pub fn decode_iso2_RetrievalMethodType(
                         1 => {
                             decode_iso2_TransformsType(
                                 stream,
-                                &mut (*RetrievalMethodType).Transforms,
+                                &mut (*RetrievalMethodType).Transforms.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -2567,7 +2509,7 @@ pub fn decode_iso2_RetrievalMethodType(
                         0 => {
                             decode_iso2_TransformsType(
                                 stream,
-                                &mut (*RetrievalMethodType).Transforms,
+                                &mut (*RetrievalMethodType).Transforms.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -2618,17 +2560,15 @@ pub fn decode_iso2_SalesTariffType(
                         0 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*SalesTariffType).Id.len,
+                                &mut ((*SalesTariffType).Id.unwrap().len as u16),
                             )?;
                             if error == 0 as i32 {
-                                if (*SalesTariffType).Id.len as i32 >= 2 as i32 {
-                                    (*SalesTariffType).Id.len =
-                                        ((*SalesTariffType).Id.len as i32 - 2 as i32)
-                                            as u16;
+                                if (*SalesTariffType).Id.unwrap().len as i32 >= 2 as i32 {
+                                    (*SalesTariffType).Id.unwrap().len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
-                                        (*SalesTariffType).Id.len as usize,
-                                        ((*SalesTariffType).Id.data).as_mut_ptr(),
+                                        (*SalesTariffType).Id.unwrap().len as usize,
+                                        &mut (*SalesTariffType).Id.unwrap().data,
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
@@ -2741,33 +2681,26 @@ pub fn decode_iso2_SalesTariffType(
                                 if eventCode == 0 as i32 as u32 {
                                     exi_basetypes_decoder_uint_16(
                                         stream,
-                                        &mut (*SalesTariffType)
+                                        &mut ((*SalesTariffType)
                                             .SalesTariffDescription
-                                            .len,
+                                            .unwrap().len as u16),
                                     )?;
                                     if error == 0 as i32 {
-                                        if (*SalesTariffType).SalesTariffDescription.len
+                                        if (*SalesTariffType).SalesTariffDescription.unwrap().len
                                             as i32
                                             >= 2 as i32
                                         {
                                             (*SalesTariffType)
                                                 .SalesTariffDescription
-                                                .len = ((*SalesTariffType)
-                                                .SalesTariffDescription
-                                                .len
-                                                as i32
-                                                - 2 as i32)
-                                                as u16;
+                                                .unwrap().len -= 2;
                                             exi_basetypes_decoder_characters(
                                                 stream,
                                                 (*SalesTariffType)
                                                     .SalesTariffDescription
-                                                    .len
-                                                    as usize,
-                                                ((*SalesTariffType)
+                                                    .unwrap().len,
+                                                &mut (*SalesTariffType)
                                                     .SalesTariffDescription
-                                                    .data)
-                                                    .as_mut_ptr(),
+                                                    .unwrap().data,
                                                 (32 as i32 + 1 as i32) as usize,
                                             )?;
                                         } else {
@@ -2786,7 +2719,6 @@ pub fn decode_iso2_SalesTariffType(
                                 )?;
                                 if error == 0 as i32 {
                                     if eventCode == 0 as i32 as u32 {
-                                        (*SalesTariffType)
                                         grammar_id = 60 as i32;
                                     } else {
                                         return Err(-170);
@@ -2809,7 +2741,7 @@ pub fn decode_iso2_SalesTariffType(
                                         &mut value_1,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*SalesTariffType).NumEPriceLevels = Some(value_1);
+                                        (*SalesTariffType).NumEPriceLevels = Some(value_1 as u8);
                                     }
                                 } else {
                                     return Err(-151);
@@ -2835,12 +2767,15 @@ pub fn decode_iso2_SalesTariffType(
                                 let fresh8 = (*SalesTariffType).SalesTariffEntry.arrayLen;
                                 (*SalesTariffType).SalesTariffEntry.arrayLen =
                                     ((*SalesTariffType).SalesTariffEntry.arrayLen).wrapping_add(1);
-                                decode_iso2_SalesTariffEntryType(
-                                    stream,
-                                    &mut *((*SalesTariffType).SalesTariffEntry.array)
-                                        .as_mut_ptr()
-                                        .offset(fresh8 as isize),
-                                )?;
+                                if let Some(entry) = (*SalesTariffType)
+                                    .SalesTariffEntry
+                                    .array
+                                    .get_mut(fresh8 as usize)
+                                {
+                                    decode_iso2_SalesTariffEntryType(stream, entry)?;
+                                } else {
+                                    return Err(-110);
+                                }
                             } else {
                                 return Err(-110);
                             }
@@ -2861,12 +2796,15 @@ pub fn decode_iso2_SalesTariffType(
                                 let fresh9 = (*SalesTariffType).SalesTariffEntry.arrayLen;
                                 (*SalesTariffType).SalesTariffEntry.arrayLen =
                                     ((*SalesTariffType).SalesTariffEntry.arrayLen).wrapping_add(1);
-                                decode_iso2_SalesTariffEntryType(
-                                    stream,
-                                    &mut *((*SalesTariffType).SalesTariffEntry.array)
-                                        .as_mut_ptr()
-                                        .offset(fresh9 as isize),
-                                )?;
+                                if let Some(entry) = (*SalesTariffType)
+                                    .SalesTariffEntry
+                                    .array
+                                    .get_mut(fresh9 as usize)
+                                {
+                                    decode_iso2_SalesTariffEntryType(stream, entry)?;
+                                } else {
+                                    return Err(-110);
+                                }
                             } else {
                                 return Err(-110);
                             }
@@ -2904,7 +2842,7 @@ pub fn decode_iso2_SalesTariffType(
                                         &mut value_2,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*SalesTariffType).NumEPriceLevels = Some(value_2);
+                                        (*SalesTariffType).NumEPriceLevels = Some(value_2 as u8);
                                     }
                                 } else {
                                     return Err(-151);
@@ -2930,12 +2868,15 @@ pub fn decode_iso2_SalesTariffType(
                                 let fresh10 = (*SalesTariffType).SalesTariffEntry.arrayLen;
                                 (*SalesTariffType).SalesTariffEntry.arrayLen =
                                     ((*SalesTariffType).SalesTariffEntry.arrayLen).wrapping_add(1);
-                                decode_iso2_SalesTariffEntryType(
-                                    stream,
-                                    &mut *((*SalesTariffType).SalesTariffEntry.array)
-                                        .as_mut_ptr()
-                                        .offset(fresh10 as isize),
-                                )?;
+                                if let Some(entry) = (*SalesTariffType)
+                                    .SalesTariffEntry
+                                    .array
+                                    .get_mut(fresh10 as usize)
+                                {
+                                    decode_iso2_SalesTariffEntryType(stream, entry)?;
+                                } else {
+                                    return Err(-110);
+                                }
                             } else {
                                 return Err(-110);
                             }
@@ -2956,12 +2897,15 @@ pub fn decode_iso2_SalesTariffType(
                                 let fresh11 = (*SalesTariffType).SalesTariffEntry.arrayLen;
                                 (*SalesTariffType).SalesTariffEntry.arrayLen =
                                     ((*SalesTariffType).SalesTariffEntry.arrayLen).wrapping_add(1);
-                                decode_iso2_SalesTariffEntryType(
-                                    stream,
-                                    &mut *((*SalesTariffType).SalesTariffEntry.array)
-                                        .as_mut_ptr()
-                                        .offset(fresh11 as isize),
-                                )?;
+                                if let Some(entry) = (*SalesTariffType)
+                                    .SalesTariffEntry
+                                    .array
+                                    .get_mut(fresh11 as usize)
+                                {
+                                    decode_iso2_SalesTariffEntryType(stream, entry)?;
+                                } else {
+                                    return Err(-110);
+                                }
                             } else {
                                 return Err(-110);
                             }
@@ -2989,12 +2933,15 @@ pub fn decode_iso2_SalesTariffType(
                                 let fresh12 = (*SalesTariffType).SalesTariffEntry.arrayLen;
                                 (*SalesTariffType).SalesTariffEntry.arrayLen =
                                     ((*SalesTariffType).SalesTariffEntry.arrayLen).wrapping_add(1);
-                                decode_iso2_SalesTariffEntryType(
-                                    stream,
-                                    &mut *((*SalesTariffType).SalesTariffEntry.array)
-                                        .as_mut_ptr()
-                                        .offset(fresh12 as isize),
-                                )?;
+                                if let Some(entry) = (*SalesTariffType)
+                                    .SalesTariffEntry
+                                    .array
+                                    .get_mut(fresh12 as usize)
+                                {
+                                    decode_iso2_SalesTariffEntryType(stream, entry)?;
+                                } else {
+                                    return Err(-110);
+                                }
                             } else {
                                 return Err(-110);
                             }
@@ -3015,12 +2962,15 @@ pub fn decode_iso2_SalesTariffType(
                                 let fresh13 = (*SalesTariffType).SalesTariffEntry.arrayLen;
                                 (*SalesTariffType).SalesTariffEntry.arrayLen =
                                     ((*SalesTariffType).SalesTariffEntry.arrayLen).wrapping_add(1);
-                                decode_iso2_SalesTariffEntryType(
-                                    stream,
-                                    &mut *((*SalesTariffType).SalesTariffEntry.array)
-                                        .as_mut_ptr()
-                                        .offset(fresh13 as isize),
-                                )?;
+                                if let Some(entry) = (*SalesTariffType)
+                                    .SalesTariffEntry
+                                    .array
+                                    .get_mut(fresh13 as usize)
+                                {
+                                    decode_iso2_SalesTariffEntryType(stream, entry)?;
+                                } else {
+                                    return Err(-110);
+                                }
                             } else {
                                 return Err(-110);
                             }
@@ -3075,7 +3025,7 @@ pub fn decode_iso2_X509DataType(
                         0 => {
                             decode_iso2_X509IssuerSerialType(
                                 stream,
-                                &mut (*X509DataType).X509IssuerSerial,
+                                &mut (*X509DataType).X509IssuerSerial.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -3084,10 +3034,8 @@ pub fn decode_iso2_X509DataType(
                         1 => {
                             decode_exi_type_hex_binary(
                                 stream,
-                                &mut (*X509DataType).X509SKI.len,
-                                &mut *((*X509DataType).X509SKI.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*X509DataType).X509SKI.unwrap().len,
+                                &mut (*X509DataType).X509SKI.unwrap().data,
                                 350 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -3104,23 +3052,18 @@ pub fn decode_iso2_X509DataType(
                                 if eventCode == 0 as i32 as u32 {
                                     exi_basetypes_decoder_uint_16(
                                         stream,
-                                        &mut (*X509DataType).X509SubjectName.len,
+                                        &mut ((*X509DataType).X509SubjectName.unwrap().len as u16),
                                     )?;
                                     if error == 0 as i32 {
-                                        if (*X509DataType).X509SubjectName.len as i32
+                                        if (*X509DataType).X509SubjectName.unwrap().len as i32
                                             >= 2 as i32
                                         {
-                                            (*X509DataType).X509SubjectName.len =
-                                                ((*X509DataType).X509SubjectName.len
-                                                    as i32
-                                                    - 2 as i32)
-                                                    as u16;
+                                            (*X509DataType).X509SubjectName.unwrap().len -= 2;
                                             exi_basetypes_decoder_characters(
                                                 stream,
-                                                (*X509DataType).X509SubjectName.len
+                                                (*X509DataType).X509SubjectName.unwrap().len
                                                     as usize,
-                                                ((*X509DataType).X509SubjectName.data)
-                                                    .as_mut_ptr(),
+                                                &mut (*X509DataType).X509SubjectName.unwrap().data,
                                                 (64 as i32 + 1 as i32) as usize,
                                             )?;
                                         } else {
@@ -3149,10 +3092,8 @@ pub fn decode_iso2_X509DataType(
                         3 => {
                             decode_exi_type_hex_binary(
                                 stream,
-                                &mut (*X509DataType).X509Certificate.len,
-                                &mut *((*X509DataType).X509Certificate.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*X509DataType).X509Certificate.unwrap().len,
+                                &mut (*X509DataType).X509Certificate.unwrap().data,
                                 350 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -3162,10 +3103,8 @@ pub fn decode_iso2_X509DataType(
                         4 => {
                             decode_exi_type_hex_binary(
                                 stream,
-                                &mut (*X509DataType).X509CRL.len,
-                                &mut *((*X509DataType).X509CRL.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*X509DataType).X509CRL.unwrap().len,
+                                &mut (*X509DataType).X509CRL.unwrap().data,
                                 350 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -3175,10 +3114,8 @@ pub fn decode_iso2_X509DataType(
                         5 => {
                             decode_exi_type_hex_binary(
                                 stream,
-                                &mut (*X509DataType).ANY.len,
-                                &mut *((*X509DataType).ANY.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*X509DataType).ANY.unwrap().len,
+                                &mut (*X509DataType).ANY.unwrap().data,
                                 4 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -3224,12 +3161,14 @@ pub fn decode_iso2_PGPDataType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
+                            let pgp_data = match &mut (*PGPDataType).PGPComponent {
+                                Iso2PGPComponentType::Choice1(ref mut c1) => c1,
+                                _ => return Err(-150),
+                            };
                             decode_exi_type_hex_binary(
                                 stream,
-                                &mut (*PGPDataType).PGPComponent.Choice1.PGPKeyID.len,
-                                &mut *((*PGPDataType).PGPComponent.Choice1.PGPKeyID.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut pgp_data.PGPKeyID.len,
+                                &mut pgp_data.PGPKeyID.data,
                                 350 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -3237,16 +3176,17 @@ pub fn decode_iso2_PGPDataType(
                             }
                         }
                         1 => {
+                            let pgp_data = match &mut (*PGPDataType).PGPComponent {
+                                Iso2PGPComponentType::Choice1(ref mut c1) => c1,
+                                _ => return Err(-150),
+                            };
                             decode_exi_type_hex_binary(
                                 stream,
-                                &mut (*PGPDataType).PGPComponent.Choice1.PGPKeyPacket.len,
-                                &mut *((*PGPDataType).PGPComponent.Choice1.PGPKeyPacket.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut pgp_data.PGPKeyPacket.unwrap().len,
+                                &mut pgp_data.PGPKeyPacket.unwrap().data,
                                 350 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
-                                ((*PGPDataType).PGPComponent.Choice1);
                                 grammar_id = 67 as i32;
                             }
                         }
@@ -3261,18 +3201,17 @@ pub fn decode_iso2_PGPDataType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
+                            let pgp_data = match &mut (*PGPDataType).PGPComponent {
+                                Iso2PGPComponentType::Choice1(ref mut c1) => c1,
+                                _ => return Err(-150),
+                            };
                             decode_exi_type_hex_binary(
                                 stream,
-                                &mut (*PGPDataType).PGPComponent.Choice1.PGPKeyPacket.len,
-                                &mut *((*PGPDataType).PGPComponent.Choice1.PGPKeyPacket.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut pgp_data.PGPKeyPacket.unwrap().len,
+                                &mut pgp_data.PGPKeyPacket.unwrap().data,
                                 350 as i32 as usize,
                             )?;
-                            if error == 0 as i32 {
-                                ((*PGPDataType).PGPComponent.Choice1);
-                                grammar_id = 67 as i32;
-                            }
+                            grammar_id = 67 as i32;
                         }
                         1 => {
                             return Err(-50);
@@ -3281,12 +3220,14 @@ pub fn decode_iso2_PGPDataType(
                             return Ok(0);
                         }
                         3 => {
+                            let pgp_data = match &mut (*PGPDataType).PGPComponent {
+                                Iso2PGPComponentType::Choice1(ref mut c1) => c1,
+                                _ => return Err(-150),
+                            };
                             decode_exi_type_hex_binary(
                                 stream,
-                                &mut (*PGPDataType).PGPComponent.Choice1.ANY.len,
-                                &mut *((*PGPDataType).PGPComponent.Choice1.ANY.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut pgp_data.ANY.unwrap().len,
+                                &mut pgp_data.ANY.unwrap().data,
                                 4 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -3313,12 +3254,14 @@ pub fn decode_iso2_PGPDataType(
                             return Ok(0);
                         }
                         3 => {
+                            let pgp_data = match &mut (*PGPDataType).PGPComponent {
+                                Iso2PGPComponentType::Choice1(ref mut c1) => c1,
+                                _ => return Err(-150),
+                            };
                             decode_exi_type_hex_binary(
                                 stream,
-                                &mut (*PGPDataType).PGPComponent.Choice1.ANY.len,
-                                &mut *((*PGPDataType).PGPComponent.Choice1.ANY.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut pgp_data.ANY.unwrap().len,
+                                &mut pgp_data.ANY.unwrap().data,
                                 4 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -3336,12 +3279,16 @@ pub fn decode_iso2_PGPDataType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
+                            // Ensure we are using PGPChoice2Type
+                            let pgp_data = match &mut (*PGPDataType).PGPComponent {
+                                Iso2PGPComponentType::Choice2(ref mut c2) => c2,
+                                _ => return Err(-150),
+                            };
+
                             decode_exi_type_hex_binary(
                                 stream,
-                                &mut (*PGPDataType).PGPComponent.Choice2.PGPKeyPacket.len,
-                                &mut *((*PGPDataType).PGPComponent.Choice2.PGPKeyPacket.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut pgp_data.PGPKeyPacket.len,
+                                &mut pgp_data.PGPKeyPacket.data,
                                 350 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -3365,11 +3312,11 @@ pub fn decode_iso2_PGPDataType(
                             return Ok(0);
                         }
                         2 => {
-                            if let mut Some(c2_any) = PGPComponent.Choice2{
+                            if let Some(c2_any) = PGPComponent.Choice2{
                                 decode_exi_type_hex_binary(
                                     stream,
-                                    &mut c2_any.len,
-                                    &mut c2_any.data,
+                                    &mut c2_ANY.unwrap().len,
+                                    &mut c2_ANY.unwrap().data,
                                     4
                                 )?;
                             }
@@ -3418,9 +3365,7 @@ pub fn decode_iso2_SPKIDataType(
                             decode_exi_type_hex_binary(
                                 stream,
                                 &mut (*SPKIDataType).SPKISexp.len,
-                                &mut *((*SPKIDataType).SPKISexp.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*SPKIDataType).SPKISexp.data,
                                 350 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -3446,10 +3391,8 @@ pub fn decode_iso2_SPKIDataType(
                         2 => {
                             decode_exi_type_hex_binary(
                                 stream,
-                                &mut (*SPKIDataType).ANY.len,
-                                &mut *((*SPKIDataType).ANY.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*SPKIDataType).ANY.unwrap().len,
+                                &mut (*SPKIDataType).ANY.unwrap().data,
                                 4 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -3498,18 +3441,16 @@ pub fn decode_iso2_SignedInfoType(
                         0 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*SignedInfoType).Id.len,
+                                &mut ((*ServiceType).ServiceName.unwrap().len as u16),
                             )?;
                             if error == 0 as i32 {
-                                if (*SignedInfoType).Id.len as i32 >= 2 as i32 {
-                                    (*SignedInfoType).Id.len =
-                                        ((*SignedInfoType).Id.len as i32 - 2 as i32)
-                                            as u16;
+                                if (*ServiceType).ServiceName.unwrap().len as i32 >= 2 as i32 {
+                                    (*ServiceType).ServiceName.unwrap().len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
-                                        (*SignedInfoType).Id.len as usize,
-                                        ((*SignedInfoType).Id.data).as_mut_ptr(),
-                                        (64 as i32 + 1 as i32) as usize,
+                                        (*ServiceType).ServiceName.unwrap().len,
+                                        &mut(*ServiceType).ServiceName.unwrap().data,
+                                        65,
                                     )?;
                                 } else {
                                     return Err(-200);
@@ -3575,16 +3516,17 @@ pub fn decode_iso2_SignedInfoType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            if ((*SignedInfoType).Reference.arrayLen as i32) < 4 as i32 {
-                                let fresh14 = (*SignedInfoType).Reference.arrayLen;
-                                (*SignedInfoType).Reference.arrayLen =
-                                    ((*SignedInfoType).Reference.arrayLen).wrapping_add(1);
-                                decode_iso2_ReferenceType(
-                                    stream,
-                                    &mut *((*SignedInfoType).Reference.array)
-                                        .as_mut_ptr()
-                                        .offset(fresh14 as isize),
-                                )?;
+                            if (*SignedInfoType).ReferenceLen < 4 {
+                                let fresh14 = (*SignedInfoType).ReferenceLen;
+                                if let Some(reference) = (*SignedInfoType)
+                                    .Reference
+                                    .get_mut(fresh14 as usize)
+                                {
+                                    decode_iso2_ReferenceType(stream, reference)?;
+                                    (*SignedInfoType).ReferenceLen += 1;
+                                } else {
+                                    return Err(-110);
+                                }
                             } else {
                                 return Err(-110);
                             }
@@ -3601,16 +3543,18 @@ pub fn decode_iso2_SignedInfoType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            if ((*SignedInfoType).Reference.arrayLen as i32) < 4 as i32 {
-                                let fresh15 = (*SignedInfoType).Reference.arrayLen;
-                                (*SignedInfoType).Reference.arrayLen =
-                                    ((*SignedInfoType).Reference.arrayLen).wrapping_add(1);
-                                decode_iso2_ReferenceType(
-                                    stream,
-                                    &mut *((*SignedInfoType).Reference.array)
-                                        .as_mut_ptr()
-                                        .offset(fresh15 as isize),
-                                )?;
+                            if ((*SignedInfoType).ReferenceLen as i32) < 4 as i32 {
+                                let fresh15 = (*SignedInfoType).ReferenceLen;
+                                (*SignedInfoType).ReferenceLen =
+                                    ((*SignedInfoType).ReferenceLen).wrapping_add(1);
+                                if let Some(reference) = (*SignedInfoType)
+                                    .Reference
+                                    .get_mut(fresh15 as usize)
+                                {
+                                    decode_iso2_ReferenceType(stream, reference)?;
+                                } else {
+                                    return Err(-110);
+                                }
                             } else {
                                 return Err(-110);
                             }
@@ -3713,7 +3657,7 @@ pub fn decode_iso2_ProfileEntryType(
                                     if error == 0 as i32 {
                                         (*ProfileEntryType)
                                             .ChargingProfileEntryMaxNumberOfPhasesInUse =
-                                            value.wrapping_add(1 as i32 as u32) as i8;
+                                            Some(value.wrapping_add(1) as i8);
                                     }
                                 } else {
                                     return Err(-151);
@@ -3968,12 +3912,14 @@ pub fn decode_iso2_ParameterSetType(
                                 let fresh16 = (*ParameterSetType).Parameter.arrayLen;
                                 (*ParameterSetType).Parameter.arrayLen =
                                     ((*ParameterSetType).Parameter.arrayLen).wrapping_add(1);
-                                decode_iso2_ParameterType(
-                                    stream,
-                                    &mut *((*ParameterSetType).Parameter.array)
-                                        .as_mut_ptr()
-                                        .offset(fresh16 as isize),
-                                )?;
+                                if let Some(param) = (*ParameterSetType).Parameter.array.get_mut(fresh16 as usize) {
+                                    decode_iso2_ParameterType(
+                                        stream,
+                                        param,
+                                    )?;
+                                } else {
+                                    return Err(-110);
+                                }
                             } else {
                                 return Err(-110);
                             }
@@ -3994,12 +3940,14 @@ pub fn decode_iso2_ParameterSetType(
                                 let fresh17 = (*ParameterSetType).Parameter.arrayLen;
                                 (*ParameterSetType).Parameter.arrayLen =
                                     ((*ParameterSetType).Parameter.arrayLen).wrapping_add(1);
-                                decode_iso2_ParameterType(
-                                    stream,
-                                    &mut *((*ParameterSetType).Parameter.array)
-                                        .as_mut_ptr()
-                                        .offset(fresh17 as isize),
-                                )?;
+                                if let Some(param) = (*ParameterSetType).Parameter.array.get_mut(fresh17 as usize) {
+                                    decode_iso2_ParameterType(
+                                        stream,
+                                        param,
+                                    )?;
+                                } else {
+                                    return Err(-110);
+                                }
                             } else {
                                 return Err(-110);
                             }
@@ -4120,7 +4068,7 @@ pub fn decode_iso2_SAScheduleTupleType(
                         0 => {
                             decode_iso2_SalesTariffType(
                                 stream,
-                                &mut (*SAScheduleTupleType).SalesTariff,
+                                &mut (*SAScheduleTupleType).SalesTariff.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -4190,7 +4138,7 @@ pub fn decode_iso2_SelectedServiceType(
                         0 => {
                             decode_exi_type_integer16(
                                 stream,
-                                &mut (*SelectedServiceType).ParameterSetID,
+                                &mut (*SelectedServiceType).ParameterSetID.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -4264,22 +4212,18 @@ pub fn decode_iso2_ServiceType(
                                 if eventCode == 0 as i32 as u32 {
                                     exi_basetypes_decoder_uint_16(
                                         stream,
-                                        &mut (*ServiceType).ServiceName.len,
+                                        &mut ((*ServiceType).ServiceName.unwrap().len as u16),
                                     )?;
                                     if error == 0 as i32 {
-                                        if (*ServiceType).ServiceName.len as i32
+                                        if (*ServiceType).ServiceName.unwrap().len as i32
                                             >= 2 as i32
                                         {
-                                            (*ServiceType).ServiceName.len =
-                                                ((*ServiceType).ServiceName.len as i32
-                                                    - 2 as i32)
-                                                    as u16;
+                                            (*ServiceType).ServiceName.unwrap().len -= 2;
                                             exi_basetypes_decoder_characters(
                                                 stream,
-                                                (*ServiceType).ServiceName.len as usize,
-                                                ((*ServiceType).ServiceName.data)
-                                                    .as_mut_ptr(),
-                                                (32 as i32 + 1 as i32) as usize,
+                                                (*ServiceType).ServiceName.unwrap().len,
+                                                &mut (*ServiceType).ServiceName.unwrap().data,
+                                                33,
                                             )?;
                                         } else {
                                             return Err(-200);
@@ -4408,22 +4352,18 @@ pub fn decode_iso2_ServiceType(
                                 if eventCode == 0 as i32 as u32 {
                                     exi_basetypes_decoder_uint_16(
                                         stream,
-                                        &mut (*ServiceType).ServiceScope.len,
+                                        &mut ((*ServiceType).ServiceScope.unwrap().len as u16),
                                     )?;
                                     if error == 0 as i32 {
-                                        if (*ServiceType).ServiceScope.len as i32
+                                        if (*ServiceType).ServiceScope.unwrap().len as i32
                                             >= 2 as i32
                                         {
-                                            (*ServiceType).ServiceScope.len =
-                                                ((*ServiceType).ServiceScope.len as i32
-                                                    - 2 as i32)
-                                                    as u16;
+                                            (*ServiceType).ServiceScope.unwrap().len -= 2;
                                             exi_basetypes_decoder_characters(
                                                 stream,
-                                                (*ServiceType).ServiceScope.len as usize,
-                                                ((*ServiceType).ServiceScope.data)
-                                                    .as_mut_ptr(),
-                                                (64 as i32 + 1 as i32) as usize,
+                                                (*ServiceType).ServiceScope.unwrap().len,
+                                                &mut (*ServiceType).ServiceScope.unwrap().data,
+                                                65,
                                             )?;
                                         } else {
                                             return Err(-200);
@@ -4572,17 +4512,15 @@ pub fn decode_iso2_SignatureValueType(
                         0 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*SignatureValueType).Id.len,
+                                &mut ((*KeyInfoType).Id.unwrap().len as u16),
                             )?;
                             if error == 0 as i32 {
-                                if (*SignatureValueType).Id.len as i32 >= 2 as i32 {
-                                    (*SignatureValueType).Id.len =
-                                        ((*SignatureValueType).Id.len as i32 - 2 as i32)
-                                            as u16;
+                                if (*KeyInfoType).Id.unwrap().len as i32 >= 2 as i32 {
+                                    (*KeyInfoType).Id.unwrap().len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
-                                        (*SignatureValueType).Id.len as usize,
-                                        ((*SignatureValueType).Id.data).as_mut_ptr(),
+                                        (*KeyInfoType).Id.unwrap().len as usize,
+                                        &mut (*KeyInfoType).Id.unwrap().data,
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
@@ -4594,16 +4532,13 @@ pub fn decode_iso2_SignatureValueType(
                         1 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*SignatureValueType).CONTENT.len,
+                                &mut ((*SignatureValueType).CONTENT.len as u16),
                             )?;
                             if error == 0 as i32 {
                                 exi_basetypes_decoder_bytes(
                                     stream,
                                     (*SignatureValueType).CONTENT.len as usize,
-                                    &mut *((*SignatureValueType).CONTENT.data)
-                                        .as_mut_ptr()
-                                        .offset(0 as i32 as isize),
-                                    350 as i32 as usize,
+                                    &mut (*SignatureValueType).CONTENT.data,
                                 )?;
                                 if error == 0 as i32 {
                                     grammar_id = 3 as i32;
@@ -4623,16 +4558,13 @@ pub fn decode_iso2_SignatureValueType(
                         0 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*SignatureValueType).CONTENT.len,
+                                &mut ((*SignatureValueType).CONTENT.len as u16),
                             )?;
                             if error == 0 as i32 {
                                 exi_basetypes_decoder_bytes(
                                     stream,
                                     (*SignatureValueType).CONTENT.len as usize,
-                                    &mut *((*SignatureValueType).CONTENT.data)
-                                        .as_mut_ptr()
-                                        .offset(0 as i32 as isize),
-                                    350 as i32 as usize,
+                                    &mut (*SignatureValueType).CONTENT.data,
                                 )?;
                                 if error == 0 as i32 {
                                     grammar_id = 3 as i32;
@@ -4680,30 +4612,22 @@ pub fn decode_iso2_SubCertificatesType(
                     match eventCode {
                         0 => {
                             if ((*SubCertificatesType).Certificate.arrayLen as i32) < 4 as i32 {
-                                decode_exi_type_hex_binary(
-                                    stream,
-                                    &mut (*((*SubCertificatesType).Certificate.array)
-                                        .as_mut_ptr()
-                                        .offset(
-                                            (*SubCertificatesType).Certificate.arrayLen as isize,
-                                        ))
-                                    .len,
-                                    &mut *((*((*SubCertificatesType).Certificate.array)
-                                        .as_mut_ptr()
-                                        .offset(
-                                            (*SubCertificatesType).Certificate.arrayLen as isize,
-                                        ))
-                                    .data)
-                                        .as_mut_ptr()
-                                        .offset(0 as i32 as isize),
-                                    800 as i32 as usize,
-                                )?;
-                                if error == 0 as i32 {
-                                    (*SubCertificatesType).Certificate.arrayLen =
-                                        ((*SubCertificatesType).Certificate.arrayLen)
-                                            .wrapping_add(1);
-                                    (*SubCertificatesType).Certificate.arrayLen;
-                                    grammar_id = 99 as i32;
+                                let idx = (*SubCertificatesType).Certificate.arrayLen as usize;
+                                if let Some(cert) = (*SubCertificatesType).Certificate.array.get_mut(idx) {
+                                    decode_exi_type_hex_binary(
+                                        stream,
+                                        &mut cert.len,
+                                        &mut cert.data,
+                                        800 as usize,
+                                    )?;
+                                    if error == 0 as i32 {
+                                        (*SubCertificatesType).Certificate.arrayLen =
+                                            ((*SubCertificatesType).Certificate.arrayLen)
+                                                .wrapping_add(1);
+                                        grammar_id = 99 as i32;
+                                    }
+                                } else {
+                                    return Err(-110);
                                 }
                             } else {
                                 return Err(-110);
@@ -4721,30 +4645,22 @@ pub fn decode_iso2_SubCertificatesType(
                     match eventCode {
                         0 => {
                             if ((*SubCertificatesType).Certificate.arrayLen as i32) < 4 as i32 {
-                                decode_exi_type_hex_binary(
-                                    stream,
-                                    &mut (*((*SubCertificatesType).Certificate.array)
-                                        .as_mut_ptr()
-                                        .offset(
-                                            (*SubCertificatesType).Certificate.arrayLen as isize,
-                                        ))
-                                    .len,
-                                    &mut *((*((*SubCertificatesType).Certificate.array)
-                                        .as_mut_ptr()
-                                        .offset(
-                                            (*SubCertificatesType).Certificate.arrayLen as isize,
-                                        ))
-                                    .data)
-                                        .as_mut_ptr()
-                                        .offset(0 as i32 as isize),
-                                    800 as i32 as usize,
-                                )?;
-                                if error == 0 as i32 {
-                                    (*SubCertificatesType).Certificate.arrayLen =
-                                        ((*SubCertificatesType).Certificate.arrayLen)
-                                            .wrapping_add(1);
-                                    (*SubCertificatesType).Certificate.arrayLen;
-                                    grammar_id = 99 as i32;
+                                let idx = (*SubCertificatesType).Certificate.arrayLen as usize;
+                                if let Some(cert) = (*SubCertificatesType).Certificate.array.get_mut(idx) {
+                                    decode_exi_type_hex_binary(
+                                        stream,
+                                        &mut cert.len,
+                                        &mut cert.data,
+                                        800 as usize,
+                                    )?;
+                                    if error == 0 as i32 {
+                                        (*SubCertificatesType).Certificate.arrayLen =
+                                            ((*SubCertificatesType).Certificate.arrayLen)
+                                                .wrapping_add(1);
+                                        grammar_id = 99 as i32;
+                                    }
+                                } else {
+                                    return Err(-110);
                                 }
                             } else {
                                 return Err(-110);
@@ -4795,17 +4711,16 @@ pub fn decode_iso2_KeyInfoType(
                         0 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*KeyInfoType).Id.len,
+                                &mut ((*KeyInfoType).Id.unwrap().len as u16),
                             )?;
                             if error == 0 as i32 {
-                                if (*KeyInfoType).Id.len as i32 >= 2 as i32 {
-                                    (*KeyInfoType).Id.len =
-                                        ((*KeyInfoType).Id.len as i32 - 2 as i32) as u16;
+                                if (*KeyInfoType).Id.unwrap().len as i32 >= 2 as i32 {
+                                    (*KeyInfoType).Id.unwrap().len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
-                                        (*KeyInfoType).Id.len as usize,
-                                        ((*KeyInfoType).Id.data).as_mut_ptr(),
-                                        (64 as i32 + 1 as i32) as usize,
+                                        (*KeyInfoType).Id.unwrap().len,
+                                        &mut (*KeyInfoType).Id.unwrap().data,
+                                        65,
                                     )?;
                                 } else {
                                     return Err(-200);
@@ -4823,18 +4738,15 @@ pub fn decode_iso2_KeyInfoType(
                                 if eventCode == 0 as i32 as u32 {
                                     exi_basetypes_decoder_uint_16(
                                         stream,
-                                        &mut (*KeyInfoType).KeyName.len,
+                                        &mut ((*KeyInfoType).KeyName.unwrap().len as u16),
                                     )?;
                                     if error == 0 as i32 {
-                                        if (*KeyInfoType).KeyName.len as i32 >= 2 as i32 {
-                                            (*KeyInfoType).KeyName.len =
-                                                ((*KeyInfoType).KeyName.len as i32
-                                                    - 2 as i32)
-                                                    as u16;
+                                        if (*KeyInfoType).KeyName.unwrap().len as i32 >= 2 as i32 {
+                                            (*KeyInfoType).KeyName.unwrap().len -= 2;
                                             exi_basetypes_decoder_characters(
                                                 stream,
-                                                (*KeyInfoType).KeyName.len as usize,
-                                                ((*KeyInfoType).KeyName.data).as_mut_ptr(),
+                                                (*KeyInfoType).KeyName.unwrap().len as usize,
+                                                &mut (*KeyInfoType).KeyName.unwrap().data,
                                                 (64 as i32 + 1 as i32) as usize,
                                             )?;
                                         } else {
@@ -4861,7 +4773,7 @@ pub fn decode_iso2_KeyInfoType(
                             }
                         }
                         2 => {
-                            decode_iso2_KeyValueType(stream, &mut (*KeyInfoType).KeyValue);
+                            decode_iso2_KeyValueType(stream, &mut (*KeyInfoType).KeyValue.unwrap());
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
                             }
@@ -4869,26 +4781,26 @@ pub fn decode_iso2_KeyInfoType(
                         3 => {
                             decode_iso2_RetrievalMethodType(
                                 stream,
-                                &mut (*KeyInfoType).RetrievalMethod,
+                                &mut (*KeyInfoType).RetrievalMethod.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
                             }
                         }
                         4 => {
-                            decode_iso2_X509DataType(stream, &mut (*KeyInfoType).X509Data);
+                            decode_iso2_X509DataType(stream, &mut (*KeyInfoType).X509Data.unwrap());
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
                             }
                         }
                         5 => {
-                            decode_iso2_PGPDataType(stream, &mut (*KeyInfoType).PGPData);
+                            decode_iso2_PGPDataType(stream, &mut (*KeyInfoType).PGPData.unwrap());
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
                             }
                         }
                         6 => {
-                            decode_iso2_SPKIDataType(stream, &mut (*KeyInfoType).SPKIData);
+                            decode_iso2_SPKIDataType(stream, &mut (*KeyInfoType).SPKIData.unwrap());
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
                             }
@@ -4901,22 +4813,19 @@ pub fn decode_iso2_KeyInfoType(
                             )?;
                             if error == 0 as i32 {
                                 if eventCode == 0 as i32 as u32 {
+                                    let mgmt_data = (*KeyInfoType).MgmtData.as_mut().unwrap();
                                     exi_basetypes_decoder_uint_16(
                                         stream,
-                                        &mut (*KeyInfoType).MgmtData.len,
+                                        &mut (mgmt_data.len as u16),
                                     )?;
                                     if error == 0 as i32 {
-                                        if (*KeyInfoType).MgmtData.len as i32 >= 2 as i32
-                                        {
-                                            (*KeyInfoType).MgmtData.len =
-                                                ((*KeyInfoType).MgmtData.len as i32
-                                                    - 2 as i32)
-                                                    as u16;
+                                        if mgmt_data.len >= 2 {
+                                            mgmt_data.len -= 2;
                                             exi_basetypes_decoder_characters(
                                                 stream,
-                                                (*KeyInfoType).MgmtData.len as usize,
-                                                ((*KeyInfoType).MgmtData.data).as_mut_ptr(),
-                                                (64 as i32 + 1 as i32) as usize,
+                                                mgmt_data.len as usize,
+                                                &mut mgmt_data.data,
+                                                65,
                                             )?;
                                         } else {
                                             return Err(-200);
@@ -4944,11 +4853,9 @@ pub fn decode_iso2_KeyInfoType(
                         8 => {
                             decode_exi_type_hex_binary(
                                 stream,
-                                &mut (*KeyInfoType).ANY.len,
-                                &mut *((*KeyInfoType).ANY.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
-                                4 as i32 as usize,
+                                &mut (*KeyInfoType).ANY.unwrap().len,
+                                &mut (*KeyInfoType).ANY.unwrap().data,
+                                4,
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -4974,19 +4881,16 @@ pub fn decode_iso2_KeyInfoType(
                                 if eventCode == 0 as i32 as u32 {
                                     exi_basetypes_decoder_uint_16(
                                         stream,
-                                        &mut (*KeyInfoType).KeyName.len,
+                                        &mut ((*KeyInfoType).KeyName.unwrap().len as u16),
                                     )?;
                                     if error == 0 as i32 {
-                                        if (*KeyInfoType).KeyName.len as i32 >= 2 as i32 {
-                                            (*KeyInfoType).KeyName.len =
-                                                ((*KeyInfoType).KeyName.len as i32
-                                                    - 2 as i32)
-                                                    as u16;
+                                        if (*KeyInfoType).KeyName.unwrap().len as i32 >= 2 as i32 {
+                                            (*KeyInfoType).KeyName.unwrap().len -= 2;
                                             exi_basetypes_decoder_characters(
                                                 stream,
-                                                (*KeyInfoType).KeyName.len as usize,
-                                                ((*KeyInfoType).KeyName.data).as_mut_ptr(),
-                                                (64 as i32 + 1 as i32) as usize,
+                                                (*KeyInfoType).KeyName.unwrap().len,
+                                                &mut (*KeyInfoType).KeyName.unwrap().data,
+                                                65,
                                             )?;
                                         } else {
                                             return Err(-200);
@@ -5012,7 +4916,7 @@ pub fn decode_iso2_KeyInfoType(
                             }
                         }
                         1 => {
-                            decode_iso2_KeyValueType(stream, &mut (*KeyInfoType).KeyValue);
+                            decode_iso2_KeyValueType(stream, &mut (*KeyInfoType).KeyValue.unwrap());
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
                             }
@@ -5020,26 +4924,26 @@ pub fn decode_iso2_KeyInfoType(
                         2 => {
                             decode_iso2_RetrievalMethodType(
                                 stream,
-                                &mut (*KeyInfoType).RetrievalMethod,
+                                &mut (*KeyInfoType).RetrievalMethod.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
                             }
                         }
                         3 => {
-                            decode_iso2_X509DataType(stream, &mut (*KeyInfoType).X509Data);
+                            decode_iso2_X509DataType(stream, &mut (*KeyInfoType).X509Data.unwrap());
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
                             }
                         }
                         4 => {
-                            decode_iso2_PGPDataType(stream, &mut (*KeyInfoType).PGPData);
+                            decode_iso2_PGPDataType(stream, &mut (*KeyInfoType).PGPData.unwrap());
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
                             }
                         }
                         5 => {
-                            decode_iso2_SPKIDataType(stream, &mut (*KeyInfoType).SPKIData);
+                            decode_iso2_SPKIDataType(stream, &mut (*KeyInfoType).SPKIData.unwrap());
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
                             }
@@ -5054,19 +4958,16 @@ pub fn decode_iso2_KeyInfoType(
                                 if eventCode == 0 as i32 as u32 {
                                     exi_basetypes_decoder_uint_16(
                                         stream,
-                                        &mut (*KeyInfoType).MgmtData.len,
+                                        &mut ((*KeyInfoType).MgmtData.unwrap().len as u16),
                                     )?;
                                     if error == 0 as i32 {
-                                        if (*KeyInfoType).MgmtData.len as i32 >= 2 as i32
+                                        if (*KeyInfoType).MgmtData.unwrap().len as i32 >= 2 as i32
                                         {
-                                            (*KeyInfoType).MgmtData.len =
-                                                ((*KeyInfoType).MgmtData.len as i32
-                                                    - 2 as i32)
-                                                    as u16;
+                                            (*KeyInfoType).MgmtData.unwrap().len -= 2;
                                             exi_basetypes_decoder_characters(
                                                 stream,
-                                                (*KeyInfoType).MgmtData.len as usize,
-                                                ((*KeyInfoType).MgmtData.data).as_mut_ptr(),
+                                                (*KeyInfoType).MgmtData.unwrap().len as usize,
+                                                &mut (*KeyInfoType).MgmtData.unwrap().data,
                                                 (64 as i32 + 1 as i32) as usize,
                                             )?;
                                         } else {
@@ -5095,10 +4996,8 @@ pub fn decode_iso2_KeyInfoType(
                         7 => {
                             decode_exi_type_hex_binary(
                                 stream,
-                                &mut (*KeyInfoType).ANY.len,
-                                &mut *((*KeyInfoType).ANY.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*KeyInfoType).ANY.unwrap().len,
+                                &mut (*KeyInfoType).ANY.unwrap().data,
                                 4 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -5135,7 +5034,6 @@ pub fn decode_iso2_ObjectType(
     mut ObjectType: &mut Iso2ObjectType,
 ) -> Result<u8, i16> {
     let mut grammar_id: i32 = 102 as i32;
-
     let mut eventCode: u32 = 0;
     let mut error: i32 = 0;
     loop {
@@ -5147,18 +5045,16 @@ pub fn decode_iso2_ObjectType(
                         0 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*ObjectType).Encoding.len,
+                                &mut ((*ObjectType).Encoding.unwrap().len as u16),
                             )?;
                             if error == 0 as i32 {
-                                if (*ObjectType).Encoding.len as i32 >= 2 as i32 {
-                                    (*ObjectType).Encoding.len =
-                                        ((*ObjectType).Encoding.len as i32 - 2 as i32)
-                                            as u16;
+                                if (*ObjectType).Encoding.unwrap().len as i32 >= 2 as i32 {
+                                    (*ObjectType).Encoding.unwrap().len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
-                                        (*ObjectType).Encoding.len as usize,
-                                        ((*ObjectType).Encoding.data).as_mut_ptr(),
-                                        (64 as i32 + 1 as i32) as usize,
+                                        (*ObjectType).Encoding.unwrap().len,
+                                        &mut (*ObjectType).Encoding.unwrap().data,
+                                        65,
                                     )?;
                                 } else {
                                     return Err(-200);
@@ -5169,17 +5065,16 @@ pub fn decode_iso2_ObjectType(
                         1 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*ObjectType).Id.len,
+                                &mut ((*ObjectType).Id.as_mut().unwrap().len as u16),
                             )?;
                             if error == 0 as i32 {
-                                if (*ObjectType).Id.len as i32 >= 2 as i32 {
-                                    (*ObjectType).Id.len =
-                                        ((*ObjectType).Id.len as i32 - 2 as i32) as u16;
+                                if (*ObjectType).Id.as_ref().unwrap().len as i32 >= 2 as i32 {
+                                    (*ObjectType).Id.as_mut().unwrap().len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
-                                        (*ObjectType).Id.len as usize,
-                                        ((*ObjectType).Id.data).as_mut_ptr(),
-                                        (64 as i32 + 1 as i32) as usize,
+                                        (*ObjectType).Id.as_ref().unwrap().len,
+                                        &mut (*ObjectType).Id.as_mut().unwrap().data,
+                                        65,
                                     )?;
                                 } else {
                                     return Err(-200);
@@ -5190,18 +5085,16 @@ pub fn decode_iso2_ObjectType(
                         2 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*ObjectType).MimeType.len,
+                                &mut ((*ObjectType).MimeType.unwrap().len as u16),
                             )?;
                             if error == 0 as i32 {
-                                if (*ObjectType).MimeType.len as i32 >= 2 as i32 {
-                                    (*ObjectType).MimeType.len =
-                                        ((*ObjectType).MimeType.len as i32 - 2 as i32)
-                                            as u16;
+                                if (*ObjectType).MimeType.unwrap().len as i32 >= 2 as i32 {
+                                    (*ObjectType).MimeType.unwrap().len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
-                                        (*ObjectType).MimeType.len as usize,
-                                        ((*ObjectType).MimeType.data).as_mut_ptr(),
-                                        (64 as i32 + 1 as i32) as usize,
+                                        (*ObjectType).MimeType.unwrap().len,
+                                        &mut (*ObjectType).MimeType.unwrap().data,
+                                        65,
                                     )?;
                                 } else {
                                     return Err(-200);
@@ -5218,10 +5111,8 @@ pub fn decode_iso2_ObjectType(
                         5 => {
                             decode_exi_type_hex_binary(
                                 stream,
-                                &mut (*ObjectType).ANY.len,
-                                &mut *((*ObjectType).ANY.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*ObjectType).ANY.unwrap().len,
+                                &mut (*ObjectType).ANY.unwrap().data,
                                 4 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -5241,17 +5132,16 @@ pub fn decode_iso2_ObjectType(
                         0 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*ObjectType).Id.len,
+                                &mut ((*ObjectType).Id.unwrap()-len as u16)
                             )?;
                             if error == 0 as i32 {
-                                if (*ObjectType).Id.len as i32 >= 2 as i32 {
-                                    (*ObjectType).Id.len =
-                                        ((*ObjectType).Id.len as i32 - 2 as i32) as u16;
+                                if (*ObjectType).Id.unwrap().len as i32 >= 2 as i32 {
+                                    (*ObjectType).Id.unwrap().len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
-                                        (*ObjectType).Id.len as usize,
-                                        ((*ObjectType).Id.data).as_mut_ptr(),
-                                        (64 as i32 + 1 as i32) as usize,
+                                        (*ObjectType).Id.unwrap().len,
+                                        &mut (*ObjectType).Id.unwrap().data,
+                                        65,
                                     )?;
                                 } else {
                                     return Err(-200);
@@ -5262,18 +5152,16 @@ pub fn decode_iso2_ObjectType(
                         1 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*ObjectType).MimeType.len,
+                                &mut ((*ObjectType).MimeType.unwrap().len as u16),
                             )?;
                             if error == 0 as i32 {
-                                if (*ObjectType).MimeType.len as i32 >= 2 as i32 {
-                                    (*ObjectType).MimeType.len =
-                                        ((*ObjectType).MimeType.len as i32 - 2 as i32)
-                                            as u16;
+                                if (*ObjectType).MimeType.unwrap().len as i32 >= 2 as i32 {
+                                    (*ObjectType).MimeType.unwrap().len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
-                                        (*ObjectType).MimeType.len as usize,
-                                        ((*ObjectType).MimeType.data).as_mut_ptr(),
-                                        (64 as i32 + 1 as i32) as usize,
+                                        (*ObjectType).MimeType.unwrap().len,
+                                        &mut (*ObjectType).MimeType.unwrap().data,
+                                        65,
                                     )?;
                                 } else {
                                     return Err(-200);
@@ -5290,11 +5178,9 @@ pub fn decode_iso2_ObjectType(
                         4 => {
                             decode_exi_type_hex_binary(
                                 stream,
-                                &mut (*ObjectType).ANY.len,
-                                &mut *((*ObjectType).ANY.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
-                                4 as i32 as usize,
+                                &mut (*ObjectType).ANY.unwrap().len,
+                                &mut (*ObjectType).ANY.unwrap().data,
+                                4,
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -5313,18 +5199,16 @@ pub fn decode_iso2_ObjectType(
                         0 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*ObjectType).MimeType.len,
+                                &mut ((*ObjectType).MimeType.unwrap().len as u16),
                             )?;
                             if error == 0 as i32 {
-                                if (*ObjectType).MimeType.len as i32 >= 2 as i32 {
-                                    (*ObjectType).MimeType.len =
-                                        ((*ObjectType).MimeType.len as i32 - 2 as i32)
-                                            as u16;
+                                if (*ObjectType).MimeType.unwrap().len as i32 >= 2 as i32 {
+                                    (*ObjectType).MimeType.unwrap().len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
-                                        (*ObjectType).MimeType.len as usize,
-                                        ((*ObjectType).MimeType.data).as_mut_ptr(),
-                                        (64 as i32 + 1 as i32) as usize,
+                                        (*ObjectType).MimeType.unwrap().len,
+                                        &mut (*ObjectType).MimeType.unwrap().data,
+                                        65,
                                     )?;
                                 } else {
                                     return Err(-200);
@@ -5341,11 +5225,9 @@ pub fn decode_iso2_ObjectType(
                         3 => {
                             decode_exi_type_hex_binary(
                                 stream,
-                                &mut (*ObjectType).ANY.len,
-                                &mut *((*ObjectType).ANY.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
-                                4 as i32 as usize,
+                                &mut (*ObjectType).ANY.unwrap().len,
+                                &mut (*ObjectType).ANY.unwrap().data,
+                                4,
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -5370,11 +5252,9 @@ pub fn decode_iso2_ObjectType(
                         2 => {
                             decode_exi_type_hex_binary(
                                 stream,
-                                &mut (*ObjectType).ANY.len,
-                                &mut *((*ObjectType).ANY.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
-                                4 as i32 as usize,
+                                &mut (*ObjectType).ANY.unwrap().len,
+                                &mut (*ObjectType).ANY.unwrap().data,
+                                4,
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -5593,18 +5473,16 @@ pub fn decode_iso2_CertificateChainType(
                         0 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*CertificateChainType).Id.len,
+                                &mut ((*CertificateChainType).Id.unwrap().len as u16),
                             )?;
                             if error == 0 as i32 {
-                                if (*CertificateChainType).Id.len as i32 >= 2 as i32 {
-                                    (*CertificateChainType).Id.len =
-                                        ((*CertificateChainType).Id.len as i32 - 2 as i32)
-                                            as u16;
+                                if (*CertificateChainType).Id.unwrap().len as i32 >= 2 as i32 {
+                                    (*CertificateChainType).Id.unwrap().len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
-                                        (*CertificateChainType).Id.len as usize,
-                                        ((*CertificateChainType).Id.data).as_mut_ptr(),
-                                        (64 as i32 + 1 as i32) as usize,
+                                        (*CertificateChainType).Id.unwrap().len,
+                                        &mut (*CertificateChainType).Id.unwrap().data,
+                                        65,
                                     )?;
                                 } else {
                                     return Err(-200);
@@ -5616,9 +5494,7 @@ pub fn decode_iso2_CertificateChainType(
                             decode_exi_type_hex_binary(
                                 stream,
                                 &mut (*CertificateChainType).Certificate.len,
-                                &mut *((*CertificateChainType).Certificate.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*CertificateChainType).Certificate.data,
                                 800 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -5639,9 +5515,7 @@ pub fn decode_iso2_CertificateChainType(
                             decode_exi_type_hex_binary(
                                 stream,
                                 &mut (*CertificateChainType).Certificate.len,
-                                &mut *((*CertificateChainType).Certificate.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*CertificateChainType).Certificate.data,
                                 800 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -5661,7 +5535,7 @@ pub fn decode_iso2_CertificateChainType(
                         0 => {
                             decode_iso2_SubCertificatesType(
                                 stream,
-                                &mut (*CertificateChainType).SubCertificates,
+                                &mut (*CertificateChainType).SubCertificates.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -5700,12 +5574,11 @@ pub fn decode_iso2_BodyBaseType(
     mut BodyBaseType: &mut Iso2BodyBaseType,
 ) -> Result<u8, i16> {
     let mut eventCode: u32 = 0;
-    let mut error: i32 = exi_basetypes_decoder_nbit_uint(stream, 1, &mut eventCode)?;
-    if error == 0 as i32 {
-        if eventCode != 0 as i32 as u32 {
-            return Err(-150);
-        }
+    exi_basetypes_decoder_nbit_uint(stream, 1, &mut eventCode)?;
+    if eventCode != 0 as i32 as u32 {
+        return Err(-150);
     }
+    return Ok(0);
 }
 pub fn decode_iso2_NotificationType(
     stream: &mut ExiBitstream,
@@ -5777,22 +5650,18 @@ pub fn decode_iso2_NotificationType(
                                 if eventCode == 0 as i32 as u32 {
                                     exi_basetypes_decoder_uint_16(
                                         stream,
-                                        &mut (*NotificationType).FaultMsg.len,
+                                        &mut ((*NotificationType).FaultMsg.unwrap().len as u16),
                                     )?;
                                     if error == 0 as i32 {
-                                        if (*NotificationType).FaultMsg.len as i32
+                                        if (*NotificationType).FaultMsg.unwrap().len as i32
                                             >= 2 as i32
                                         {
-                                            (*NotificationType).FaultMsg.len =
-                                                ((*NotificationType).FaultMsg.len as i32
-                                                    - 2 as i32)
-                                                    as u16;
+                                            (*NotificationType).FaultMsg.unwrap().len -= 2;
                                             exi_basetypes_decoder_characters(
                                                 stream,
-                                                (*NotificationType).FaultMsg.len as usize,
-                                                ((*NotificationType).FaultMsg.data)
-                                                    .as_mut_ptr(),
-                                                (64 as i32 + 1 as i32) as usize,
+                                                (*NotificationType).FaultMsg.unwrap().len,
+                                                &mut (*NotificationType).FaultMsg.unwrap().data,
+                                                65,
                                             )?;
                                         } else {
                                             return Err(-200);
@@ -6086,19 +5955,19 @@ pub fn decode_iso2_SelectedServiceListType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            if ((*SelectedServiceListType).SelectedService.arrayLen as i32)
-                                < 16 as i32
-                            {
+                            if ((*SelectedServiceListType).SelectedService.arrayLen as i32) < 16 as i32 {
                                 let fresh18 = (*SelectedServiceListType).SelectedService.arrayLen;
                                 (*SelectedServiceListType).SelectedService.arrayLen =
-                                    ((*SelectedServiceListType).SelectedService.arrayLen)
-                                        .wrapping_add(1);
-                                decode_iso2_SelectedServiceType(
-                                    stream,
-                                    &mut *((*SelectedServiceListType).SelectedService.array)
-                                        .as_mut_ptr()
-                                        .offset(fresh18 as isize),
-                                )?;
+                                    ((*SelectedServiceListType).SelectedService.arrayLen).wrapping_add(1);
+                                if let Some(selected_service) = (*SelectedServiceListType)
+                                    .SelectedService
+                                    .array
+                                    .get_mut(fresh18 as usize)
+                                {
+                                    decode_iso2_SelectedServiceType(stream, selected_service)?;
+                                } else {
+                                    return Err(-110);
+                                }
                             } else {
                                 return Err(-110);
                             }
@@ -6122,12 +5991,15 @@ pub fn decode_iso2_SelectedServiceListType(
                                 (*SelectedServiceListType).SelectedService.arrayLen =
                                     ((*SelectedServiceListType).SelectedService.arrayLen)
                                         .wrapping_add(1);
-                                decode_iso2_SelectedServiceType(
-                                    stream,
-                                    &mut *((*SelectedServiceListType).SelectedService.array)
-                                        .as_mut_ptr()
-                                        .offset(fresh19 as isize),
-                                )?;
+                                if let Some(selected_service) = (*SelectedServiceListType)
+                                    .SelectedService
+                                    .array
+                                    .get_mut(fresh19 as usize)
+                                {
+                                    decode_iso2_SelectedServiceType(stream, selected_service)?;
+                                } else {
+                                    return Err(-110);
+                                }
                             } else {
                                 return Err(-110);
                             }
@@ -6328,18 +6200,16 @@ pub fn decode_iso2_SignatureType(
                         0 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*SignatureType).Id.len,
+                                &mut ((*SignatureType).Id.unwrap().len as u16)
                             )?;
                             if error == 0 as i32 {
-                                if (*SignatureType).Id.len as i32 >= 2 as i32 {
-                                    (*SignatureType).Id.len =
-                                        ((*SignatureType).Id.len as i32 - 2 as i32)
-                                            as u16;
+                                if (*SignatureType).Id.unwrap().len as i32 >= 2 as i32 {
+                                    (*SignatureType).Id.unwrap().len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
-                                        (*SignatureType).Id.len as usize,
-                                        ((*SignatureType).Id.data).as_mut_ptr(),
-                                        (64 as i32 + 1 as i32) as usize,
+                                        (*SignatureType).Id.unwrap().len,
+                                        &mut (*SignatureType).Id.unwrap().data,
+                                        65,
                                     )?;
                                 } else {
                                     return Err(-200);
@@ -6405,13 +6275,13 @@ pub fn decode_iso2_SignatureType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            decode_iso2_KeyInfoType(stream, &mut (*SignatureType).KeyInfo);
+                            decode_iso2_KeyInfoType(stream, &mut (*SignatureType).KeyInfo.unwrap());
                             if error == 0 as i32 {
                                 grammar_id = 126 as i32;
                             }
                         }
                         1 => {
-                            decode_iso2_ObjectType(stream, &mut (*SignatureType).Object);
+                            decode_iso2_ObjectType(stream, &mut (*SignatureType).Object.unwrap());
                             if error == 0 as i32 {
                                 grammar_id = 125 as i32;
                             }
@@ -6446,7 +6316,7 @@ pub fn decode_iso2_SignatureType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            decode_iso2_ObjectType(stream, &mut (*SignatureType).Object);
+                            decode_iso2_ObjectType(stream, &mut (*SignatureType).Object.unwrap());
                             if error == 0 as i32 {
                                 grammar_id = 127 as i32;
                             }
@@ -6514,12 +6384,15 @@ pub fn decode_iso2_ChargingProfileType(
                                 let fresh20 = (*ChargingProfileType).ProfileEntry.arrayLen;
                                 (*ChargingProfileType).ProfileEntry.arrayLen =
                                     ((*ChargingProfileType).ProfileEntry.arrayLen).wrapping_add(1);
-                                decode_iso2_ProfileEntryType(
-                                    stream,
-                                    &mut *((*ChargingProfileType).ProfileEntry.array)
-                                        .as_mut_ptr()
-                                        .offset(fresh20 as isize),
-                                )?;
+                                if let Some(entry) = (*ChargingProfileType)
+                                    .ProfileEntry
+                                    .array
+                                    .get_mut(fresh20 as usize)
+                                {
+                                    decode_iso2_ProfileEntryType(stream, entry)?;
+                                } else {
+                                    return Err(-110);
+                                }
                             } else {
                                 return Err(-110);
                             }
@@ -6540,12 +6413,15 @@ pub fn decode_iso2_ChargingProfileType(
                                 let fresh21 = (*ChargingProfileType).ProfileEntry.arrayLen;
                                 (*ChargingProfileType).ProfileEntry.arrayLen =
                                     ((*ChargingProfileType).ProfileEntry.arrayLen).wrapping_add(1);
-                                decode_iso2_ProfileEntryType(
-                                    stream,
-                                    &mut *((*ChargingProfileType).ProfileEntry.array)
-                                        .as_mut_ptr()
-                                        .offset(fresh21 as isize),
-                                )?;
+                                if let Some(entry) = (*ChargingProfileType)
+                                    .ProfileEntry
+                                    .array
+                                    .get_mut(fresh21 as usize)
+                                {
+                                    decode_iso2_ProfileEntryType(stream, entry)?;
+                                } else {
+                                    return Err(-110);
+                                }
                             } else {
                                 return Err(-110);
                             }
@@ -6604,12 +6480,15 @@ pub fn decode_iso2_ServiceParameterListType(
                                 (*ServiceParameterListType).ParameterSet.arrayLen =
                                     ((*ServiceParameterListType).ParameterSet.arrayLen)
                                         .wrapping_add(1);
-                                decode_iso2_ParameterSetType(
-                                    stream,
-                                    &mut *((*ServiceParameterListType).ParameterSet.array)
-                                        .as_mut_ptr()
-                                        .offset(fresh22 as isize),
-                                )?;
+                                if let Some(param_set) = (*ServiceParameterListType)
+                                    .ParameterSet
+                                    .array
+                                    .get_mut(fresh22 as usize)
+                                {
+                                    decode_iso2_ParameterSetType(stream, param_set)?;
+                                } else {
+                                    return Err(-110);
+                                }
                             } else {
                                 return Err(-110);
                             }
@@ -6632,12 +6511,15 @@ pub fn decode_iso2_ServiceParameterListType(
                                 (*ServiceParameterListType).ParameterSet.arrayLen =
                                     ((*ServiceParameterListType).ParameterSet.arrayLen)
                                         .wrapping_add(1);
-                                decode_iso2_ParameterSetType(
-                                    stream,
-                                    &mut *((*ServiceParameterListType).ParameterSet.array)
-                                        .as_mut_ptr()
-                                        .offset(fresh23 as isize),
-                                )?;
+                                if let Some(param_set) = (*ServiceParameterListType)
+                                    .ParameterSet
+                                    .array
+                                    .get_mut(fresh23 as usize)
+                                {
+                                    decode_iso2_ParameterSetType(stream, param_set)?;
+                                } else {
+                                    return Err(-110);
+                                }
                             } else {
                                 return Err(-110);
                             }
@@ -6700,12 +6582,18 @@ pub fn decode_iso2_ListOfRootCertificateIDsType(
                                 (*ListOfRootCertificateIDsType).RootCertificateID.arrayLen =
                                     ((*ListOfRootCertificateIDsType).RootCertificateID.arrayLen)
                                         .wrapping_add(1);
-                                decode_iso2_X509IssuerSerialType(
-                                    stream,
-                                    &mut *((*ListOfRootCertificateIDsType).RootCertificateID.array)
-                                        .as_mut_ptr()
-                                        .offset(fresh24 as isize),
-                                )?;
+                                if let Some(root_cert) = (*ListOfRootCertificateIDsType)
+                                    .RootCertificateID
+                                    .array
+                                    .get_mut(fresh24 as usize)
+                                {
+                                    decode_iso2_X509IssuerSerialType(
+                                        stream,
+                                        root_cert,
+                                    )?;
+                                } else {
+                                    return Err(-110);
+                                }
                             } else {
                                 return Err(-110);
                             }
@@ -6730,12 +6618,18 @@ pub fn decode_iso2_ListOfRootCertificateIDsType(
                                 (*ListOfRootCertificateIDsType).RootCertificateID.arrayLen =
                                     ((*ListOfRootCertificateIDsType).RootCertificateID.arrayLen)
                                         .wrapping_add(1);
-                                decode_iso2_X509IssuerSerialType(
-                                    stream,
-                                    &mut *((*ListOfRootCertificateIDsType).RootCertificateID.array)
-                                        .as_mut_ptr()
-                                        .offset(fresh25 as isize),
-                                )?;
+                                if let Some(root_cert) = (*ListOfRootCertificateIDsType)
+                                    .RootCertificateID
+                                    .array
+                                    .get_mut(fresh25 as usize)
+                                {
+                                    decode_iso2_X509IssuerSerialType(
+                                        stream,
+                                        root_cert,
+                                    )?;
+                                } else {
+                                    return Err(-110);
+                                }
                             } else {
                                 return Err(-110);
                             }
@@ -7398,7 +7292,7 @@ pub fn decode_iso2_EVChargeParameterType(
                         0 => {
                             decode_exi_type_uint32(
                                 stream,
-                                &mut (*EVChargeParameterType).DepartureTime,
+                                &mut (*EVChargeParameterType).DepartureTime.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 149 as i32;
@@ -7481,12 +7375,11 @@ pub fn decode_iso2_SASchedulesType(
     mut SASchedulesType: &mut Iso2SASchedulesType,
 ) -> Result<u8, i16> {
     let mut eventCode: u32 = 0;
-    let mut error: i32 = exi_basetypes_decoder_nbit_uint(stream, 1, &mut eventCode)?;
-    if error == 0 as i32 {
-        if eventCode != 0 as i32 as u32 {
-            return Err(-150);
-        }
+    exi_basetypes_decoder_nbit_uint(stream, 1, &mut eventCode)?;
+    if eventCode != 0 as i32 as u32 {
+        return Err(-150);
     }
+    return Ok(0);
 }
 pub fn decode_iso2_SAScheduleListType(
     stream: &mut ExiBitstream,
@@ -7598,11 +7491,8 @@ pub fn decode_iso2_ChargeServiceType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            error =
-                                decode_exi_type_uint16(stream, &mut (*ChargeServiceType).ServiceID);
-                            if error == 0 as i32 {
-                                grammar_id = 154 as i32;
-                            }
+                            decode_exi_type_uint16(stream, &mut (*ChargeServiceType).ServiceID)?;
+                            grammar_id = 154 as i32;
                         }
                         _ => {
                             return Err(-150);
@@ -7624,24 +7514,18 @@ pub fn decode_iso2_ChargeServiceType(
                                 if eventCode == 0 as i32 as u32 {
                                     exi_basetypes_decoder_uint_16(
                                         stream,
-                                        &mut (*ChargeServiceType).ServiceName.len,
+                                        &mut ((*ChargeServiceType).ServiceName.unwrap().len as u16),
                                     )?;
                                     if error == 0 as i32 {
-                                        if (*ChargeServiceType).ServiceName.len as i32
+                                        if (*ChargeServiceType).ServiceName.unwrap().len as i32
                                             >= 2 as i32
                                         {
-                                            (*ChargeServiceType).ServiceName.len =
-                                                ((*ChargeServiceType).ServiceName.len
-                                                    as i32
-                                                    - 2 as i32)
-                                                    as u16;
+                                            (*ChargeServiceType).ServiceName.unwrap().len -= 2;
                                             exi_basetypes_decoder_characters(
                                                 stream,
-                                                (*ChargeServiceType).ServiceName.len
-                                                    as usize,
-                                                ((*ChargeServiceType).ServiceName.data)
-                                                    .as_mut_ptr(),
-                                                (32 as i32 + 1 as i32) as usize,
+                                                (*ChargeServiceType).ServiceName.unwrap().len,
+                                                &mut (*ChargeServiceType).ServiceName.unwrap().data,
+                                                33,
                                             )?;
                                         } else {
                                             return Err(-200);
@@ -7770,24 +7654,17 @@ pub fn decode_iso2_ChargeServiceType(
                                 if eventCode == 0 as i32 as u32 {
                                     exi_basetypes_decoder_uint_16(
                                         stream,
-                                        &mut (*ChargeServiceType).ServiceScope.len,
+                                        &mut ((*ChargeServiceType).ServiceScope.unwrap().len as u16),
                                     )?;
                                     if error == 0 as i32 {
-                                        if (*ChargeServiceType).ServiceScope.len as i32
-                                            >= 2 as i32
-                                        {
-                                            (*ChargeServiceType).ServiceScope.len =
-                                                ((*ChargeServiceType).ServiceScope.len
-                                                    as i32
-                                                    - 2 as i32)
-                                                    as u16;
+                                        if (*ChargeServiceType).ServiceScope.unwrap().len >= 2 {
+                                            (*ChargeServiceType).ServiceScope.unwrap().len -= 2;
                                             exi_basetypes_decoder_characters(
                                                 stream,
-                                                (*ChargeServiceType).ServiceScope.len
+                                                (*ChargeServiceType).ServiceScope.unwrap().len
                                                     as usize,
-                                                ((*ChargeServiceType).ServiceScope.data)
-                                                    .as_mut_ptr(),
-                                                (64 as i32 + 1 as i32) as usize,
+                                                &mut (*ChargeServiceType).ServiceScope.unwrap().data,
+                                                65,
                                             )?;
                                         } else {
                                             return Err(-200);
@@ -7943,12 +7820,11 @@ pub fn decode_iso2_EVPowerDeliveryParameterType(
     mut EVPowerDeliveryParameterType: &mut Iso2EVPowerDeliveryParameterType,
 ) -> Result<u8, i16> {
     let mut eventCode: u32 = 0;
-    let mut error: i32 = exi_basetypes_decoder_nbit_uint(stream, 1, &mut eventCode)?;
-    if error == 0 as i32 {
-        if eventCode != 0 as i32 as u32 {
-            return Err(-150);
-        }
+    exi_basetypes_decoder_nbit_uint(stream, 1, &mut eventCode)?;
+    if eventCode != 0 as i32 as u32 {
+        return Err(-150);
     }
+    return Ok(0);
 }
 pub fn decode_iso2_DC_EVPowerDeliveryParameterType(
     stream: &mut ExiBitstream,
@@ -8146,27 +8022,18 @@ pub fn decode_iso2_ContractSignatureEncryptedPrivateKeyType(
                         0 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*ContractSignatureEncryptedPrivateKeyType).Id.len,
+                                &mut ((*ContractSignatureEncryptedPrivateKeyType).Id.len as u16),
                             )?;
                             if error == 0 as i32 {
-                                if (*ContractSignatureEncryptedPrivateKeyType).Id.len
-                                    as i32
-                                    >= 2 as i32
-                                {
-                                    (*ContractSignatureEncryptedPrivateKeyType).Id.len =
-                                        ((*ContractSignatureEncryptedPrivateKeyType)
-                                            .Id
-                                            .len
-                                            as i32
-                                            - 2 as i32)
-                                            as u16;
+                                if (*ContractSignatureEncryptedPrivateKeyType).Id.len >= 2 {
+                                    (*ContractSignatureEncryptedPrivateKeyType).Id.len -= 2;
+
                                     exi_basetypes_decoder_characters(
                                         stream,
                                         (*ContractSignatureEncryptedPrivateKeyType).Id.len
                                             as usize,
-                                        ((*ContractSignatureEncryptedPrivateKeyType).Id.data)
-                                            .as_mut_ptr(),
-                                        (64 as i32 + 1 as i32) as usize,
+                                        &mut (*ContractSignatureEncryptedPrivateKeyType).Id.data,
+                                        65,
                                     )?;
                                 } else {
                                     return Err(-200);
@@ -8187,19 +8054,13 @@ pub fn decode_iso2_ContractSignatureEncryptedPrivateKeyType(
                         0 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*ContractSignatureEncryptedPrivateKeyType).CONTENT.len,
+                                &mut ((*ContractSignatureEncryptedPrivateKeyType).CONTENT.len as u16),
                             )?;
                             if error == 0 as i32 {
                                 exi_basetypes_decoder_bytes(
                                     stream,
-                                    (*ContractSignatureEncryptedPrivateKeyType).CONTENT.len
-                                        as usize,
-                                    &mut *((*ContractSignatureEncryptedPrivateKeyType)
-                                        .CONTENT
-                                        .data)
-                                        .as_mut_ptr()
-                                        .offset(0 as i32 as isize),
-                                    350 as i32 as usize,
+                                    (*ContractSignatureEncryptedPrivateKeyType).CONTENT.len as usize,
+                                    &mut (*ContractSignatureEncryptedPrivateKeyType).CONTENT.data,
                                 )?;
                                 if error == 0 as i32 {
                                     grammar_id = 3 as i32;
@@ -8236,19 +8097,17 @@ pub fn decode_iso2_EVSEChargeParameterType(
     mut EVSEChargeParameterType: &mut Iso2EVSEChargeParameterType,
 ) -> Result<u8, i16> {
     let mut eventCode: u32 = 0;
-    let mut error: i32 = exi_basetypes_decoder_nbit_uint(stream, 1, &mut eventCode)?;
-    if error == 0 as i32 {
-        if eventCode != 0 as i32 as u32 {
-            return Err(-150);
-        }
+    exi_basetypes_decoder_nbit_uint(stream, 1, &mut eventCode)?;
+    if eventCode != 0 as i32 as u32 {
+        return Err(-150);
     }
+    return Ok(0);
 }
 pub fn decode_iso2_DC_EVSEChargeParameterType(
     stream: &mut ExiBitstream,
     mut DC_EVSEChargeParameterType: &mut Iso2DC_EVSEChargeParameterType,
 ) -> Result<u8, i16> {
     let mut grammar_id: i32 = 164 as i32;
-
     let mut eventCode: u32 = 0;
     let mut error: i32 = 0;
     loop {
@@ -8568,20 +8427,16 @@ pub fn decode_iso2_DiffieHellmanPublickeyType(
                         0 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*DiffieHellmanPublickeyType).Id.len,
+                                &mut ((*DiffieHellmanPublickeyType).Id.len as u16),
                             )?;
                             if error == 0 as i32 {
-                                if (*DiffieHellmanPublickeyType).Id.len as i32 >= 2 as i32
-                                {
-                                    (*DiffieHellmanPublickeyType).Id.len =
-                                        ((*DiffieHellmanPublickeyType).Id.len as i32
-                                            - 2 as i32)
-                                            as u16;
+                                if (*DiffieHellmanPublickeyType).Id.len >= 2 {
+                                    (*DiffieHellmanPublickeyType).Id.len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
                                         (*DiffieHellmanPublickeyType).Id.len as usize,
-                                        ((*DiffieHellmanPublickeyType).Id.data).as_mut_ptr(),
-                                        (64 as i32 + 1 as i32) as usize,
+                                        &mut (*DiffieHellmanPublickeyType).Id.data,
+                                        65,
                                     )?;
                                 } else {
                                     return Err(-200);
@@ -8602,14 +8457,13 @@ pub fn decode_iso2_DiffieHellmanPublickeyType(
                         0 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*DiffieHellmanPublickeyType).CONTENT.len,
+                                &mut ((*DiffieHellmanPublickeyType).CONTENT.len as u16),
                             )?;
-                            if let Some(content) = DiffieHellmanPublickeyType.Content {
+                            if let content = DiffieHellmanPublickeyType.CONTENT {
                                 exi_basetypes_decoder_bytes(
                                     stream,
                                     content.len,
-                                    content.data,
-                                    350,
+                                    &mut content.data,
                                 )?;
                                 grammar_id = 3 as i32;
                             }
@@ -8656,17 +8510,16 @@ pub fn decode_iso2_EMAIDType(
                         0 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*EMAIDType).Id.len,
+                                &mut ((*EMAIDType).Id.len as u16),
                             )?;
                             if error == 0 as i32 {
-                                if (*EMAIDType).Id.len as i32 >= 2 as i32 {
-                                    (*EMAIDType).Id.len =
-                                        ((*EMAIDType).Id.len as i32 - 2 as i32) as u16;
+                                if (*EMAIDType).Id.len >= 2 {
+                                    (*EMAIDType).Id.len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
                                         (*EMAIDType).Id.len as usize,
-                                        ((*EMAIDType).Id.data).as_mut_ptr(),
-                                        (64 as i32 + 1 as i32) as usize,
+                                        &mut (*EMAIDType).Id.data,
+                                        65,
                                     )?;
                                 } else {
                                     return Err(-200);
@@ -8687,18 +8540,16 @@ pub fn decode_iso2_EMAIDType(
                         0 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*EMAIDType).CONTENT.len,
+                                &mut ((*EMAIDType).CONTENT.len as u16),
                             )?;
                             if error == 0 as i32 {
-                                if (*EMAIDType).CONTENT.len as i32 >= 2 as i32 {
-                                    (*EMAIDType).CONTENT.len =
-                                        ((*EMAIDType).CONTENT.len as i32 - 2 as i32)
-                                            as u16;
+                                if (*EMAIDType).CONTENT.len >= 2 {
+                                    (*EMAIDType).CONTENT.len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
                                         (*EMAIDType).CONTENT.len as usize,
-                                        ((*EMAIDType).CONTENT.data).as_mut_ptr(),
-                                        (64 as i32 + 1 as i32) as usize,
+                                        &mut (*EMAIDType).CONTENT.data,
+                                        65,
                                     )?;
                                 } else {
                                     return Err(-200);
@@ -9115,20 +8966,16 @@ pub fn decode_iso2_MeterInfoType(
                                 if eventCode == 0 as i32 as u32 {
                                     exi_basetypes_decoder_uint_16(
                                         stream,
-                                        &mut (*MeterInfoType).MeterID.len,
+                                        &mut ((*MeterInfoType).MeterID.len as u16),
                                     )?;
                                     if error == 0 as i32 {
-                                        if (*MeterInfoType).MeterID.len as i32 >= 2 as i32
-                                        {
-                                            (*MeterInfoType).MeterID.len =
-                                                ((*MeterInfoType).MeterID.len as i32
-                                                    - 2 as i32)
-                                                    as u16;
+                                        if (*MeterInfoType).MeterID.len >= 2 {
+                                            (*MeterInfoType).MeterID.len -= 2;
                                             exi_basetypes_decoder_characters(
                                                 stream,
                                                 (*MeterInfoType).MeterID.len as usize,
-                                                ((*MeterInfoType).MeterID.data).as_mut_ptr(),
-                                                (32 as i32 + 1 as i32) as usize,
+                                                &mut (*MeterInfoType).MeterID.data,
+                                                33,
                                             )?;
                                         } else {
                                             return Err(-200);
@@ -9164,19 +9011,14 @@ pub fn decode_iso2_MeterInfoType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            error =
-                                decode_exi_type_uint64(stream, &mut (*MeterInfoType).MeterReading);
-                            if error == 0 as i32 {
-                                grammar_id = 191 as i32;
-                            }
+                            decode_exi_type_uint64(stream, &mut (*MeterInfoType).MeterReading.unwrap())?;
+                            grammar_id = 191 as i32;
                         }
                         1 => {
                             decode_exi_type_hex_binary(
                                 stream,
-                                &mut (*MeterInfoType).SigMeterReading.len,
-                                &mut *((*MeterInfoType).SigMeterReading.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*MeterInfoType).SigMeterReading.unwrap().len,
+                                &mut (*MeterInfoType).SigMeterReading.unwrap().data,
                                 64 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -9186,14 +9028,14 @@ pub fn decode_iso2_MeterInfoType(
                         2 => {
                             decode_exi_type_integer16(
                                 stream,
-                                &mut (*MeterInfoType).MeterStatus,
+                                &mut (*MeterInfoType).MeterStatus.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 193 as i32;
                             }
                         }
                         3 => {
-                            decode_exi_type_integer64(stream, &mut (*MeterInfoType).TMeter);
+                            decode_exi_type_integer64(stream, &mut (*MeterInfoType).TMeter.unwrap());
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
                             }
@@ -9214,10 +9056,8 @@ pub fn decode_iso2_MeterInfoType(
                         0 => {
                             decode_exi_type_hex_binary(
                                 stream,
-                                &mut (*MeterInfoType).SigMeterReading.len,
-                                &mut *((*MeterInfoType).SigMeterReading.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*MeterInfoType).SigMeterReading.unwrap().len,
+                                &mut (*MeterInfoType).SigMeterReading.unwrap().data,
                                 64 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -9227,14 +9067,14 @@ pub fn decode_iso2_MeterInfoType(
                         1 => {
                             decode_exi_type_integer16(
                                 stream,
-                                &mut (*MeterInfoType).MeterStatus,
+                                &mut (*MeterInfoType).MeterStatus.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 193 as i32;
                             }
                         }
                         2 => {
-                            decode_exi_type_integer64(stream, &mut (*MeterInfoType).TMeter);
+                            decode_exi_type_integer64(stream, &mut (*MeterInfoType).TMeter.unwrap());
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
                             }
@@ -9255,14 +9095,14 @@ pub fn decode_iso2_MeterInfoType(
                         0 => {
                             decode_exi_type_integer16(
                                 stream,
-                                &mut (*MeterInfoType).MeterStatus,
+                                &mut (*MeterInfoType).MeterStatus.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 193 as i32;
                             }
                         }
                         1 => {
-                            decode_exi_type_integer64(stream, &mut (*MeterInfoType).TMeter);
+                            decode_exi_type_integer64(stream, &mut (*MeterInfoType).TMeter.unwrap());
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
                             }
@@ -9281,7 +9121,7 @@ pub fn decode_iso2_MeterInfoType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            decode_exi_type_integer64(stream, &mut (*MeterInfoType).TMeter);
+                            decode_exi_type_integer64(stream, &mut (*MeterInfoType).TMeter.unwrap());
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
                             }
@@ -9332,9 +9172,7 @@ pub fn decode_iso2_MessageHeaderType(
                             decode_exi_type_hex_binary(
                                 stream,
                                 &mut (*MessageHeaderType).SessionID.len,
-                                &mut *((*MessageHeaderType).SessionID.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*MessageHeaderType).SessionID.data,
                                 8 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -9354,7 +9192,7 @@ pub fn decode_iso2_MessageHeaderType(
                         0 => {
                             decode_iso2_NotificationType(
                                 stream,
-                                &mut (*MessageHeaderType).Notification,
+                                &mut (*MessageHeaderType).Notification.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 196 as i32;
@@ -9363,7 +9201,7 @@ pub fn decode_iso2_MessageHeaderType(
                         1 => {
                             decode_iso2_SignatureType(
                                 stream,
-                                &mut (*MessageHeaderType).Signature,
+                                &mut (*MessageHeaderType).Signature.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -9385,7 +9223,7 @@ pub fn decode_iso2_MessageHeaderType(
                         0 => {
                             decode_iso2_SignatureType(
                                 stream,
-                                &mut (*MessageHeaderType).Signature,
+                                &mut (*MessageHeaderType).Signature.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -9496,7 +9334,7 @@ pub fn decode_iso2_PowerDeliveryReqType(
                                     )?;
                                     if error == 0 as i32 {
                                         (*PowerDeliveryReqType).SAScheduleTupleID =
-                                            value_0.wrapping_add(1 as i32 as u32) as u8;
+                                            value_0.wrapping_add(1) as u8;
                                     }
                                 } else {
                                     return Err(-151);
@@ -9530,7 +9368,7 @@ pub fn decode_iso2_PowerDeliveryReqType(
                         0 => {
                             decode_iso2_ChargingProfileType(
                                 stream,
-                                &mut (*PowerDeliveryReqType).ChargingProfile,
+                                &mut (*PowerDeliveryReqType).ChargingProfile.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 200 as i32;
@@ -9539,7 +9377,7 @@ pub fn decode_iso2_PowerDeliveryReqType(
                         1 => {
                             decode_iso2_DC_EVPowerDeliveryParameterType(
                                 stream,
-                                &mut (*PowerDeliveryReqType).DC_EVPowerDeliveryParameter,
+                                &mut (*PowerDeliveryReqType).DC_EVPowerDeliveryParameter.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -9548,7 +9386,7 @@ pub fn decode_iso2_PowerDeliveryReqType(
                         2 => {
                             decode_iso2_EVPowerDeliveryParameterType(
                                 stream,
-                                &mut (*PowerDeliveryReqType).EVPowerDeliveryParameter,
+                                &mut (*PowerDeliveryReqType).EVPowerDeliveryParameter.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -9570,7 +9408,7 @@ pub fn decode_iso2_PowerDeliveryReqType(
                         0 => {
                             decode_iso2_DC_EVPowerDeliveryParameterType(
                                 stream,
-                                &mut (*PowerDeliveryReqType).DC_EVPowerDeliveryParameter,
+                                &mut (*PowerDeliveryReqType).DC_EVPowerDeliveryParameter.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 (*PowerDeliveryReqType);
@@ -9580,7 +9418,7 @@ pub fn decode_iso2_PowerDeliveryReqType(
                         1 => {
                             decode_iso2_EVPowerDeliveryParameterType(
                                 stream,
-                                &mut (*PowerDeliveryReqType).EVPowerDeliveryParameter,
+                                &mut (*PowerDeliveryReqType).EVPowerDeliveryParameter.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 (*PowerDeliveryReqType);
@@ -9877,7 +9715,7 @@ pub fn decode_iso2_CurrentDemandResType(
                         0 => {
                             decode_iso2_PhysicalValueType(
                                 stream,
-                                &mut (*CurrentDemandResType).EVSEMaximumVoltageLimit,
+                                &mut (*CurrentDemandResType).EVSEMaximumVoltageLimit.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 209 as i32;
@@ -9886,7 +9724,7 @@ pub fn decode_iso2_CurrentDemandResType(
                         1 => {
                             decode_iso2_PhysicalValueType(
                                 stream,
-                                &mut (*CurrentDemandResType).EVSEMaximumCurrentLimit,
+                                &mut (*CurrentDemandResType).EVSEMaximumCurrentLimit.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 210 as i32;
@@ -9895,7 +9733,7 @@ pub fn decode_iso2_CurrentDemandResType(
                         2 => {
                             decode_iso2_PhysicalValueType(
                                 stream,
-                                &mut (*CurrentDemandResType).EVSEMaximumPowerLimit,
+                                &mut (*CurrentDemandResType).EVSEMaximumPowerLimit.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 211 as i32;
@@ -9911,24 +9749,19 @@ pub fn decode_iso2_CurrentDemandResType(
                                 if eventCode == 0 as i32 as u32 {
                                     exi_basetypes_decoder_uint_16(
                                         stream,
-                                        &mut (*CurrentDemandResType).EVSEID.len,
+                                        &mut ((*CurrentDemandResType).EVSEID.len as u16),
                                     )?;
                                     if error == 0 as i32 {
                                         if (*CurrentDemandResType).EVSEID.len as i32
                                             >= 2 as i32
                                         {
-                                            (*CurrentDemandResType).EVSEID.len =
-                                                ((*CurrentDemandResType).EVSEID.len
-                                                    as i32
-                                                    - 2 as i32)
-                                                    as u16;
+                                            (*CurrentDemandResType).EVSEID.len -= 2;
                                             exi_basetypes_decoder_characters(
                                                 stream,
                                                 (*CurrentDemandResType).EVSEID.len
                                                     as usize,
-                                                ((*CurrentDemandResType).EVSEID.data)
-                                                    .as_mut_ptr(),
-                                                (37 as i32 + 1 as i32) as usize,
+                                                &mut (*CurrentDemandResType).EVSEID.data,
+                                                38,
                                             )?;
                                         } else {
                                             return Err(-200);
@@ -9966,7 +9799,7 @@ pub fn decode_iso2_CurrentDemandResType(
                         0 => {
                             decode_iso2_PhysicalValueType(
                                 stream,
-                                &mut (*CurrentDemandResType).EVSEMaximumCurrentLimit,
+                                &mut (*CurrentDemandResType).EVSEMaximumCurrentLimit.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 210 as i32;
@@ -9975,7 +9808,7 @@ pub fn decode_iso2_CurrentDemandResType(
                         1 => {
                             decode_iso2_PhysicalValueType(
                                 stream,
-                                &mut (*CurrentDemandResType).EVSEMaximumPowerLimit,
+                                &mut (*CurrentDemandResType).EVSEMaximumPowerLimit.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 211 as i32;
@@ -9991,24 +9824,19 @@ pub fn decode_iso2_CurrentDemandResType(
                                 if eventCode == 0 as i32 as u32 {
                                     exi_basetypes_decoder_uint_16(
                                         stream,
-                                        &mut (*CurrentDemandResType).EVSEID.len,
+                                        &mut ((*CurrentDemandResType).EVSEID.len as u16),
                                     )?;
                                     if error == 0 as i32 {
                                         if (*CurrentDemandResType).EVSEID.len as i32
                                             >= 2 as i32
                                         {
-                                            (*CurrentDemandResType).EVSEID.len =
-                                                ((*CurrentDemandResType).EVSEID.len
-                                                    as i32
-                                                    - 2 as i32)
-                                                    as u16;
+                                            (*CurrentDemandResType).EVSEID.len -= 2;
                                             exi_basetypes_decoder_characters(
                                                 stream,
                                                 (*CurrentDemandResType).EVSEID.len
                                                     as usize,
-                                                ((*CurrentDemandResType).EVSEID.data)
-                                                    .as_mut_ptr(),
-                                                (37 as i32 + 1 as i32) as usize,
+                                                &mut (*CurrentDemandResType).EVSEID.data,
+                                                38,
                                             )?;
                                         } else {
                                             return Err(-200);
@@ -10046,7 +9874,7 @@ pub fn decode_iso2_CurrentDemandResType(
                         0 => {
                             decode_iso2_PhysicalValueType(
                                 stream,
-                                &mut (*CurrentDemandResType).EVSEMaximumPowerLimit,
+                                &mut (*CurrentDemandResType).EVSEMaximumPowerLimit.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 211 as i32;
@@ -10062,24 +9890,19 @@ pub fn decode_iso2_CurrentDemandResType(
                                 if eventCode == 0 as i32 as u32 {
                                     exi_basetypes_decoder_uint_16(
                                         stream,
-                                        &mut (*CurrentDemandResType).EVSEID.len,
+                                        &mut ((*CurrentDemandResType).EVSEID.len as u16),
                                     )?;
                                     if error == 0 as i32 {
                                         if (*CurrentDemandResType).EVSEID.len as i32
                                             >= 2 as i32
                                         {
-                                            (*CurrentDemandResType).EVSEID.len =
-                                                ((*CurrentDemandResType).EVSEID.len
-                                                    as i32
-                                                    - 2 as i32)
-                                                    as u16;
+                                            (*CurrentDemandResType).EVSEID.len -= 2;
                                             exi_basetypes_decoder_characters(
                                                 stream,
                                                 (*CurrentDemandResType).EVSEID.len
                                                     as usize,
-                                                ((*CurrentDemandResType).EVSEID.data)
-                                                    .as_mut_ptr(),
-                                                (37 as i32 + 1 as i32) as usize,
+                                                &mut (*CurrentDemandResType).EVSEID.data,
+                                                38,
                                             )?;
                                         } else {
                                             return Err(-200);
@@ -10124,24 +9947,18 @@ pub fn decode_iso2_CurrentDemandResType(
                                 if eventCode == 0 as i32 as u32 {
                                     exi_basetypes_decoder_uint_16(
                                         stream,
-                                        &mut (*CurrentDemandResType).EVSEID.len,
+                                        &mut ((*CurrentDemandResType).EVSEID.len as u16),
                                     )?;
                                     if error == 0 as i32 {
                                         if (*CurrentDemandResType).EVSEID.len as i32
                                             >= 2 as i32
                                         {
-                                            (*CurrentDemandResType).EVSEID.len =
-                                                ((*CurrentDemandResType).EVSEID.len
-                                                    as i32
-                                                    - 2 as i32)
-                                                    as u16;
+                                            (*CurrentDemandResType).EVSEID.len -= 2;
                                             exi_basetypes_decoder_characters(
                                                 stream,
-                                                (*CurrentDemandResType).EVSEID.len
-                                                    as usize,
-                                                ((*CurrentDemandResType).EVSEID.data)
-                                                    .as_mut_ptr(),
-                                                (37 as i32 + 1 as i32) as usize,
+                                                (*CurrentDemandResType).EVSEID.len,
+                                                &mut (*CurrentDemandResType).EVSEID.data,
+                                                38,
                                             )?;
                                         } else {
                                             return Err(-200);
@@ -10226,7 +10043,7 @@ pub fn decode_iso2_CurrentDemandResType(
                         0 => {
                             decode_iso2_MeterInfoType(
                                 stream,
-                                &mut (*CurrentDemandResType).MeterInfo,
+                                &mut (*CurrentDemandResType).MeterInfo.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 214 as i32;
@@ -10247,7 +10064,7 @@ pub fn decode_iso2_CurrentDemandResType(
                                         &mut value_4,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*CurrentDemandResType).ReceiptRequired = value_4 as i32;
+                                        (*CurrentDemandResType).ReceiptRequired = Some(value_4 as i32);
                                     }
                                 } else {
                                     return Err(-151);
@@ -10296,7 +10113,7 @@ pub fn decode_iso2_CurrentDemandResType(
                                         &mut value_5,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*CurrentDemandResType).ReceiptRequired = value_5 as i32;
+                                        (*CurrentDemandResType).ReceiptRequired = Some(value_5 as i32);
                                     }
                                 } else {
                                     return Err(-151);
@@ -10416,24 +10233,18 @@ pub fn decode_iso2_ChargingStatusResType(
                                 if eventCode == 0 as i32 as u32 {
                                     exi_basetypes_decoder_uint_16(
                                         stream,
-                                        &mut (*ChargingStatusResType).EVSEID.len,
+                                        &mut ((*ChargingStatusResType).EVSEID.len as u16),
                                     )?;
                                     if error == 0 as i32 {
                                         if (*ChargingStatusResType).EVSEID.len as i32
                                             >= 2 as i32
                                         {
-                                            (*ChargingStatusResType).EVSEID.len =
-                                                ((*ChargingStatusResType).EVSEID.len
-                                                    as i32
-                                                    - 2 as i32)
-                                                    as u16;
+                                            (*ChargingStatusResType).EVSEID.len -= 2;
                                             exi_basetypes_decoder_characters(
                                                 stream,
-                                                (*ChargingStatusResType).EVSEID.len
-                                                    as usize,
-                                                ((*ChargingStatusResType).EVSEID.data)
-                                                    .as_mut_ptr(),
-                                                (37 as i32 + 1 as i32) as usize,
+                                                (*ChargingStatusResType).EVSEID.len,
+                                                &mut (*ChargingStatusResType).EVSEID.data,
+                                                38,
                                             )?;
                                         } else {
                                             return Err(-200);
@@ -10518,7 +10329,7 @@ pub fn decode_iso2_ChargingStatusResType(
                         0 => {
                             decode_iso2_PhysicalValueType(
                                 stream,
-                                &mut (*ChargingStatusResType).EVSEMaxCurrent,
+                                &mut (*ChargingStatusResType).EVSEMaxCurrent.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 219 as i32;
@@ -10527,7 +10338,7 @@ pub fn decode_iso2_ChargingStatusResType(
                         1 => {
                             decode_iso2_MeterInfoType(
                                 stream,
-                                &mut (*ChargingStatusResType).MeterInfo,
+                                &mut (*ChargingStatusResType).MeterInfo.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 220 as i32;
@@ -10548,7 +10359,7 @@ pub fn decode_iso2_ChargingStatusResType(
                                         &mut value_1,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*ChargingStatusResType).ReceiptRequired = value_1 as i32;
+                                        (*ChargingStatusResType).ReceiptRequired = Some(value_1 as i32);
                                     }
                                 } else {
                                     return Err(-151);
@@ -10591,7 +10402,7 @@ pub fn decode_iso2_ChargingStatusResType(
                         0 => {
                             decode_iso2_MeterInfoType(
                                 stream,
-                                &mut (*ChargingStatusResType).MeterInfo,
+                                &mut (*ChargingStatusResType).MeterInfo.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 220 as i32;
@@ -10612,7 +10423,7 @@ pub fn decode_iso2_ChargingStatusResType(
                                         &mut value_2,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*ChargingStatusResType).ReceiptRequired = value_2 as i32;
+                                        (*ChargingStatusResType).ReceiptRequired = Some(value_2 as i32);
                                     }
                                 } else {
                                     return Err(-151);
@@ -10667,7 +10478,7 @@ pub fn decode_iso2_ChargingStatusResType(
                                         &mut value_3,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*ChargingStatusResType).ReceiptRequired = value_3 as i32;
+                                        (*ChargingStatusResType).ReceiptRequired = Some(value_3 as i32);
                                     }
                                 } else {
                                     return Err(-151);
@@ -10758,18 +10569,16 @@ pub fn decode_iso2_AuthorizationReqType(
                         0 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*AuthorizationReqType).Id.len,
+                                &mut ((*AuthorizationReqType).Id.unwrap().len as u16),
                             )?;
                             if error == 0 as i32 {
-                                if (*AuthorizationReqType).Id.len as i32 >= 2 as i32 {
-                                    (*AuthorizationReqType).Id.len =
-                                        ((*AuthorizationReqType).Id.len as i32 - 2 as i32)
-                                            as u16;
+                                if (*AuthorizationReqType).Id.unwrap().len as i32 >= 2 as i32 {
+                                    (*AuthorizationReqType).Id.unwrap().len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
-                                        (*AuthorizationReqType).Id.len as usize,
-                                        ((*AuthorizationReqType).Id.data).as_mut_ptr(),
-                                        (64 as i32 + 1 as i32) as usize,
+                                        (*AuthorizationReqType).Id.unwrap().len,
+                                        &mut (*AuthorizationReqType).Id.unwrap().data,
+                                    65,
                                     )?;
                                 } else {
                                     return Err(-200);
@@ -10780,10 +10589,8 @@ pub fn decode_iso2_AuthorizationReqType(
                         1 => {
                             decode_exi_type_hex_binary(
                                 stream,
-                                &mut (*AuthorizationReqType).GenChallenge.len,
-                                &mut *((*AuthorizationReqType).GenChallenge.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*AuthorizationReqType).GenChallenge.unwrap().len,
+                                &mut (*AuthorizationReqType).GenChallenge.unwrap().data,
                                 16 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -10806,10 +10613,8 @@ pub fn decode_iso2_AuthorizationReqType(
                         0 => {
                             decode_exi_type_hex_binary(
                                 stream,
-                                &mut (*AuthorizationReqType).GenChallenge.len,
-                                &mut *((*AuthorizationReqType).GenChallenge.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*AuthorizationReqType).GenChallenge.unwrap().len,
+                                &mut (*AuthorizationReqType).GenChallenge.unwrap().data,
                                 16 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -10880,7 +10685,7 @@ pub fn decode_iso2_PreChargeReqType(
                         0 => {
                             decode_iso2_PhysicalValueType(
                                 stream,
-                                &mut (*PreChargeReqType).EVTargetVoltage,
+                                &mut (*PreChargeReqType).EVTargetVoltage.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 226 as i32;
@@ -10899,7 +10704,7 @@ pub fn decode_iso2_PreChargeReqType(
                         0 => {
                             decode_iso2_PhysicalValueType(
                                 stream,
-                                &mut (*PreChargeReqType).EVTargetCurrent,
+                                &mut (*PreChargeReqType).EVTargetCurrent.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -11013,7 +10818,7 @@ pub fn decode_iso2_ServiceDetailResType(
                         0 => {
                             decode_iso2_ServiceParameterListType(
                                 stream,
-                                &mut (*ServiceDetailResType).ServiceParameterList,
+                                &mut (*ServiceDetailResType).ServiceParameterList.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -11140,18 +10945,15 @@ pub fn decode_iso2_CertificateUpdateReqType(
                         0 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*CertificateUpdateReqType).Id.len,
+                                &mut ((*CertificateUpdateReqType).Id.len as u16),
                             )?;
                             if error == 0 as i32 {
                                 if (*CertificateUpdateReqType).Id.len as i32 >= 2 as i32 {
-                                    (*CertificateUpdateReqType).Id.len =
-                                        ((*CertificateUpdateReqType).Id.len as i32
-                                            - 2 as i32)
-                                            as u16;
+                                    (*CertificateUpdateReqType).Id.len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
                                         (*CertificateUpdateReqType).Id.len as usize,
-                                        ((*CertificateUpdateReqType).Id.data).as_mut_ptr(),
+                                        &mut (*CertificateUpdateReqType).Id.data,
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
@@ -11199,23 +11001,17 @@ pub fn decode_iso2_CertificateUpdateReqType(
                                 if eventCode == 0 as i32 as u32 {
                                     exi_basetypes_decoder_uint_16(
                                         stream,
-                                        &mut (*CertificateUpdateReqType).eMaid.len,
+                                        &mut ((*CertificateUpdateReqType).eMaid.len as u16),
                                     )?;
                                     if error == 0 as i32 {
                                         if (*CertificateUpdateReqType).eMaid.len as i32
                                             >= 2 as i32
                                         {
-                                            (*CertificateUpdateReqType).eMaid.len =
-                                                ((*CertificateUpdateReqType).eMaid.len
-                                                    as i32
-                                                    - 2 as i32)
-                                                    as u16;
+                                            (*CertificateUpdateReqType).eMaid.len -= 2;
                                             exi_basetypes_decoder_characters(
                                                 stream,
-                                                (*CertificateUpdateReqType).eMaid.len
-                                                    as usize,
-                                                ((*CertificateUpdateReqType).eMaid.data)
-                                                    .as_mut_ptr(),
+                                                (*CertificateUpdateReqType).eMaid.len,
+                                                &mut (*CertificateUpdateReqType).eMaid.data,
                                                 (15 as i32 + 1 as i32) as usize,
                                             )?;
                                         } else {
@@ -11356,23 +11152,18 @@ pub fn decode_iso2_SessionSetupResType(
                                 if eventCode == 0 as i32 as u32 {
                                     exi_basetypes_decoder_uint_16(
                                         stream,
-                                        &mut (*SessionSetupResType).EVSEID.len,
+                                        &mut ((*SessionSetupResType).EVSEID.len as u16),
                                     )?;
                                     if error == 0 as i32 {
                                         if (*SessionSetupResType).EVSEID.len as i32
                                             >= 2 as i32
                                         {
-                                            (*SessionSetupResType).EVSEID.len =
-                                                ((*SessionSetupResType).EVSEID.len as i32
-                                                    - 2 as i32)
-                                                    as u16;
+                                            (*SessionSetupResType).EVSEID.len -= 2;
                                             exi_basetypes_decoder_characters(
                                                 stream,
-                                                (*SessionSetupResType).EVSEID.len
-                                                    as usize,
-                                                ((*SessionSetupResType).EVSEID.data)
-                                                    .as_mut_ptr(),
-                                                (37 as i32 + 1 as i32) as usize,
+                                                (*SessionSetupResType).EVSEID.len,
+                                                &mut (*SessionSetupResType).EVSEID.data,
+                                                38,
                                             )?;
                                         } else {
                                             return Err(-200);
@@ -11410,7 +11201,7 @@ pub fn decode_iso2_SessionSetupResType(
                         0 => {
                             decode_exi_type_integer64(
                                 stream,
-                                &mut (*SessionSetupResType).EVSETimeStamp,
+                                &mut (*SessionSetupResType).EVSETimeStamp.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -11461,21 +11252,17 @@ pub fn decode_iso2_CertificateInstallationReqType(
                         0 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*CertificateInstallationReqType).Id.len,
+                                &mut ((*CertificateInstallationReqType).Id.len as u16),
                             )?;
                             if error == 0 as i32 {
                                 if (*CertificateInstallationReqType).Id.len as i32
                                     >= 2 as i32
                                 {
-                                    (*CertificateInstallationReqType).Id.len =
-                                        ((*CertificateInstallationReqType).Id.len as i32
-                                            - 2 as i32)
-                                            as u16;
+                                    (*CertificateInstallationReqType).Id.len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
                                         (*CertificateInstallationReqType).Id.len as usize,
-                                        ((*CertificateInstallationReqType).Id.data)
-                                            .as_mut_ptr(),
+                                        &mut (*CertificateInstallationReqType).Id.data,
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
@@ -11500,9 +11287,7 @@ pub fn decode_iso2_CertificateInstallationReqType(
                                 &mut (*CertificateInstallationReqType)
                                     .OEMProvisioningCert
                                     .len,
-                                &mut *((*CertificateInstallationReqType).OEMProvisioningCert.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*CertificateInstallationReqType).OEMProvisioningCert.data,
                                 800 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -11895,7 +11680,7 @@ pub fn decode_iso2_CurrentDemandReqType(
                         0 => {
                             decode_iso2_PhysicalValueType(
                                 stream,
-                                &mut (*CurrentDemandReqType).EVMaximumVoltageLimit,
+                                &mut (*CurrentDemandReqType).EVMaximumVoltageLimit.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 253 as i32;
@@ -11904,7 +11689,7 @@ pub fn decode_iso2_CurrentDemandReqType(
                         1 => {
                             decode_iso2_PhysicalValueType(
                                 stream,
-                                &mut (*CurrentDemandReqType).EVMaximumCurrentLimit,
+                                &mut (*CurrentDemandReqType).EVMaximumCurrentLimit.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 254 as i32;
@@ -11913,7 +11698,7 @@ pub fn decode_iso2_CurrentDemandReqType(
                         2 => {
                             decode_iso2_PhysicalValueType(
                                 stream,
-                                &mut (*CurrentDemandReqType).EVMaximumPowerLimit,
+                                &mut (*CurrentDemandReqType).EVMaximumPowerLimit.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 255 as i32;
@@ -11934,7 +11719,7 @@ pub fn decode_iso2_CurrentDemandReqType(
                                         &mut value,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*CurrentDemandReqType).BulkChargingComplete = value as i32;
+                                        (*CurrentDemandReqType).BulkChargingComplete = Some(value as i32);
                                     }
                                 } else {
                                     return Err(-151);
@@ -12004,7 +11789,7 @@ pub fn decode_iso2_CurrentDemandReqType(
                         0 => {
                             decode_iso2_PhysicalValueType(
                                 stream,
-                                &mut (*CurrentDemandReqType).EVMaximumCurrentLimit,
+                                &mut (*CurrentDemandReqType).EVMaximumCurrentLimit.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 254 as i32;
@@ -12013,7 +11798,7 @@ pub fn decode_iso2_CurrentDemandReqType(
                         1 => {
                             decode_iso2_PhysicalValueType(
                                 stream,
-                                &mut (*CurrentDemandReqType).EVMaximumPowerLimit,
+                                &mut (*CurrentDemandReqType).EVMaximumPowerLimit.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 255 as i32;
@@ -12035,7 +11820,7 @@ pub fn decode_iso2_CurrentDemandReqType(
                                     )?;
                                     if error == 0 as i32 {
                                         (*CurrentDemandReqType).BulkChargingComplete =
-                                            value_1 as i32;
+                                            Some(value_1 as i32);
                                     }
                                 } else {
                                     return Err(-151);
@@ -12105,7 +11890,7 @@ pub fn decode_iso2_CurrentDemandReqType(
                         0 => {
                             decode_iso2_PhysicalValueType(
                                 stream,
-                                &mut (*CurrentDemandReqType).EVMaximumPowerLimit,
+                                &mut (*CurrentDemandReqType).EVMaximumPowerLimit.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 255 as i32;
@@ -12127,7 +11912,7 @@ pub fn decode_iso2_CurrentDemandReqType(
                                     )?;
                                     if error == 0 as i32 {
                                         (*CurrentDemandReqType).BulkChargingComplete =
-                                            value_3 as i32;
+                                            Some(value_3 as i32);
                                     }
                                 } else {
                                     return Err(-151);
@@ -12209,8 +11994,7 @@ pub fn decode_iso2_CurrentDemandReqType(
                                         &mut value_5,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*CurrentDemandReqType).BulkChargingComplete =
-                                            value_5 as i32;
+                                        (*CurrentDemandReqType).BulkChargingComplete = Some(value_5 as i32);
                                     }
                                 } else {
                                     return Err(-151);
@@ -12326,7 +12110,7 @@ pub fn decode_iso2_CurrentDemandReqType(
                         0 => {
                             decode_iso2_PhysicalValueType(
                                 stream,
-                                &mut (*CurrentDemandReqType).RemainingTimeToFullSoC,
+                                &mut (*CurrentDemandReqType).RemainingTimeToFullSoC.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 258 as i32;
@@ -12335,7 +12119,7 @@ pub fn decode_iso2_CurrentDemandReqType(
                         1 => {
                             decode_iso2_PhysicalValueType(
                                 stream,
-                                &mut (*CurrentDemandReqType).RemainingTimeToBulkSoC,
+                                &mut (*CurrentDemandReqType).RemainingTimeToBulkSoC.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 259 as i32;
@@ -12363,7 +12147,7 @@ pub fn decode_iso2_CurrentDemandReqType(
                         0 => {
                             decode_iso2_PhysicalValueType(
                                 stream,
-                                &mut (*CurrentDemandReqType).RemainingTimeToBulkSoC,
+                                &mut (*CurrentDemandReqType).RemainingTimeToBulkSoC.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 259 as i32;
@@ -12696,7 +12480,7 @@ pub fn decode_iso2_CertificateUpdateResType(
                         0 => {
                             decode_exi_type_integer16(
                                 stream,
-                                &mut (*CertificateUpdateResType).RetryCounter,
+                                &mut (*CertificateUpdateResType).RetryCounter.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -12747,18 +12531,15 @@ pub fn decode_iso2_MeteringReceiptReqType(
                         0 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut (*MeteringReceiptReqType).Id.len,
+                                &mut ((*MeteringReceiptReqType).Id.unwrap().len as u16),
                             )?;
                             if error == 0 as i32 {
-                                if (*MeteringReceiptReqType).Id.len as i32 >= 2 as i32 {
-                                    (*MeteringReceiptReqType).Id.len =
-                                        ((*MeteringReceiptReqType).Id.len as i32
-                                            - 2 as i32)
-                                            as u16;
+                                if (*MeteringReceiptReqType).Id.unwrap().len as i32 >= 2 as i32 {
+                                    (*MeteringReceiptReqType).Id.unwrap().len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
-                                        (*MeteringReceiptReqType).Id.len as usize,
-                                        ((*MeteringReceiptReqType).Id.data).as_mut_ptr(),
+                                        (*MeteringReceiptReqType).Id.unwrap().len,
+                                        &mut (*MeteringReceiptReqType).Id.unwrap().data,
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
@@ -12771,9 +12552,7 @@ pub fn decode_iso2_MeteringReceiptReqType(
                             decode_exi_type_hex_binary(
                                 stream,
                                 &mut (*MeteringReceiptReqType).SessionID.len,
-                                &mut *((*MeteringReceiptReqType).SessionID.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*MeteringReceiptReqType).SessionID.data,
                                 8 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -12794,9 +12573,7 @@ pub fn decode_iso2_MeteringReceiptReqType(
                             decode_exi_type_hex_binary(
                                 stream,
                                 &mut (*MeteringReceiptReqType).SessionID.len,
-                                &mut *((*MeteringReceiptReqType).SessionID.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*MeteringReceiptReqType).SessionID.data,
                                 8 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -12828,8 +12605,8 @@ pub fn decode_iso2_MeteringReceiptReqType(
                                         &mut value,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*MeteringReceiptReqType).SAScheduleTupleID =
-                                            value.wrapping_add(1 as i32 as u32) as u8;
+                                        (*MeteringReceiptReqType).SAScheduleTupleID = Some(
+                                            value.wrapping_add(1 as i32 as u32) as u8);
                                     }
                                 } else {
                                     return Err(-151);
@@ -12908,12 +12685,12 @@ pub fn decode_iso2_ChargingStatusReqType(
     mut ChargingStatusReqType: &mut Iso2ChargingStatusReqType,
 ) -> Result<u8, i16> {
     let mut eventCode: u32 = 0;
-    let mut error: i32 = exi_basetypes_decoder_nbit_uint(stream, 1, &mut eventCode)?;
-    if error == 0 as i32 {
-        if eventCode != 0 as i32 as u32 {
-            return Err(-150);
-        }
+    exi_basetypes_decoder_nbit_uint(stream, 1, &mut eventCode)?;
+    if eventCode != 0 {
+        return Err(-150);
     }
+
+    return Ok(0);
 }
 pub fn decode_iso2_SessionStopResType(
     stream: &mut ExiBitstream,
@@ -13008,7 +12785,7 @@ pub fn decode_iso2_ChargeParameterDiscoveryReqType(
                         0 => {
                             decode_exi_type_uint16(
                                 stream,
-                                &mut (*ChargeParameterDiscoveryReqType).MaxEntriesSAScheduleTuple,
+                                &mut (*ChargeParameterDiscoveryReqType).MaxEntriesSAScheduleTuple.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 276 as i32;
@@ -13113,7 +12890,7 @@ pub fn decode_iso2_ChargeParameterDiscoveryReqType(
                         0 => {
                             decode_iso2_AC_EVChargeParameterType(
                                 stream,
-                                &mut (*ChargeParameterDiscoveryReqType).AC_EVChargeParameter,
+                                &mut (*ChargeParameterDiscoveryReqType).AC_EVChargeParameter.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -13122,7 +12899,7 @@ pub fn decode_iso2_ChargeParameterDiscoveryReqType(
                         1 => {
                             decode_iso2_DC_EVChargeParameterType(
                                 stream,
-                                &mut (*ChargeParameterDiscoveryReqType).DC_EVChargeParameter,
+                                &mut (*ChargeParameterDiscoveryReqType).DC_EVChargeParameter.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -13131,7 +12908,7 @@ pub fn decode_iso2_ChargeParameterDiscoveryReqType(
                         2 => {
                             decode_iso2_EVChargeParameterType(
                                 stream,
-                                &mut (*ChargeParameterDiscoveryReqType).EVChargeParameter,
+                                &mut (*ChargeParameterDiscoveryReqType).EVChargeParameter.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -13321,7 +13098,7 @@ pub fn decode_iso2_PowerDeliveryResType(
                         0 => {
                             decode_iso2_AC_EVSEStatusType(
                                 stream,
-                                &mut (*PowerDeliveryResType).AC_EVSEStatus,
+                                &mut (*PowerDeliveryResType).AC_EVSEStatus.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -13330,7 +13107,7 @@ pub fn decode_iso2_PowerDeliveryResType(
                         1 => {
                             decode_iso2_DC_EVSEStatusType(
                                 stream,
-                                &mut (*PowerDeliveryResType).DC_EVSEStatus,
+                                &mut (*PowerDeliveryResType).DC_EVSEStatus.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -13339,7 +13116,7 @@ pub fn decode_iso2_PowerDeliveryResType(
                         2 => {
                             decode_iso2_EVSEStatusType(
                                 stream,
-                                &mut (*PowerDeliveryResType).EVSEStatus,
+                                &mut (*PowerDeliveryResType).EVSEStatus.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -13481,7 +13258,7 @@ pub fn decode_iso2_ChargeParameterDiscoveryResType(
                         0 => {
                             decode_iso2_SAScheduleListType(
                                 stream,
-                                &mut (*ChargeParameterDiscoveryResType).SAScheduleList,
+                                &mut (*ChargeParameterDiscoveryResType).SAScheduleList.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 285 as i32;
@@ -13490,7 +13267,7 @@ pub fn decode_iso2_ChargeParameterDiscoveryResType(
                         1 => {
                             decode_iso2_SASchedulesType(
                                 stream,
-                                &mut (*ChargeParameterDiscoveryResType).SASchedules,
+                                &mut (*ChargeParameterDiscoveryResType).SASchedules.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 285 as i32;
@@ -13499,7 +13276,7 @@ pub fn decode_iso2_ChargeParameterDiscoveryResType(
                         2 => {
                             decode_iso2_AC_EVSEChargeParameterType(
                                 stream,
-                                &mut (*ChargeParameterDiscoveryResType).AC_EVSEChargeParameter,
+                                &mut (*ChargeParameterDiscoveryResType).AC_EVSEChargeParameter.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -13508,7 +13285,7 @@ pub fn decode_iso2_ChargeParameterDiscoveryResType(
                         3 => {
                             decode_iso2_DC_EVSEChargeParameterType(
                                 stream,
-                                &mut (*ChargeParameterDiscoveryResType).DC_EVSEChargeParameter,
+                                &mut (*ChargeParameterDiscoveryResType).DC_EVSEChargeParameter.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -13517,7 +13294,7 @@ pub fn decode_iso2_ChargeParameterDiscoveryResType(
                         4 => {
                             decode_iso2_EVSEChargeParameterType(
                                 stream,
-                                &mut (*ChargeParameterDiscoveryResType).EVSEChargeParameter,
+                                &mut (*ChargeParameterDiscoveryResType).EVSEChargeParameter.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -13536,7 +13313,7 @@ pub fn decode_iso2_ChargeParameterDiscoveryResType(
                         0 => {
                             decode_iso2_AC_EVSEChargeParameterType(
                                 stream,
-                                &mut (*ChargeParameterDiscoveryResType).AC_EVSEChargeParameter,
+                                &mut (*ChargeParameterDiscoveryResType).AC_EVSEChargeParameter.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -13545,7 +13322,7 @@ pub fn decode_iso2_ChargeParameterDiscoveryResType(
                         1 => {
                             decode_iso2_DC_EVSEChargeParameterType(
                                 stream,
-                                &mut (*ChargeParameterDiscoveryResType).DC_EVSEChargeParameter,
+                                &mut (*ChargeParameterDiscoveryResType).DC_EVSEChargeParameter.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -13554,7 +13331,7 @@ pub fn decode_iso2_ChargeParameterDiscoveryResType(
                         2 => {
                             decode_iso2_EVSEChargeParameterType(
                                 stream,
-                                &mut (*ChargeParameterDiscoveryResType).EVSEChargeParameter,
+                                &mut (*ChargeParameterDiscoveryResType).EVSEChargeParameter.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -13744,7 +13521,7 @@ pub fn decode_iso2_MeteringReceiptResType(
                         0 => {
                             decode_iso2_AC_EVSEStatusType(
                                 stream,
-                                &mut (*MeteringReceiptResType).AC_EVSEStatus,
+                                &mut (*MeteringReceiptResType).AC_EVSEStatus.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -13753,7 +13530,7 @@ pub fn decode_iso2_MeteringReceiptResType(
                         1 => {
                             decode_iso2_DC_EVSEStatusType(
                                 stream,
-                                &mut (*MeteringReceiptResType).DC_EVSEStatus,
+                                &mut (*MeteringReceiptResType).DC_EVSEStatus.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -13762,7 +13539,7 @@ pub fn decode_iso2_MeteringReceiptResType(
                         2 => {
                             decode_iso2_EVSEStatusType(
                                 stream,
-                                &mut (*MeteringReceiptResType).EVSEStatus,
+                                &mut (*MeteringReceiptResType).EVSEStatus.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -14037,7 +13814,7 @@ pub fn decode_iso2_ServiceDiscoveryResType(
                         0 => {
                             decode_iso2_ServiceListType(
                                 stream,
-                                &mut (*ServiceDiscoveryResType).ServiceList,
+                                &mut (*ServiceDiscoveryResType).ServiceList.unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -14137,9 +13914,7 @@ pub fn decode_iso2_SessionSetupReqType(
                             decode_exi_type_hex_binary(
                                 stream,
                                 &mut (*SessionSetupReqType).EVCCID.len,
-                                &mut *((*SessionSetupReqType).EVCCID.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*SessionSetupReqType).EVCCID.data,
                                 6 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -14271,30 +14046,25 @@ pub fn decode_iso2_ServiceDiscoveryReqType(
                                 if eventCode == 0 as i32 as u32 {
                                     exi_basetypes_decoder_uint_16(
                                         stream,
-                                        &mut (*ServiceDiscoveryReqType).ServiceScope.len,
+                                        &mut ((*ServiceDiscoveryReqType).ServiceScope.unwrap().len as u16),
                                     )?;
                                     if error == 0 as i32 {
-                                        if (*ServiceDiscoveryReqType).ServiceScope.len
+                                        if (*ServiceDiscoveryReqType).ServiceScope.unwrap().len
                                             as i32
                                             >= 2 as i32
                                         {
-                                            (*ServiceDiscoveryReqType).ServiceScope.len =
+                                            (*ServiceDiscoveryReqType).ServiceScope.unwrap().len =
                                                 ((*ServiceDiscoveryReqType)
-                                                    .ServiceScope
-                                                    .len
+                                                    .ServiceScope.unwrap().len
                                                     as i32
                                                     - 2 as i32)
-                                                    as u16;
+                                                    as usize;
                                             exi_basetypes_decoder_characters(
                                                 stream,
                                                 (*ServiceDiscoveryReqType)
-                                                    .ServiceScope
-                                                    .len
-                                                    as usize,
-                                                ((*ServiceDiscoveryReqType)
-                                                    .ServiceScope
-                                                    .data)
-                                                    .as_mut_ptr(),
+                                                    .ServiceScope.unwrap().len,
+                                                &mut ((*ServiceDiscoveryReqType)
+                                                    .ServiceScope.unwrap().data),
                                                 (64 as i32 + 1 as i32) as usize,
                                             )?;
                                         } else {
@@ -14582,7 +14352,7 @@ pub fn decode_iso2_PaymentDetailsReqType(
                                 if eventCode == 0 as i32 as u32 {
                                     exi_basetypes_decoder_uint_16(
                                         stream,
-                                        &mut (*PaymentDetailsReqType).eMaid.len,
+                                        &mut ((*PaymentDetailsReqType).eMaid.len as u16),
                                     )?;
                                     if error == 0 as i32 {
                                         if (*PaymentDetailsReqType).eMaid.len as i32
@@ -14592,13 +14362,11 @@ pub fn decode_iso2_PaymentDetailsReqType(
                                                 ((*PaymentDetailsReqType).eMaid.len
                                                     as i32
                                                     - 2 as i32)
-                                                    as u16;
+                                                    as usize;
                                             exi_basetypes_decoder_characters(
                                                 stream,
-                                                (*PaymentDetailsReqType).eMaid.len
-                                                    as usize,
-                                                ((*PaymentDetailsReqType).eMaid.data)
-                                                    .as_mut_ptr(),
+                                                (*PaymentDetailsReqType).eMaid.len,
+                                                &mut (*PaymentDetailsReqType).eMaid.data,
                                                 (15 as i32 + 1 as i32) as usize,
                                             )?;
                                         } else {
@@ -14697,7 +14465,7 @@ pub fn decode_iso2_PaymentDetailsResType(
                                     )?;
                                     if error == 0 as i32 {
                                         (*PaymentDetailsResType).ResponseCode =
-                                            value as Iso2responseCodeType;
+                                            value as Iso2ResponseCodeType;
                                     }
                                 } else {
                                     return Err(-151);
@@ -14732,9 +14500,7 @@ pub fn decode_iso2_PaymentDetailsResType(
                             decode_exi_type_hex_binary(
                                 stream,
                                 &mut (*PaymentDetailsResType).GenChallenge.len,
-                                &mut *((*PaymentDetailsResType).GenChallenge.data)
-                                    .as_mut_ptr()
-                                    .offset(0 as i32 as isize),
+                                &mut (*PaymentDetailsResType).GenChallenge.data,
                                 16 as i32 as usize,
                             )?;
                             if error == 0 as i32 {
@@ -14805,9 +14571,9 @@ pub fn decode_iso2_BodyType(
             BodyType.BodyTypeComponent = Iso2BodyTypeEnum::AuthorizationRes(authorization_res);
         }
         2 => {
-            let mut body_base: Iso2BodyBaseType = Default::default();
-            decode_iso2_BodyBaseType(stream, &mut body_base)?;
-            BodyType.BodyTypeComponent = Iso2BodyTypeEnum::BodyBase(body_base);
+            let mut body_element: Iso2BodyBaseType = Default::default();
+            decode_iso2_BodyBaseType(stream, &mut body_element)?;
+            BodyType.BodyTypeComponent = Iso2BodyTypeEnum::BodyElement(body_element);
         }
         3 => {
             let mut cable_check_req: Iso2CableCheckReqType = Default::default();
@@ -14982,7 +14748,7 @@ pub fn decode_iso2_BodyType(
 }
 pub fn decode_iso2_V2G_Message(
     stream: &mut ExiBitstream,
-    mut V2G_Message: &mut Iso2V2G_Message,
+    mut V2G_Message: &mut Iso2v2gMessage,
 ) -> Result<u8, i16> {
     let mut grammar_id: i32 = 310 as i32;
     let mut eventCode: u32 = 0;
@@ -15043,7 +14809,7 @@ pub fn decode_iso2_V2G_Message(
 
 pub fn decode_iso2_exiDocument(
     stream: &mut ExiBitstream,
-    mut exiDoc: &mut Iso2exiDocument,
+    mut exiDoc: &mut Iso2ExiDocument,
 ) -> Result<u8, i16> {
     let mut eventCode: u32 = 0;
     exi_header_read_and_check(stream)?;
@@ -15061,7 +14827,7 @@ pub fn decode_iso2_exiDocument(
 
 pub fn decode_iso2_exiFragment(
     stream: &mut ExiBitstream,
-    mut exiFrag: &mut Iso2exiFragment,
+    mut exiFrag: &mut Iso2ExiFragment,
 ) -> Result<u8, i16> {
     let mut eventCode: u32 = 0;
     exi_header_read_and_check(stream)?;
@@ -15386,7 +15152,7 @@ pub fn decode_iso2_exiFragment(
 
 pub fn decode_iso2_xmldsigFragment(
     stream: &mut ExiBitstream,
-    mut xmldsigFrag: &mut Iso2xmldsigFragment,
+    mut xmldsigFrag: &mut Iso2XmlDsigFragment,
 ) -> Result<u8, i16> {
     let mut eventCode: u32 = 0;
     exi_header_read_and_check(stream)?;
