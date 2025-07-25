@@ -9226,10 +9226,12 @@ pub fn decode_iso2_MessageHeaderType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            decode_iso2_SignatureType(
-                                stream,
-                                &mut (*MessageHeaderType).Signature.unwrap(),
-                            )?;
+                            if (*MessageHeaderType).Signature.is_some() {
+                                decode_iso2_SignatureType(
+                                    stream,
+                                    &mut (*MessageHeaderType).Signature.unwrap(),
+                                )?;
+                            }
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
                             }
