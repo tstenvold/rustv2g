@@ -22,3 +22,9 @@ std = []
 
 [dev-dependencies]
 # Test dependencies go here
+
+
+[profile.release]
+debug = 2
+lto = true
+opt-level = 'z'

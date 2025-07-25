@@ -25,4 +25,5 @@ pub mod common {
 pub mod iso_2 {
     pub mod iso2_msgDefDatatypes;
     pub mod iso2_msgDefDecoder;
+    //pub mod iso2_msgDefEncoder;
 }

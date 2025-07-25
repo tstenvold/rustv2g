@@ -1,12 +1,9 @@
 #[cfg(test)]
 mod tests {
-    use rustv2g::exi_v2gtp::{
-        v2gtp_write_header,
-        v2gtp20_write_header,
-        v2gtp_read_header,
-        v2gtp20_read_header,
-    };
     use rustv2g::common::exi_error_codes::BITSTREAM_OVERFLOW;
+    use rustv2g::exi_v2gtp::{
+        v2gtp20_read_header, v2gtp20_write_header, v2gtp_read_header, v2gtp_write_header,
+    };
     #[test]
     fn test_v2gtp_write_header_success() {
         let mut buf = [0u8; 8];

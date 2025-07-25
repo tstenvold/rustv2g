@@ -3,11 +3,10 @@
 #[cfg(test)]
 mod tests {
     use rustv2g::app_handshake::appHand_Datatypes::*;
-    use rustv2g::app_handshake::appHand_Encoder::*;
-    use rustv2g::common::exi_error_codes::*;
-    use rustv2g::common::exi_bitstream::*;
     use rustv2g::app_handshake::appHand_Decoder::*;
-
+    use rustv2g::app_handshake::appHand_Encoder::*;
+    use rustv2g::common::exi_bitstream::*;
+    use rustv2g::common::exi_error_codes::*;
 
     fn make_protocol_type() -> AppHandAppProtocolType {
         AppHandAppProtocolType {
@@ -165,8 +164,7 @@ mod tests {
         let mut res = AppHandSupportedAppProtocolRes::default();
         let result = decode_appHand_supportedAppProtocolRes(&mut stream, &mut res);
         assert_eq!(result, Ok(NO_ERROR));
-        assert_eq!(res.ResponseCode,
-            AppHandResponseCodeType::from(0));
+        assert_eq!(res.ResponseCode, AppHandResponseCodeType::from(0));
     }
 
     #[test]
@@ -238,8 +236,10 @@ mod tests {
         assert_eq!(decode_result, Ok(NO_ERROR));
         assert!(decoded_doc.SupportedAppProtocolRes.is_some());
         let res = decoded_doc.SupportedAppProtocolRes.unwrap();
-        assert_eq!(res.ResponseCode, AppHandResponseCodeType::AppHandResponseCodeTypeOkSuccessfulNegotiation);
+        assert_eq!(
+            res.ResponseCode,
+            AppHandResponseCodeType::AppHandResponseCodeTypeOkSuccessfulNegotiation
+        );
         assert_eq!(res.SchemaID, Some(1));
     }
-
 }

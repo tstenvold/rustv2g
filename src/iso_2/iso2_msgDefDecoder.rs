@@ -9190,19 +9190,24 @@ pub fn decode_iso2_MessageHeaderType(
                 if error == 0 as i32 {
                     match eventCode {
                         0 => {
-                            decode_iso2_NotificationType(
-                                stream,
-                                &mut (*MessageHeaderType).Notification.unwrap(),
-                            )?;
+                            // If notification is None skip
+                            if (*MessageHeaderType).Notification.is_some() {
+                                decode_iso2_NotificationType(
+                                    stream,
+                                    &mut (*MessageHeaderType).Notification.unwrap(),
+                                )?;
+                            }
                             if error == 0 as i32 {
                                 grammar_id = 196 as i32;
                             }
                         }
                         1 => {
-                            decode_iso2_SignatureType(
-                                stream,
-                                &mut (*MessageHeaderType).Signature.unwrap(),
-                            )?;
+                            if (*MessageHeaderType).Signature.is_some() {
+                                decode_iso2_SignatureType(
+                                    stream,
+                                    &mut (*MessageHeaderType).Signature.unwrap(),
+                                )?;
+                            }
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
                             }
