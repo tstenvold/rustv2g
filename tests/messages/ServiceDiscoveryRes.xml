@@ -1,0 +1,26 @@
+<V2G_Message>
+  <Header>
+    <SessionID>82DBA3A44ED6E5B9</SessionID>
+  </Header>
+  <Body>
+    <ServiceDiscoveryRes>
+      <ResponseCode>OK</ResponseCode>
+      <PaymentOptionList>
+        <PaymentOption>
+          <PaymentOption>ExternalPayment</PaymentOption>
+        </PaymentOption>
+      </PaymentOptionList>
+      <ChargeService>
+        <ServiceID>1</ServiceID>
+        <ServiceName>AC_DC_Charging</ServiceName>
+        <ServiceCategory>EVCharging</ServiceCategory>
+        <FreeService>True</FreeService>
+        <SupportedEnergyTransferMode>
+          <EnergyTransferMode>
+            <EnergyTransferMode>DC_extended</EnergyTransferMode>
+          </EnergyTransferMode>
+        </SupportedEnergyTransferMode>
+      </ChargeService>
+    </ServiceDiscoveryRes>
+  </Body>
+</V2G_Message>

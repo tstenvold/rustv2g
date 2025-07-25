@@ -22,7 +22,7 @@ std = []
 
 [dev-dependencies]
 # Test dependencies go here
-
+hex = "0.4"
 
 [profile.release]
 debug = 2

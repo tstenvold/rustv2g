@@ -1,0 +1,17 @@
+<V2G_Message>
+  <Header>
+    <SessionID>82DBA3A44ED6E5B9</SessionID>
+  </Header>
+  <Body>
+    <CableCheckRes>
+      <ResponseCode>OK</ResponseCode>
+      <DC_EVSEStatus>
+        <NotificationMaxDelay>0</NotificationMaxDelay>
+        <EVSENotification>None</EVSENotification>
+        <EVSEIsolationStatus>Invalid</EVSEIsolationStatus>
+        <EVSEStatusCode>EVSE_Ready</EVSEStatusCode>
+      </DC_EVSEStatus>
+      <EVSEProcessing>Ongoing</EVSEProcessing>
+    </CableCheckRes>
+  </Body>
+</V2G_Message>

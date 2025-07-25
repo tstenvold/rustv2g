@@ -1,0 +1,11 @@
+<V2G_Message>
+  <Header>
+    <SessionID>82DBA3A44ED6E5B9</SessionID>
+  </Header>
+  <Body>
+    <ServiceDiscoveryReq>
+      <ServiceScope>www.vector.com</ServiceScope>
+      <ServiceCategory>EVCharging</ServiceCategory>
+    </ServiceDiscoveryReq>
+  </Body>
+</V2G_Message>

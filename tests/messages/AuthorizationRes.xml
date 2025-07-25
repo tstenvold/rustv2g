@@ -1,0 +1,11 @@
+<V2G_Message>
+  <Header>
+    <SessionID>82DBA3A44ED6E5B9</SessionID>
+  </Header>
+  <Body>
+    <AuthorizationRes>
+      <ResponseCode>OK</ResponseCode>
+      <EVSEProcessing>Finished</EVSEProcessing>
+    </AuthorizationRes>
+  </Body>
+</V2G_Message>

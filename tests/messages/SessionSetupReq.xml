@@ -1,0 +1,10 @@
+<V2G_Message>
+  <Header>
+    <SessionID>0000000000000000</SessionID>
+  </Header>
+  <Body>
+    <SessionSetupReq>
+      <EVCCID>020000000001</EVCCID>
+    </SessionSetupReq>
+  </Body>
+</V2G_Message>
