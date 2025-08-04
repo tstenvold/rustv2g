@@ -1,4 +1,4 @@
-use crate::common::exi_error_codes::*;
+use crate::common::exi_error_codes::ExiError;
 
 pub type StatusCallback = Option<fn(i32, i32, i32, i32)>;
 
@@ -108,7 +108,7 @@ pub fn exi_bitstream_write_bits(
 }
 
 pub fn exi_bitstream_write_octet(stream: &mut ExiBitstream, value: u8) -> Result<(), ExiError> {
-    exi_bitstream_write_bits(stream, 8, value as u32)
+    exi_bitstream_write_bits(stream, 8, u32::from(value))
 }
 
 pub fn exi_bitstream_read_bits(
@@ -123,7 +123,7 @@ pub fn exi_bitstream_read_bits(
     for _ in 0..bit_count {
         let mut bit = 0;
         exi_bitstream_read_bit(stream, &mut bit)?;
-        *value = (*value << 1) | (bit as u32);
+        *value = (*value << 1) | u32::from(bit);
     }
     Ok(())
 }

@@ -1,4 +1,4 @@
-use crate::common::exi_error_codes::*;
+use crate::common::exi_error_codes::ExiError;
 
 pub fn v2gtp_write_header(
     stream_data: &mut [u8],
@@ -37,13 +37,13 @@ pub fn v2gtp20_read_header(stream_data: &[u8], v2gtp20_payload_id: u16) -> Resul
     if stream_data[0] != 0x1 || stream_data[1] != 0xfe {
         return Err(ExiError::BitstreamOverflow);
     }
-    let payload_id = ((stream_data[2] as u16) << 8) | (stream_data[3] as u16);
+    let payload_id = (u16::from(stream_data[2]) << 8) | u16::from(stream_data[3]);
     if payload_id != v2gtp20_payload_id {
         return Err(ExiError::UnknownEventCode);
     }
-    let stream_payload_length = ((stream_data[4] as u32) << 24)
-        | ((stream_data[5] as u32) << 16)
-        | ((stream_data[6] as u32) << 8)
-        | (stream_data[7] as u32);
+    let stream_payload_length = (u32::from(stream_data[4]) << 24)
+        | (u32::from(stream_data[5]) << 16)
+        | (u32::from(stream_data[6]) << 8)
+        | u32::from(stream_data[7]);
     Ok(stream_payload_length as usize)
 }

@@ -1,9 +1,9 @@
 use core::result::Result;
 use heapless::String;
 
-use crate::common::exi_basetypes::*;
-use crate::common::exi_bitstream::*;
-use crate::common::exi_error_codes::*;
+use crate::common::exi_basetypes::{ExiSigned, ExiUnsigned, exi_basetypes_convert_64_from_unsigned, exi_basetypes_convert_bytes_from_unsigned, exi_basetypes_convert_from_unsigned};
+use crate::common::exi_bitstream::{ExiBitstream, exi_bitstream_read_bits, exi_bitstream_read_octet};
+use crate::common::exi_error_codes::ExiError;
 
 fn exi_basetypes_decoder_read_unsigned(
     stream: &mut ExiBitstream,
@@ -136,7 +136,7 @@ pub fn exi_basetypes_decoder_integer_8(
     exi_basetypes_decoder_uint_8(stream, &mut tmp)?;
     *value = tmp as i8;
     if sign != 0 {
-        *value = -(*value as i32 + 1) as i8;
+        *value = -(i32::from(*value) + 1) as i8;
     }
     Ok(())
 }
@@ -151,7 +151,7 @@ pub fn exi_basetypes_decoder_integer_16(
     exi_basetypes_decoder_uint_16(stream, &mut tmp)?;
     *value = tmp as i16;
     if sign != 0 {
-        *value = -(*value as i32 + 1) as i16;
+        *value = -(i32::from(*value) + 1) as i16;
     }
     Ok(())
 }

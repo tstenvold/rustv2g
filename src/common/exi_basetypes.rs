@@ -1,4 +1,4 @@
-use crate::common::exi_error_codes::*;
+use crate::common::exi_error_codes::ExiError;
 
 const EXI_UNSIGNED_MAX_OCTETS: usize = 29;
 
@@ -12,15 +12,15 @@ pub struct ExiUnsigned {
 
 impl Default for ExiUnsigned {
     fn default() -> Self {
-        ExiUnsigned {
+        Self {
             octets: [0; EXI_UNSIGNED_MAX_OCTETS],
             octets_count: 0,
         }
     }
 }
 impl ExiUnsigned {
-    pub fn new() -> Self {
-        ExiUnsigned::default()
+    #[must_use] pub fn new() -> Self {
+        Self::default()
     }
 }
 
@@ -31,8 +31,8 @@ pub struct ExiSigned {
 }
 
 impl ExiSigned {
-    pub fn new() -> Self {
-        ExiSigned::default()
+    #[must_use] pub fn new() -> Self {
+        Self::default()
     }
 }
 
@@ -139,7 +139,7 @@ pub fn exi_basetypes_convert_from_unsigned(
         .take(exi_unsigned.octets_count)
         .enumerate()
     {
-        *value = value.wrapping_add(((octet & 0x7f) as u32) << (n * 7));
+        *value = value.wrapping_add(u32::from(octet & 0x7f) << (n * 7));
     }
     Ok(())
 }
@@ -158,7 +158,7 @@ pub fn exi_basetypes_convert_64_from_unsigned(
         .take(exi_unsigned.octets_count)
         .enumerate()
     {
-        *value = value.wrapping_add(((octet & 0x7f) as u64) << (n * 7));
+        *value = value.wrapping_add(u64::from(octet & 0x7f) << (n * 7));
     }
     Ok(())
 }
@@ -206,8 +206,8 @@ pub fn exi_basetypes_convert_bytes_from_unsigned(
     let mut total_offset: usize = 0;
     let mut n: usize = 0;
     while n < exi_unsigned.octets_count {
-        temp = (temp as u32
-            + (((exi_unsigned.octets[n] & 0x7f) as u16 as u32) << total_offset) as u32)
+        temp = (u32::from(temp)
+            + (u32::from(u16::from(exi_unsigned.octets[n] & 0x7f)) << total_offset) as u32)
             as u16;
         total_offset += 7;
         if total_offset >= 8 {
@@ -264,7 +264,7 @@ pub fn exi_basetypes_convert_bytes_to_unsigned(
     let mut outcount: usize = 0;
     while outcount < exi_expected_octets_count {
         if dummy_count < 7 && incount < data.len() - bytenum {
-            dummy |= (data[data.len() - incount - 1] as u16) << dummy_count;
+            dummy |= u16::from(data[data.len() - incount - 1]) << dummy_count;
             dummy_count += 8;
             incount += 1;
         }

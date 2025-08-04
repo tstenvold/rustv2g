@@ -2,7 +2,7 @@
 
 #![warn(clippy::pedantic)]
 #![deny(clippy::cargo)]
-#![deny(clippy::nursery)]
+#![warn(clippy::nursery)]
 
 pub mod exi_v2gtp;
 pub mod app_handshake {

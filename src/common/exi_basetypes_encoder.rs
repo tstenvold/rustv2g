@@ -1,9 +1,9 @@
 use core::result::Result;
 use heapless::String;
 
-use crate::common::exi_basetypes::*;
-use crate::common::exi_bitstream::*;
-use crate::common::exi_error_codes::*;
+use crate::common::exi_basetypes::{ExiSigned, ExiUnsigned, exi_basetypes_convert_64_to_unsigned, exi_basetypes_convert_bytes_to_unsigned, exi_basetypes_convert_to_unsigned};
+use crate::common::exi_bitstream::{ExiBitstream, exi_bitstream_write_bits, exi_bitstream_write_octet};
+use crate::common::exi_error_codes::ExiError;
 
 fn exi_basetypes_encoder_write_unsigned(
     stream: &mut ExiBitstream,
@@ -45,7 +45,7 @@ pub fn exi_basetypes_encoder_uint_8(stream: &mut ExiBitstream, value: u8) -> Res
         octets: [0; 29],
         octets_count: 0,
     };
-    let result = value as u32;
+    let result = u32::from(value);
     exi_basetypes_convert_to_unsigned(&mut exi_unsigned, result, 2)?;
     exi_basetypes_encoder_write_unsigned(stream, &exi_unsigned)
 }
@@ -58,7 +58,7 @@ pub fn exi_basetypes_encoder_uint_16(
         octets: [0; 29],
         octets_count: 0,
     };
-    let result = value as u32;
+    let result = u32::from(value);
     exi_basetypes_convert_to_unsigned(&mut exi_unsigned, result, 3)?;
     exi_basetypes_encoder_write_unsigned(stream, &exi_unsigned)
 }
@@ -110,7 +110,7 @@ pub fn exi_basetypes_encoder_integer_8(
     exi_basetypes_encoder_bool(stream, sign)?;
     let mut result = value as u8;
     if sign != 0 {
-        result = (-(value as i32) - 1) as u8;
+        result = (-i32::from(value) - 1) as u8;
     }
     exi_basetypes_encoder_uint_8(stream, result)
 }
@@ -123,7 +123,7 @@ pub fn exi_basetypes_encoder_integer_16(
     exi_basetypes_encoder_bool(stream, sign)?;
     let mut result = value as u16;
     if sign != 0 {
-        result = (-(value as i32) - 1) as u16;
+        result = (-i32::from(value) - 1) as u16;
     }
     exi_basetypes_encoder_uint_16(stream, result)
 }
@@ -147,10 +147,7 @@ pub fn exi_basetypes_encoder_integer_64(
 ) -> Result<(), ExiError> {
     let sign = if value < 0 { 1 } else { 0 };
     exi_basetypes_encoder_bool(stream, sign)?;
-    let mut result = value as u64;
-    if sign != 0 {
-        result = (-value - 1) as u64;
-    }
+    let mut result = if sign != 0 { (-value - 1) as u64 } else { value as u64 };
     exi_basetypes_encoder_uint_64(stream, result)
 }
 
@@ -158,7 +155,7 @@ pub fn exi_basetypes_encoder_signed(
     stream: &mut ExiBitstream,
     value: &ExiSigned,
 ) -> Result<(), ExiError> {
-    exi_basetypes_encoder_bool(stream, value.is_negative as i32)?;
+    exi_basetypes_encoder_bool(stream, i32::from(value.is_negative))?;
     exi_basetypes_encoder_unsigned(stream, &value.data)
 }
 

@@ -1,10 +1,10 @@
 use core::result::Result;
 
-use crate::app_handshake::app_handshake_datatypes::*;
-use crate::common::exi_basetypes_encoder::*;
-use crate::common::exi_bitstream::*;
-use crate::common::exi_error_codes::*;
-use crate::common::exi_header::*;
+use crate::app_handshake::app_handshake_datatypes::{AppHandAppProtocolType, AppHandExiDocument, AppHandSupportedAppProtocolReq, AppHandSupportedAppProtocolRes};
+use crate::common::exi_basetypes_encoder::{exi_basetypes_encoder_characters, exi_basetypes_encoder_nbit_uint, exi_basetypes_encoder_uint_16, exi_basetypes_encoder_uint_32};
+use crate::common::exi_bitstream::ExiBitstream;
+use crate::common::exi_error_codes::ExiError;
+use crate::common::exi_header::exi_header_write;
 
 pub fn encode_app_hand_app_protocol_type(
     stream: &mut ExiBitstream,
@@ -51,7 +51,7 @@ pub fn encode_app_hand_app_protocol_type(
             3 => {
                 exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
                 exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
-                exi_basetypes_encoder_nbit_uint(stream, 8, app_protocol_type.schema_id as u32)?;
+                exi_basetypes_encoder_nbit_uint(stream, 8, u32::from(app_protocol_type.schema_id))?;
                 exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
                 grammar_id = 4;
                 continue;
@@ -62,7 +62,7 @@ pub fn encode_app_hand_app_protocol_type(
                 exi_basetypes_encoder_nbit_uint(
                     stream,
                     5,
-                    (app_protocol_type.priority as u32).wrapping_sub(1),
+                    u32::from(app_protocol_type.priority).wrapping_sub(1),
                 )?;
 
                 exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
@@ -164,7 +164,7 @@ pub fn encode_app_hand_supported_app_protocol_res(
                     exi_basetypes_encoder_nbit_uint(
                         stream,
                         8,
-                        supported_app_protocol_res.schema_id.unwrap_or(0) as u32,
+                        u32::from(supported_app_protocol_res.schema_id.unwrap_or(0)),
                     )?;
 
                     exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;

@@ -1,13 +1,13 @@
 use heapless::String;
 use heapless::Vec;
 
-use crate::app_handshake::app_handshake_decoder::*;
-use crate::app_handshake::app_handshake_encoder::*;
-use crate::common::exi_basetypes_decoder::*;
-use crate::common::exi_basetypes_encoder::*;
-use crate::common::exi_bitstream::*;
-use crate::common::exi_error_codes::*;
-use crate::common::exi_header::*;
+use crate::app_handshake::app_handshake_decoder::decode_app_hand_supported_app_protocol_req;
+use crate::app_handshake::app_handshake_encoder::encode_app_hand_supported_app_protocol_req;
+use crate::common::exi_basetypes_decoder::exi_basetypes_decoder_nbit_uint;
+use crate::common::exi_basetypes_encoder::exi_basetypes_encoder_nbit_uint;
+use crate::common::exi_bitstream::{ExiBitstream, exi_bitstream_get_length};
+use crate::common::exi_error_codes::ExiError;
+use crate::common::exi_header::{exi_header_read_and_check, exi_header_write};
 
 pub enum AppHandResponseCodeType {
     AppHandResponseCodeTypeFailedNoNegotiation = 2,
@@ -30,8 +30,8 @@ pub struct AppHandProtocolNamespaceType {
 }
 
 impl AppHandProtocolNamespaceType {
-    pub fn new(characters: String<100>) -> Self {
-        AppHandProtocolNamespaceType { characters }
+    #[must_use] pub fn new(characters: String<100>) -> Self {
+        Self { characters }
     }
 }
 
@@ -41,8 +41,8 @@ pub struct AppHandSupportedAppProtocolReq {
 }
 
 impl AppHandSupportedAppProtocolReq {
-    pub fn new(app_protocol: AppHandSupportedAppProtocolReqArray) -> Self {
-        AppHandSupportedAppProtocolReq { app_protocol }
+    #[must_use] pub fn new(app_protocol: AppHandSupportedAppProtocolReqArray) -> Self {
+        Self { app_protocol }
     }
 
     pub fn to_bytes(&self) -> Result<([u8; 1024], usize), ExiError> {
@@ -72,7 +72,7 @@ impl AppHandSupportedAppProtocolReq {
             ..Default::default()
         };
 
-        let mut req = AppHandSupportedAppProtocolReq::default();
+        let mut req = Self::default();
         let mut event_code: u32 = 0;
         exi_header_read_and_check(&mut stream)?;
         exi_basetypes_decoder_nbit_uint(&mut stream, 2, &mut event_code)?;
@@ -94,7 +94,7 @@ pub struct AppHandSupportedAppProtocolReqArray {
 
 impl Default for AppHandSupportedAppProtocolReqArray {
     fn default() -> Self {
-        AppHandSupportedAppProtocolReqArray { array: Vec::new() }
+        Self { array: Vec::new() }
     }
 }
 
@@ -105,7 +105,7 @@ pub struct AppHandSupportedAppProtocolRes {
 
 impl Default for AppHandSupportedAppProtocolRes {
     fn default() -> Self {
-        AppHandSupportedAppProtocolRes {
+        Self {
             response_code: AppHandResponseCodeType::AppHandResponseCodeTypeFailedNoNegotiation,
             schema_id: None,
         }
@@ -113,14 +113,14 @@ impl Default for AppHandSupportedAppProtocolRes {
 }
 
 impl AppHandSupportedAppProtocolRes {
-    pub fn new(response_code: AppHandResponseCodeType, schema_id: Option<u8>) -> Self {
-        AppHandSupportedAppProtocolRes {
+    #[must_use] pub fn new(response_code: AppHandResponseCodeType, schema_id: Option<u8>) -> Self {
+        Self {
             response_code,
             schema_id,
         }
     }
 
-    pub fn to_bytes(&self) -> [u8; 4] {
+    #[must_use] pub fn to_bytes(&self) -> [u8; 4] {
         let schema_id = self.schema_id.unwrap_or(0);
         let packed: [u8; 4] = match self.response_code {
             AppHandResponseCodeType::AppHandResponseCodeTypeOkSuccessfulNegotiation => [0x80, 0x40, 0x00, schema_id * 0x40],
