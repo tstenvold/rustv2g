@@ -1,5 +1,9 @@
 #![no_std]
 
+#![warn(clippy::pedantic)]
+#![deny(clippy::cargo)]
+#![deny(clippy::nursery)]
+
 pub mod exi_v2gtp;
 pub mod app_handshake {
     pub mod app_handshake_datatypes;
