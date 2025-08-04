@@ -39,12 +39,12 @@ impl AppHandProtocolNamespaceType {
 
 #[derive(Default)]
 pub struct AppHandSupportedAppProtocolReq {
-    pub app_protocol: AppHandSupportedAppProtocolReqArray,
+    pub app_protocols: Vec<AppHandAppProtocolType, 5>,
 }
 
 impl AppHandSupportedAppProtocolReq {
-    #[must_use] pub fn new(app_protocol: AppHandSupportedAppProtocolReqArray) -> Self {
-        Self { app_protocol }
+    #[must_use] pub fn new(app_protocols: Vec<AppHandAppProtocolType, 5>) -> Self {
+        Self { app_protocols }
     }
 
     pub fn to_bytes(&self) -> Result<([u8; 1024], usize), ExiError> {
@@ -87,16 +87,6 @@ impl AppHandSupportedAppProtocolReq {
             }
         }
         Ok(req)
-    }
-}
-
-pub struct AppHandSupportedAppProtocolReqArray {
-    pub array: Vec<AppHandAppProtocolType, 5>,
-}
-
-impl Default for AppHandSupportedAppProtocolReqArray {
-    fn default() -> Self {
-        Self { array: Vec::new() }
     }
 }
 

@@ -90,7 +90,7 @@ pub fn encode_app_hand_supported_app_protocol_req(
     loop {
         match grammar_id {
             7 => {
-                if app_protocol_current_index < supported_app_protocol_req.app_protocol.array.len()
+                if app_protocol_current_index < supported_app_protocol_req.app_protocols.len()
                 {
                     exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
 
@@ -98,7 +98,7 @@ pub fn encode_app_hand_supported_app_protocol_req(
                     app_protocol_current_index = app_protocol_current_index.wrapping_add(1);
                     encode_app_hand_app_protocol_type(
                         stream,
-                        &supported_app_protocol_req.app_protocol.array[fresh0],
+                        &supported_app_protocol_req.app_protocols[fresh0],
                     )?;
                     grammar_id = 8;
                     continue;
@@ -107,7 +107,7 @@ pub fn encode_app_hand_supported_app_protocol_req(
                 }
             }
             8 => {
-                if app_protocol_current_index < supported_app_protocol_req.app_protocol.array.len()
+                if app_protocol_current_index < supported_app_protocol_req.app_protocols.len()
                 {
                     exi_basetypes_encoder_nbit_uint(stream, 2, 0)?;
 
@@ -115,7 +115,7 @@ pub fn encode_app_hand_supported_app_protocol_req(
                     app_protocol_current_index = app_protocol_current_index.wrapping_add(1);
                     encode_app_hand_app_protocol_type(
                         stream,
-                        &supported_app_protocol_req.app_protocol.array[fresh1],
+                        &supported_app_protocol_req.app_protocols[fresh1],
                     )?;
 
                     grammar_id = 8;

@@ -171,18 +171,17 @@ pub fn decode_app_hand_supported_app_protocol_req(
                 exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
                 match event_code {
                     0 => {
-                        if supported_app_protocol_req.app_protocol.array.len() < 5 {
-                            let idx = supported_app_protocol_req.app_protocol.array.len() as usize;
+                        if supported_app_protocol_req.app_protocols.len() < 5 {
+                            let idx = supported_app_protocol_req.app_protocols.len() as usize;
 
                             match supported_app_protocol_req
-                                .app_protocol
-                                .array
+                                .app_protocols
                                 .push(Default::default())
                             {
                                 Ok(()) => {
                                     decode_app_hand_app_protocol_type(
                                         stream,
-                                        &mut supported_app_protocol_req.app_protocol.array[idx],
+                                        &mut supported_app_protocol_req.app_protocols[idx],
                                     )?;
                                 }
                                 Err(_) => {
@@ -204,17 +203,16 @@ pub fn decode_app_hand_supported_app_protocol_req(
                 exi_basetypes_decoder_nbit_uint(stream, 2, &mut event_code)?;
                 match event_code {
                     0 => {
-                        if supported_app_protocol_req.app_protocol.array.len() < 5 {
-                            let idx = supported_app_protocol_req.app_protocol.array.len() as usize;
+                        if supported_app_protocol_req.app_protocols.len() < 5 {
+                            let idx = supported_app_protocol_req.app_protocols.len() as usize;
                             match supported_app_protocol_req
-                                .app_protocol
-                                .array
+                                .app_protocols
                                 .push(Default::default())
                             {
                                 Ok(()) => {
                                     decode_app_hand_app_protocol_type(
                                         stream,
-                                        &mut supported_app_protocol_req.app_protocol.array[idx],
+                                        &mut supported_app_protocol_req.app_protocols[idx],
                                     )?;
                                 }
                                 Err(_) => {
@@ -224,7 +222,7 @@ pub fn decode_app_hand_supported_app_protocol_req(
                         } else {
                             return Err(ExiError::ArrayOutOfBounds);
                         }
-                        if (supported_app_protocol_req.app_protocol.array.len() as i32) < 5 {
+                        if (supported_app_protocol_req.app_protocols.len() as i32) < 5 {
                             grammar_id = 8;
                             continue;
                         } else {
