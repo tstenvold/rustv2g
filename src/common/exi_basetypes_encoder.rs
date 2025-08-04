@@ -147,7 +147,7 @@ pub fn exi_basetypes_encoder_integer_64(
 ) -> Result<(), ExiError> {
     let sign = if value < 0 { 1 } else { 0 };
     exi_basetypes_encoder_bool(stream, sign)?;
-    let mut result = if sign != 0 { (-value - 1) as u64 } else { value as u64 };
+    let result = if sign != 0 { (-value - 1) as u64 } else { value as u64 };
     exi_basetypes_encoder_uint_64(stream, result)
 }
 

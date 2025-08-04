@@ -9,6 +9,8 @@ use crate::common::exi_bitstream::{ExiBitstream, exi_bitstream_get_length};
 use crate::common::exi_error_codes::ExiError;
 use crate::common::exi_header::{exi_header_read_and_check, exi_header_write};
 
+#[derive(Copy,Clone)]
+#[repr(u8)]
 pub enum AppHandResponseCodeType {
     AppHandResponseCodeTypeFailedNoNegotiation = 2,
     AppHandResponseCodeTypeOkSuccessfulNegotiationWithMinorDeviation = 1,
