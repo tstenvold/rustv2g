@@ -1,51 +1,60 @@
-pub const NO_ERROR: u8 = 0;
+use core::fmt::Debug;
 
-// stream processing -1 to -19
-pub const BITSTREAM_OVERFLOW: i16 = -1;
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ExiError {
+    NoError = 0,
 
-// stream header -20 to -29
-pub const HEADER_COOKIE_NOT_SUPPORTED: i16 = -20;
-pub const HEADER_OPTIONS_NOT_SUPPORTED: i16 = -21;
-pub const HEADER_INCORRECT: i16 = -22;
+    // stream processing -1 to -19
+    BitstreamOverflow = -1,
+    BitstreamUnderflow = -2,
+    NotEnoughSpace = -3,
 
-// stream read -30 to -39
-pub const SUPPORTED_MAX_OCTETS_OVERRUN: i16 = -30;
-pub const OCTET_COUNT_LARGER_THAN_TYPE_SUPPORTS: i16 = -31;
+    // stream header -20 to -29
+    HeaderCookieNotSupported = -20,
+    HeaderOptionsNotSupported = -21,
+    HeaderIncorrect = -22,
 
-// decoder -50 to -69
-pub const UNKNOWN_EVENT_FOR_DECODING: i16 = -50;
-pub const DECODER_NOT_IMPLEMENTED: i16 = -69;
+    // stream read -30 to -39
+    SupportedMaxOctetsOverrun = -30,
+    OctetCountLargerThanTypeSupports = -31,
 
-// encoder -70 to -89
-pub const UNKNOWN_EVENT_FOR_ENCODING: i16 = -70;
-pub const ENCODER_NOT_IMPLEMENTED: i16 = -89;
+    // decoder -50 to -69
+    UnknownEventForDecoding = -50,
+    DecoderNotImplemented = -69,
 
-// common errors -100 to -129
-pub const BIT_COUNT_LARGER_THAN_TYPE_SIZE: i16 = -100;
-pub const BYTE_COUNT_LARGER_THAN_TYPE_SIZE: i16 = -101;
-pub const ARRAY_OUT_OF_BOUNDS: i16 = -110;
-pub const CHARACTER_BUFFER_TOO_SMALL: i16 = -111;
-pub const BYTE_BUFFER_TOO_SMALL: i16 = -112;
-pub const ENCODED_INTEGER_SIZE_LARGER_THAN_DESTINATION: i16 = -113;
+    // encoder -70 to -89
+    UnknownEventForEncoding = -70,
+    EncoderNotImplemented = -89,
 
-// grammar errors -130 to -149
-pub const UNKNOWN_GRAMMAR_ID: i16 = -130;
+    // common errors -100 to -129
+    BitCountLargerThanTypeSize = -100,
+    ByteCountLargerThanTypeSize = -101,
+    ArrayOutOfBounds = -110,
+    CharacterBufferTooSmall = -111,
+    ByteBufferTooSmall = -112,
+    EncodedIntegerSizeLargerThanDestination = -113,
+    InvalidCharactersLength = -114,
 
-// event errors -150 to -169
-pub const UNKNOWN_EVENT_CODE: i16 = -150;
-pub const UNSUPPORTED_SUB_EVENT: i16 = -151;
+    // grammar errors -130 to -149
+    UnknownGrammarId = -130,
 
-// document errors -170 to -199
-pub const DEVIANTS_NOT_SUPPORTED: i16 = -170;
+    // event errors -150 to -169
+    UnknownEventCode = -150,
+    UnsupportedSubEvent = -151,
+    UnsupportedEventCode = -152,
 
-// datatype errors -200 to -229
-pub const STRINGVALUES_NOT_SUPPORTED: i16 = -200;
-pub const UNSUPPORTED_INTEGER_VALUE_TYPE: i16 = -210;
-pub const UNSUPPORTED_DATETIME_TYPE: i16 = -211;
-pub const UNSUPPORTED_CHARACTER_VALUE: i16 = -212;
+    // document errors -170 to -199
+    DeviantsNotSupported = -170,
 
-// fragment errors -230 to -259
-pub const INCORRECT_END_FRAGMENT_VALUE: i16 = -230;
+    // datatype errors -200 to -229
+    StringvaluesNotSupported = -200,
+    UnsupportedIntegerValueType = -210,
+    UnsupportedDatetimeType = -211,
+    UnsupportedCharacterValue = -212,
 
-// internal errors
-pub const NOT_IMPLEMENTED_YET: i16 = -299;
+    // fragment errors -230 to -259
+    IncorrectEndFragmentValue = -230,
+
+    // internal errors
+    NotImplementedYet = -299,
+}

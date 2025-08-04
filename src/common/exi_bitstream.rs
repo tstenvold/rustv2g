@@ -2,7 +2,7 @@ use crate::common::exi_error_codes::*;
 
 pub type StatusCallback = Option<fn(i32, i32, i32, i32)>;
 
-#[derive(Debug)]
+#[derive(Default, Debug)]
 pub struct ExiBitstream<'a> {
     pub data: &'a mut [u8],
     pub bit_count: u8,
@@ -12,36 +12,23 @@ pub struct ExiBitstream<'a> {
     pub status_callback: StatusCallback,
 }
 
-impl Default for ExiBitstream<'_> {
-    fn default() -> Self {
-        ExiBitstream {
-            data: &mut [],
-            bit_count: 0,
-            byte_pos: 0,
-            init_called: false,
-            flag_byte_pos: 0,
-            status_callback: None,
-        }
-    }
-}
-
-fn exi_bitstream_has_overflow(stream: &mut ExiBitstream) -> Result<u8, i16> {
+fn exi_bitstream_has_overflow(stream: &mut ExiBitstream) -> Result<(), ExiError> {
     if stream.bit_count == 8 {
         if stream.byte_pos < stream.data.len() {
             stream.byte_pos = stream.byte_pos.wrapping_add(1);
             stream.bit_count = 0;
         } else {
-            return Err(BITSTREAM_OVERFLOW);
+            return Err(ExiError::BitstreamOverflow);
         }
     }
-    Ok(NO_ERROR)
+    Ok(())
 }
 
-fn exi_bitstream_write_bit(stream: &mut ExiBitstream, bit: u8) -> Result<u8, i16> {
+fn exi_bitstream_write_bit(stream: &mut ExiBitstream, bit: u8) -> Result<(), ExiError> {
     exi_bitstream_has_overflow(stream)?;
 
     if stream.byte_pos >= stream.data.len() {
-        return Err(BITSTREAM_OVERFLOW);
+        return Err(ExiError::BitstreamOverflow);
     }
 
     let current_byte = &mut stream.data[stream.byte_pos];
@@ -52,20 +39,20 @@ fn exi_bitstream_write_bit(stream: &mut ExiBitstream, bit: u8) -> Result<u8, i16
         *current_byte |= 1 << (7 - stream.bit_count);
     }
     stream.bit_count = stream.bit_count.wrapping_add(1);
-    Ok(NO_ERROR)
+    Ok(())
 }
 
-fn exi_bitstream_read_bit(stream: &mut ExiBitstream, bit: &mut u8) -> Result<u8, i16> {
+fn exi_bitstream_read_bit(stream: &mut ExiBitstream, bit: &mut u8) -> Result<(), ExiError> {
     exi_bitstream_has_overflow(stream)?;
 
     if stream.byte_pos >= stream.data.len() {
-        return Err(BITSTREAM_OVERFLOW);
+        return Err(ExiError::BitstreamOverflow);
     }
 
     let current_bit = (stream.data[stream.byte_pos] >> (7 - stream.bit_count)) & 1;
     *bit = current_bit;
     stream.bit_count = stream.bit_count.wrapping_add(1);
-    Ok(NO_ERROR)
+    Ok(())
 }
 
 pub fn exi_bitstream_init<'a>(
@@ -104,9 +91,9 @@ pub fn exi_bitstream_write_bits(
     stream: &mut ExiBitstream,
     bit_count: usize,
     value: u32,
-) -> Result<u8, i16> {
+) -> Result<(), ExiError> {
     if bit_count > 32 {
-        return Err(BIT_COUNT_LARGER_THAN_TYPE_SIZE);
+        return Err(ExiError::BitCountLargerThanTypeSize);
     }
 
     for idx in 0..bit_count {
@@ -117,10 +104,10 @@ pub fn exi_bitstream_write_bits(
         };
         exi_bitstream_write_bit(stream, bit)?;
     }
-    Ok(NO_ERROR)
+    Ok(())
 }
 
-pub fn exi_bitstream_write_octet(stream: &mut ExiBitstream, value: u8) -> Result<u8, i16> {
+pub fn exi_bitstream_write_octet(stream: &mut ExiBitstream, value: u8) -> Result<(), ExiError> {
     exi_bitstream_write_bits(stream, 8, value as u32)
 }
 
@@ -128,9 +115,9 @@ pub fn exi_bitstream_read_bits(
     stream: &mut ExiBitstream,
     bit_count: usize,
     value: &mut u32,
-) -> Result<u8, i16> {
+) -> Result<(), ExiError> {
     if bit_count > 32 {
-        return Err(BIT_COUNT_LARGER_THAN_TYPE_SIZE);
+        return Err(ExiError::BitCountLargerThanTypeSize);
     }
     *value = 0;
     for _ in 0..bit_count {
@@ -138,15 +125,15 @@ pub fn exi_bitstream_read_bits(
         exi_bitstream_read_bit(stream, &mut bit)?;
         *value = (*value << 1) | (bit as u32);
     }
-    Ok(NO_ERROR)
+    Ok(())
 }
 
-pub fn exi_bitstream_read_octet(stream: &mut ExiBitstream, value: &mut u8) -> Result<u8, i16> {
+pub fn exi_bitstream_read_octet(stream: &mut ExiBitstream, value: &mut u8) -> Result<(), ExiError> {
     *value = 0;
     for _ in 0..8 {
         let mut bit = 0;
         exi_bitstream_read_bit(stream, &mut bit)?;
         *value = (*value << 1) | bit;
     }
-    Ok(NO_ERROR)
+    Ok(())
 }

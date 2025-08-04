@@ -3,7 +3,7 @@ use crate::common::exi_error_codes::*;
 pub fn v2gtp_write_header(
     stream_data: &mut [u8],
     stream_payload_length: u32,
-) -> Result<usize, i16> {
+) -> Result<(), ExiError> {
     v2gtp20_write_header(stream_data, stream_payload_length, 0x8001)
 }
 
@@ -11,9 +11,9 @@ pub fn v2gtp20_write_header(
     stream_data: &mut [u8],
     stream_payload_length: u32,
     v2gtp20_payload_id: u16,
-) -> Result<usize, i16> {
+) -> Result<(), ExiError> {
     if stream_data.len() < 8 {
-        return Err(-3); // Not enough space
+        return Err(ExiError::NotEnoughSpace);
     }
     stream_data[0] = 0x1;
     stream_data[1] = 0xfe;
@@ -23,23 +23,23 @@ pub fn v2gtp20_write_header(
     stream_data[5] = (stream_payload_length >> 16) as u8;
     stream_data[6] = (stream_payload_length >> 8) as u8;
     stream_data[7] = (stream_payload_length & 0xff) as u8;
-    Ok(NO_ERROR as usize)
+    Ok(())
 }
 
-pub fn v2gtp_read_header(stream_data: &[u8]) -> Result<usize, i16> {
+pub fn v2gtp_read_header(stream_data: &[u8]) -> Result<usize, ExiError> {
     v2gtp20_read_header(stream_data, 0x8001)
 }
 
-pub fn v2gtp20_read_header(stream_data: &[u8], v2gtp20_payload_id: u16) -> Result<usize, i16> {
+pub fn v2gtp20_read_header(stream_data: &[u8], v2gtp20_payload_id: u16) -> Result<usize, ExiError> {
     if stream_data.len() < 8 {
-        return Err(-3); // Not enough data
+        return Err(ExiError::NotEnoughSpace);
     }
     if stream_data[0] != 0x1 || stream_data[1] != 0xfe {
-        return Err(BITSTREAM_OVERFLOW);
+        return Err(ExiError::BitstreamOverflow);
     }
     let payload_id = ((stream_data[2] as u16) << 8) | (stream_data[3] as u16);
     if payload_id != v2gtp20_payload_id {
-        return Err(-2);
+        return Err(ExiError::UnknownEventCode);
     }
     let stream_payload_length = ((stream_data[4] as u32) << 24)
         | ((stream_data[5] as u32) << 16)

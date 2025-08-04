@@ -18,10 +18,9 @@ default = []
 std = []
 
 [dependencies]
-# Keep empty for no-std compatibility
+heapless = "0.8"
 
 [dev-dependencies]
-# Test dependencies go here
 hex = "0.4"
 
 [profile.release]

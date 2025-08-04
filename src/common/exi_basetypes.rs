@@ -24,20 +24,12 @@ impl ExiUnsigned {
     }
 }
 
-#[derive(Copy, Clone)]
+#[derive(Default, Copy, Clone)]
 pub struct ExiSigned {
     pub data: ExiUnsigned,
     pub is_negative: u8,
 }
 
-impl Default for ExiSigned {
-    fn default() -> Self {
-        ExiSigned {
-            data: ExiUnsigned::default(),
-            is_negative: 0,
-        }
-    }
-}
 impl ExiSigned {
     pub fn new() -> Self {
         ExiSigned::default()
@@ -48,13 +40,13 @@ pub fn exi_basetypes_convert_to_unsigned(
     exi_unsigned: &mut ExiUnsigned,
     mut value: u32,
     max_octets: usize,
-) -> Result<u8, i16> {
+) -> Result<(), ExiError> {
     exi_unsigned.octets_count = 0;
     let mut n = 0;
     while n < 5 {
         if exi_unsigned.octets_count >= exi_unsigned.octets.len() {
             // Prevent overflow
-            return Err(OCTET_COUNT_LARGER_THAN_TYPE_SUPPORTS);
+            return Err(ExiError::OctetCountLargerThanTypeSupports);
         }
         let mut octet = (value & 0x7f) as u8;
         value >>= 7;
@@ -69,22 +61,22 @@ pub fn exi_basetypes_convert_to_unsigned(
         n += 1;
     }
     if exi_unsigned.octets_count <= max_octets {
-        Ok(NO_ERROR)
+        Ok(())
     } else {
-        Err(OCTET_COUNT_LARGER_THAN_TYPE_SUPPORTS)
+        Err(ExiError::OctetCountLargerThanTypeSupports)
     }
 }
 
 pub fn exi_basetypes_convert_64_to_unsigned(
     exi_unsigned: &mut ExiUnsigned,
     mut value: u64,
-) -> Result<u8, i16> {
+) -> Result<(), ExiError> {
     exi_unsigned.octets_count = 0;
     let mut n = 0;
     while n < 10 {
         if exi_unsigned.octets_count >= exi_unsigned.octets.len() {
             // Prevent overflow
-            return Err(OCTET_COUNT_LARGER_THAN_TYPE_SUPPORTS);
+            return Err(ExiError::OctetCountLargerThanTypeSupports);
         }
         let mut octet = (value & 0x7f) as u8;
         value >>= 7;
@@ -99,9 +91,9 @@ pub fn exi_basetypes_convert_64_to_unsigned(
         n += 1;
     }
     if exi_unsigned.octets_count <= 10 {
-        Ok(NO_ERROR)
+        Ok(())
     } else {
-        Err(OCTET_COUNT_LARGER_THAN_TYPE_SUPPORTS)
+        Err(ExiError::OctetCountLargerThanTypeSupports)
     }
 }
 
@@ -109,7 +101,7 @@ pub fn exi_basetypes_convert_to_signed(
     exi_signed: &mut ExiSigned,
     value: i32,
     max_octets: usize,
-) -> Result<u8, i16> {
+) -> Result<(), ExiError> {
     if value < 0 {
         exi_signed.is_negative = 1;
         exi_basetypes_convert_to_unsigned(&mut exi_signed.data, (-value) as u32, max_octets)
@@ -122,7 +114,7 @@ pub fn exi_basetypes_convert_to_signed(
 pub fn exi_basetypes_convert_64_to_signed(
     exi_signed: &mut ExiSigned,
     value: i64,
-) -> Result<u8, i16> {
+) -> Result<(), ExiError> {
     if value < 0 {
         exi_signed.is_negative = 1;
         exi_basetypes_convert_64_to_unsigned(&mut exi_signed.data, (-value) as u64)
@@ -136,9 +128,9 @@ pub fn exi_basetypes_convert_from_unsigned(
     exi_unsigned: &ExiUnsigned,
     value: &mut u32,
     max_octets: usize,
-) -> Result<u8, i16> {
+) -> Result<(), ExiError> {
     if exi_unsigned.octets_count > max_octets {
-        return Err(OCTET_COUNT_LARGER_THAN_TYPE_SUPPORTS);
+        return Err(ExiError::OctetCountLargerThanTypeSupports);
     }
     *value = 0;
     for (n, &octet) in exi_unsigned
@@ -149,15 +141,15 @@ pub fn exi_basetypes_convert_from_unsigned(
     {
         *value = value.wrapping_add(((octet & 0x7f) as u32) << (n * 7));
     }
-    Ok(NO_ERROR)
+    Ok(())
 }
 
 pub fn exi_basetypes_convert_64_from_unsigned(
     exi_unsigned: &ExiUnsigned,
     value: &mut u64,
-) -> Result<u8, i16> {
+) -> Result<(), ExiError> {
     if exi_unsigned.octets_count > 10 {
-        return Err(OCTET_COUNT_LARGER_THAN_TYPE_SUPPORTS);
+        return Err(ExiError::OctetCountLargerThanTypeSupports);
     }
     *value = 0;
     for (n, &octet) in exi_unsigned
@@ -168,14 +160,14 @@ pub fn exi_basetypes_convert_64_from_unsigned(
     {
         *value = value.wrapping_add(((octet & 0x7f) as u64) << (n * 7));
     }
-    Ok(NO_ERROR)
+    Ok(())
 }
 
 pub fn exi_basetypes_convert_from_signed(
     exi_signed: &ExiSigned,
     value: &mut i32,
     max_octets: usize,
-) -> Result<u8, i16> {
+) -> Result<(), ExiError> {
     let mut u_value: u32 = 0;
     let res = exi_basetypes_convert_from_unsigned(&exi_signed.data, &mut u_value, max_octets);
     *value = if exi_signed.is_negative == 0 {
@@ -189,7 +181,7 @@ pub fn exi_basetypes_convert_from_signed(
 pub fn exi_basetypes_convert_64_from_signed(
     exi_signed: &ExiSigned,
     value: &mut i64,
-) -> Result<u8, i16> {
+) -> Result<(), ExiError> {
     let mut u_value: u64 = 0;
     let res = exi_basetypes_convert_64_from_unsigned(&exi_signed.data, &mut u_value);
     *value = if exi_signed.is_negative == 0 {
@@ -208,7 +200,7 @@ pub fn exi_basetypes_convert_bytes_from_unsigned(
     exi_unsigned: &ExiUnsigned,
     data: &mut [u8],
     data_len: &mut usize,
-) -> Result<u8, i16> {
+) -> Result<(), ExiError> {
     let mut temp: u16 = 0;
     *data_len = 0;
     let mut total_offset: usize = 0;
@@ -220,7 +212,7 @@ pub fn exi_basetypes_convert_bytes_from_unsigned(
         total_offset += 7;
         if total_offset >= 8 {
             if *data_len >= data.len() {
-                return Err(ENCODED_INTEGER_SIZE_LARGER_THAN_DESTINATION);
+                return Err(ExiError::EncodedIntegerSizeLargerThanDestination);
             }
             total_offset -= 8;
             data[*data_len] = (temp & 0xff) as u8;
@@ -231,19 +223,19 @@ pub fn exi_basetypes_convert_bytes_from_unsigned(
     }
     if total_offset != 0 && (temp & 0xff) != 0 {
         if *data_len >= data.len() {
-            return Err(ENCODED_INTEGER_SIZE_LARGER_THAN_DESTINATION);
+            return Err(ExiError::EncodedIntegerSizeLargerThanDestination);
         }
         data[*data_len] = (temp & 0xff) as u8;
         *data_len += 1;
     }
     reverse_array(&mut data[..*data_len]);
-    Ok(NO_ERROR)
+    Ok(())
 }
 
 pub fn exi_basetypes_convert_bytes_to_unsigned(
     exi_unsigned: &mut ExiUnsigned,
     data: &[u8],
-) -> Result<u8, i16> {
+) -> Result<(), ExiError> {
     exi_unsigned.octets_count = 0;
     let mut bytenum = 0;
     while bytenum < data.len() {
@@ -255,7 +247,7 @@ pub fn exi_basetypes_convert_bytes_to_unsigned(
     if bytenum == data.len() {
         exi_unsigned.octets[0] = 0;
         exi_unsigned.octets_count = 1;
-        return Ok(NO_ERROR);
+        return Ok(());
     }
     let byte = data[bytenum];
     let mut bits_in_byte = 0;
@@ -271,12 +263,10 @@ pub fn exi_basetypes_convert_bytes_to_unsigned(
     let mut incount: usize = 0;
     let mut outcount: usize = 0;
     while outcount < exi_expected_octets_count {
-        if dummy_count < 7 {
-            if incount < data.len() - bytenum {
-                dummy |= (data[data.len() - incount - 1] as u16) << dummy_count;
-                dummy_count += 8;
-                incount += 1;
-            }
+        if dummy_count < 7 && incount < data.len() - bytenum {
+            dummy |= (data[data.len() - incount - 1] as u16) << dummy_count;
+            dummy_count += 8;
+            incount += 1;
         }
         exi_unsigned.octets[outcount] = (dummy & 0x7f) as u8;
         exi_unsigned.octets_count += 1;
@@ -287,5 +277,5 @@ pub fn exi_basetypes_convert_bytes_to_unsigned(
         dummy_count -= 7;
         outcount += 1;
     }
-    Ok(NO_ERROR)
+    Ok(())
 }
