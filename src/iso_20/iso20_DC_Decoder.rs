@@ -142,7 +142,7 @@ pub type usize = u64;
 
 pub struct ExiUnsigned {
     pub octets: [u8; 29],
-    pub octets_count: usize,
+    pub octets.len(): usize,
 }
 #[derive(Copy, Clone, BitfieldStruct)]
 

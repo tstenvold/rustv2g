@@ -12,6 +12,7 @@ use crate::common::exi_bitstream::ExiBitstream;
 use crate::common::exi_error_codes::ExiError;
 use crate::common::exi_types_decoder::decode_exi_type_uint32;
 
+#[allow(clippy::too_many_lines)]
 pub fn decode_app_hand_app_protocol_type(
     stream: &mut ExiBitstream,
     mut app_protocol_type: &mut AppHandAppProtocolType,
@@ -49,9 +50,8 @@ pub fn decode_app_hand_app_protocol_type(
                         if event_code == 0 {
                             grammar_id = 1;
                             continue;
-                        } else {
-                            return Err(ExiError::DeviantsNotSupported);
                         }
+                        return Err(ExiError::DeviantsNotSupported);
                     }
                     _ => {
                         return Err(ExiError::UnknownEventCode);
@@ -100,7 +100,8 @@ pub fn decode_app_hand_app_protocol_type(
                             0 => {
                                 let mut value: u32 = 0;
                                 exi_basetypes_decoder_nbit_uint(stream, 8, &mut value)?;
-                                app_protocol_type.schema_id = value as u8;
+                                app_protocol_type.schema_id =
+                                    value.try_into().map_err(|_| ExiError::InvalidValue)?;
                             }
                             _ => {
                                 return Err(ExiError::UnsupportedSubEvent);
@@ -110,9 +111,8 @@ pub fn decode_app_hand_app_protocol_type(
                         if event_code == 0 {
                             grammar_id = 4;
                             continue;
-                        } else {
-                            return Err(ExiError::DeviantsNotSupported);
                         }
+                        return Err(ExiError::DeviantsNotSupported);
                     }
                     _ => {
                         return Err(ExiError::UnknownEventCode);
@@ -127,7 +127,10 @@ pub fn decode_app_hand_app_protocol_type(
                         if event_code == 0 {
                             let mut value_0: u32 = 0;
                             exi_basetypes_decoder_nbit_uint(stream, 5, &mut value_0)?;
-                            app_protocol_type.priority = value_0.wrapping_add(1) as u8;
+                            app_protocol_type.priority = value_0
+                                .wrapping_add(1)
+                                .try_into()
+                                .map_err(|_| ExiError::InvalidValue)?;
                         } else {
                             return Err(ExiError::UnsupportedSubEvent);
                         }
@@ -136,9 +139,8 @@ pub fn decode_app_hand_app_protocol_type(
                         if event_code == 0 {
                             grammar_id = 5;
                             continue;
-                        } else {
-                            return Err(ExiError::DeviantsNotSupported);
                         }
+                        return Err(ExiError::DeviantsNotSupported);
                     }
                     _ => {
                         return Err(ExiError::UnknownEventCode);
@@ -181,7 +183,7 @@ pub fn decode_app_hand_supported_app_protocol_req(
 
                             match supported_app_protocol_req
                                 .app_protocols
-                                .push(Default::default())
+                                .push(AppHandAppProtocolType::default())
                             {
                                 Ok(()) => {
                                     decode_app_hand_app_protocol_type(
@@ -209,10 +211,10 @@ pub fn decode_app_hand_supported_app_protocol_req(
                 match event_code {
                     0 => {
                         if supported_app_protocol_req.app_protocols.len() < 5 {
-                            let idx = supported_app_protocol_req.app_protocols.len() as usize;
+                            let idx = supported_app_protocol_req.app_protocols.len();
                             match supported_app_protocol_req
                                 .app_protocols
-                                .push(Default::default())
+                                .push(AppHandAppProtocolType::default())
                             {
                                 Ok(()) => {
                                     decode_app_hand_app_protocol_type(
@@ -227,7 +229,7 @@ pub fn decode_app_hand_supported_app_protocol_req(
                         } else {
                             return Err(ExiError::ArrayOutOfBounds);
                         }
-                        if (supported_app_protocol_req.app_protocols.len() as i32) < 5 {
+                        if supported_app_protocol_req.app_protocols.len() < 5 {
                             grammar_id = 8;
                             continue;
                         }
@@ -293,9 +295,8 @@ pub fn decode_app_hand_supported_app_protocol_res(
                         if event_code == 0 {
                             grammar_id = 10;
                             continue;
-                        } else {
-                            return Err(ExiError::DeviantsNotSupported);
                         }
+                        return Err(ExiError::DeviantsNotSupported);
                     }
                     _ => {
                         return Err(ExiError::UnknownEventCode);
@@ -311,7 +312,8 @@ pub fn decode_app_hand_supported_app_protocol_res(
                             let mut value_0: u32 = 0;
                             exi_basetypes_decoder_nbit_uint(stream, 8, &mut value_0)?;
 
-                            supported_app_protocol_res.schema_id = Some(value_0 as u8);
+                            supported_app_protocol_res.schema_id =
+                                Some(value_0.try_into().map_err(|_| ExiError::InvalidValue)?);
                         } else {
                             return Err(ExiError::UnsupportedSubEvent);
                         }
@@ -362,12 +364,12 @@ pub fn decode_app_hand_exi_document(
             // Create a new struct, decode into it, then set the enum
             let mut req = AppHandSupportedAppProtocolReq::default();
             decode_app_hand_supported_app_protocol_req(stream, &mut req)?;
-            exi_doc.supported_app_protocol_req = Some(req)
+            exi_doc.supported_app_protocol_req = Some(req);
         }
         1 => {
             let mut res = AppHandSupportedAppProtocolRes::default();
             decode_app_hand_supported_app_protocol_res(stream, &mut res)?;
-            exi_doc.supported_app_protocol_res = Some(res)
+            exi_doc.supported_app_protocol_res = Some(res);
         }
         _ => return Err(ExiError::UnsupportedSubEvent),
     }

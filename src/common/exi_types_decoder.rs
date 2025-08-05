@@ -18,13 +18,14 @@ pub fn decode_exi_type_hex_binary(
 ) -> Result<(), ExiError> {
     let mut event_code: u32 = 0;
     exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
+    let mut val_len: u16 = 0;
     if event_code == 0 {
-        exi_basetypes_decoder_uint_16(stream, &mut (*value_len as u16))?;
-        let len = *value_len as usize;
-        if len > value_max_len {
+        exi_basetypes_decoder_uint_16(stream, &mut val_len)?;
+        if val_len as usize > value_max_len {
             return Err(ExiError::ByteBufferTooSmall);
         }
-        exi_basetypes_decoder_bytes(stream, len, &mut value_buffer[..len])?;
+        *value_len = val_len as usize;
+        exi_basetypes_decoder_bytes(stream, *value_len, &mut value_buffer[..*value_len])?;
     } else {
         return Err(ExiError::UnsupportedSubEvent);
     }

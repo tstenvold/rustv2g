@@ -34,6 +34,7 @@ pub enum ExiError {
     ByteBufferTooSmall = -112,
     EncodedIntegerSizeLargerThanDestination = -113,
     InvalidCharactersLength = -114,
+    InvalidValue = -115,
 
     // grammar errors -130 to -149
     UnknownGrammarId = -130,

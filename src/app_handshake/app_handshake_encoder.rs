@@ -23,7 +23,9 @@ pub fn encode_app_hand_app_protocol_type(
                 exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
                 exi_basetypes_encoder_uint_16(
                     stream,
-                    (app_protocol_type.protocol_namespace.characters.len() + 2) as u16,
+                    (app_protocol_type.protocol_namespace.characters.len() + 2)
+                        .try_into()
+                        .map_err(|_| ExiError::InvalidValue)?,
                 )?;
 
                 exi_basetypes_encoder_characters(

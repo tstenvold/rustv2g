@@ -32,7 +32,7 @@ pub struct AppHandProtocolNamespaceType {
 
 impl AppHandProtocolNamespaceType {
     #[must_use]
-    pub fn new(characters: String<100>) -> Self {
+    pub const fn new(characters: String<100>) -> Self {
         Self { characters }
     }
 }
@@ -111,7 +111,7 @@ impl Default for AppHandSupportedAppProtocolRes {
 
 impl AppHandSupportedAppProtocolRes {
     #[must_use]
-    pub fn new(response_code: AppHandResponseCodeType, schema_id: Option<u8>) -> Self {
+    pub const fn new(response_code: AppHandResponseCodeType, schema_id: Option<u8>) -> Self {
         Self {
             response_code,
             schema_id,

@@ -62,11 +62,13 @@ impl ExiBitstream<'_> {
         Ok(bit)
     }
 
-    #[must_use] pub const fn is_empty(&self) -> bool {
+    #[must_use]
+    pub const fn is_empty(&self) -> bool {
         self.byte_pos == 0 && self.bit_count == 0 && self.flag_byte_pos == 0
     }
 
-    #[must_use] pub const fn len(&self) -> usize {
+    #[must_use]
+    pub const fn len(&self) -> usize {
         let mut length = self.byte_pos;
         if self.flag_byte_pos != 0 {
             length = length.wrapping_sub(self.flag_byte_pos);
