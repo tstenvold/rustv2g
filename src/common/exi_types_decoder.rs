@@ -134,6 +134,7 @@ pub fn decode_exi_type_uint16(stream: &mut ExiBitstream, value: &mut u16) -> Res
     Ok(())
 }
 
+
 pub fn decode_exi_type_uint32(stream: &mut ExiBitstream, value: &mut u32) -> Result<(), ExiError> {
     let mut event_code: u32 = 0;
     exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
@@ -149,6 +150,11 @@ pub fn decode_exi_type_uint32(stream: &mut ExiBitstream, value: &mut u32) -> Res
     Ok(())
 }
 
+/// #Errors
+///
+/// This function can return the following errors:
+/// - `ExiError::UnsupportedSubEvent` if the event code is not supported
+/// - `ExiError::DeviantsNotSupported` if the event code is not valid
 pub fn decode_exi_type_uint64(stream: &mut ExiBitstream, value: &mut u64) -> Result<(), ExiError> {
     let mut event_code: u32 = 0;
     exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;

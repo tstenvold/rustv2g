@@ -18,14 +18,13 @@ mod tests {
         let namespace: String<100> = String::try_from("urn:iso:15118:2:2016:MsgDef").unwrap();
         let ns = AppHandProtocolNamespaceType::new(namespace);
 
-        let mut ap_typ = AppHandAppProtocolType::default();
-        ap_typ.protocol_namespace = ns;
-        ap_typ.version_number_major = 2;
-        ap_typ.version_number_minor = 4;
-        ap_typ.schema_id = 42;
-        ap_typ.priority = 1;
-
-        ap_typ
+        AppHandAppProtocolType {
+            protocol_namespace: ns,
+            version_number_major: 2,
+            version_number_minor: 4,
+            schema_id: 42,
+            priority: 1,
+        }
     }
 
     // Integration tests for the entire handshake process

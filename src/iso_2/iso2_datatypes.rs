@@ -156,20 +156,11 @@ impl Default for Iso2CostType {
     }
 }
 
+#[derive(Default)]
 pub struct Iso2TransformType {
     pub algorithm: Iso2u8FixedBufType<65>,
     pub any: Option<Iso2u8FixedBufType<4>>,
     pub xpath: Option<Iso2u8FixedBufType<65>>,
-}
-
-impl Default for Iso2TransformType {
-    fn default() -> Self {
-        Self {
-            algorithm: Iso2u8FixedBufType::<65>::default(),
-            any: None,
-            xpath: None,
-        }
-    }
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -187,28 +178,17 @@ impl<const N: usize> Default for Iso2u8FixedBufType<N> {
     }
 }
 
+#[derive(Default)]
 pub struct Iso2IntervalType {
     pub _unused: i32,
 }
 
-impl Default for Iso2IntervalType {
-    fn default() -> Self {
-        Self { _unused: 0 }
-    }
-}
-
+#[derive(Default)]
 pub struct Iso2TransformsType {
     pub transform: Iso2TransformType,
 }
 
-impl Default for Iso2TransformsType {
-    fn default() -> Self {
-        Self {
-            transform: Iso2TransformType::default(),
-        }
-    }
-}
-
+#[derive(Default)]
 pub struct Iso2DSAKeyValueType {
     pub p: Option<Iso2u8FixedBufType<350>>,
     pub q: Option<Iso2u8FixedBufType<350>>,
@@ -219,120 +199,48 @@ pub struct Iso2DSAKeyValueType {
     pub pgen_counter: Option<Iso2u8FixedBufType<350>>,
 }
 
-impl Default for Iso2DSAKeyValueType {
-    fn default() -> Self {
-        Self {
-            p: None,
-            q: None,
-            g: None,
-            y: Iso2u8FixedBufType::<350>::default(),
-            j: None,
-            seed: None,
-            pgen_counter: None,
-        }
-    }
-}
-
+#[derive(Default)]
 pub struct Iso2X509IssuerSerialType {
     pub x509_issuer_name: Iso2u8FixedBufType<65>,
     pub x509_serial_number: ExiSigned,
 }
 
-impl Default for Iso2X509IssuerSerialType {
-    fn default() -> Self {
-        Self {
-            x509_issuer_name: Iso2u8FixedBufType::<65>::default(),
-            x509_serial_number: ExiSigned::default(),
-        }
-    }
-}
-
+#[derive(Default)]
 pub struct Iso2RelativeTimeIntervalType {
     pub start: u32,
     pub duration: Option<u32>,
 }
 
-impl Default for Iso2RelativeTimeIntervalType {
-    fn default() -> Self {
-        Self {
-            start: 0,
-            duration: None,
-        }
-    }
-}
-
+#[derive(Default)]
 pub struct Iso2DigestMethodType {
     pub algorithm: Iso2u8FixedBufType<65>,
     pub any: Option<Iso2u8FixedBufType<4>>,
 }
 
-impl Default for Iso2DigestMethodType {
-    fn default() -> Self {
-        Self {
-            algorithm: Iso2u8FixedBufType::<65>::default(),
-            any: None,
-        }
-    }
-}
-
+#[derive(Default)]
 pub struct Iso2RSAKeyValueType {
     pub modulus: Iso2u8FixedBufType<350>,
     pub exponent: Iso2u8FixedBufType<350>,
 }
 
-impl Default for Iso2RSAKeyValueType {
-    fn default() -> Self {
-        Self {
-            modulus: Iso2u8FixedBufType::<350>::default(),
-            exponent: Iso2u8FixedBufType::<350>::default(),
-        }
-    }
-}
-
+#[derive(Default)]
 pub struct Iso2CanonicalizationMethodType {
     pub algorithm: Iso2u8FixedBufType<65>,
     pub any: Option<Iso2u8FixedBufType<4>>,
 }
 
-impl Default for Iso2CanonicalizationMethodType {
-    fn default() -> Self {
-        Self {
-            algorithm: Iso2u8FixedBufType::<65>::default(),
-            any: None,
-        }
-    }
-}
-
+#[derive(Default)]
 pub struct Iso2SignatureMethodType {
     pub algorithm: Iso2u8FixedBufType<65>,
     pub hmac_output_length: Option<ExiSigned>,
     pub any: Option<Iso2u8FixedBufType<4>>,
 }
 
-impl Default for Iso2SignatureMethodType {
-    fn default() -> Self {
-        Self {
-            algorithm: Iso2u8FixedBufType::<65>::default(),
-            hmac_output_length: None,
-            any: None,
-        }
-    }
-}
-
+#[derive(Default)]
 pub struct Iso2KeyValueType {
     pub dsa_key_value: Option<Iso2DSAKeyValueType>,
     pub rsa_key_value: Option<Iso2RSAKeyValueType>,
     pub any: Option<Iso2u8FixedBufType<4>>,
-}
-
-impl Default for Iso2KeyValueType {
-    fn default() -> Self {
-        Self {
-            dsa_key_value: None,
-            rsa_key_value: None,
-            any: None,
-        }
-    }
 }
 
 pub struct Iso2PhysicalValueType {
@@ -365,22 +273,12 @@ impl Default for Iso2ConsumptionCostType {
     }
 }
 
+#[derive(Default)]
 pub struct Iso2PMaxScheduleEntryType {
     pub relative_time_interval: Option<Iso2RelativeTimeIntervalType>,
     pub time_interval: Option<Iso2IntervalType>,
     pub p_max: Iso2PhysicalValueType,
 }
-
-impl Default for Iso2PMaxScheduleEntryType {
-    fn default() -> Self {
-        Self {
-            relative_time_interval: None,
-            time_interval: None,
-            p_max: Iso2PhysicalValueType::default(),
-        }
-    }
-}
-
 pub struct Iso2SalesTariffEntryType {
     pub relative_time_interval: Option<Iso2RelativeTimeIntervalType>,
     pub time_interval: Option<Iso2IntervalType>,
@@ -399,6 +297,7 @@ impl Default for Iso2SalesTariffEntryType {
     }
 }
 
+#[derive(Default)]
 pub struct Iso2ParameterType {
     pub name: Iso2u8FixedBufType<65>,
     pub bool_value: Option<i32>,
@@ -407,20 +306,6 @@ pub struct Iso2ParameterType {
     pub int_value: Option<i32>,
     pub physical_value: Option<Iso2PhysicalValueType>,
     pub string_value: Option<Iso2u8FixedBufType<65>>,
-}
-
-impl Default for Iso2ParameterType {
-    fn default() -> Self {
-        Self {
-            name: Iso2u8FixedBufType::<65>::default(),
-            bool_value: None,
-            byte_value: None,
-            short_value: None,
-            int_value: None,
-            physical_value: None,
-            string_value: None,
-        }
-    }
 }
 
 pub struct Iso2PMaxScheduleType {
@@ -435,6 +320,7 @@ impl Default for Iso2PMaxScheduleType {
     }
 }
 
+#[derive(Default)]
 pub struct Iso2ReferenceType {
     pub id: Option<Iso2u8FixedBufType<65>>,
     pub ref_type: Option<Iso2u8FixedBufType<65>>,
@@ -444,33 +330,11 @@ pub struct Iso2ReferenceType {
     pub digest_value: Option<Iso2u8FixedBufType<350>>,
 }
 
-impl Default for Iso2ReferenceType {
-    fn default() -> Self {
-        Self {
-            id: None,
-            ref_type: None,
-            uri: None,
-            transforms: None,
-            digest_method: Iso2DigestMethodType::default(),
-            digest_value: None,
-        }
-    }
-}
-
+#[derive(Default)]
 pub struct Iso2RetrievalMethodType {
     pub ref_type: Option<Iso2u8FixedBufType<65>>,
     pub uri: Option<Iso2u8FixedBufType<65>>,
     pub transforms: Option<Iso2TransformsType>,
-}
-
-impl Default for Iso2RetrievalMethodType {
-    fn default() -> Self {
-        Self {
-            ref_type: None,
-            uri: None,
-            transforms: None,
-        }
-    }
 }
 
 pub struct Iso2SalesTariffType {
@@ -493,6 +357,7 @@ impl Default for Iso2SalesTariffType {
     }
 }
 
+#[derive(Default)]
 pub struct Iso2X509DataType {
     pub x509_issuer_serial: Option<Iso2X509IssuerSerialType>,
     pub x509_ski: Option<Iso2u8FixedBufType<350>>,
@@ -502,72 +367,36 @@ pub struct Iso2X509DataType {
     pub any: Option<Iso2u8FixedBufType<4>>,
 }
 
-impl Default for Iso2X509DataType {
-    fn default() -> Self {
-        Self {
-            x509_issuer_serial: None,
-            x509_ski: None,
-            x509_subject_name: None,
-            x509_certificate: None,
-            x509_crl: None,
-            any: None,
-        }
-    }
-}
-
 pub struct Iso2PGPDataType {
     pub pgpcomponent: Iso2PGPComponentType,
 }
 
+#[allow(clippy::large_enum_variant)]
 pub enum Iso2PGPComponentType {
     Choice1(PGPChoice1Type),
     Choice2(PGPChoice2Type),
 }
 
+#[derive(Default)]
 pub struct PGPChoice2Type {
     pub pgpkey_packet: Iso2u8FixedBufType<350>,
     pub any: Option<Iso2u8FixedBufType<4>>,
 }
 
-impl Default for PGPChoice2Type {
-    fn default() -> Self {
-        Self {
-            pgpkey_packet: Iso2u8FixedBufType::<350>::default(),
-            any: None,
-        }
-    }
-}
-
+#[derive(Default)]
 pub struct PGPChoice1Type {
     pub pgpkey_id: Iso2u8FixedBufType<350>,
     pub pgpkey_packet: Option<Iso2u8FixedBufType<350>>,
     pub any: Option<Iso2u8FixedBufType<4>>,
 }
 
-impl Default for PGPChoice1Type {
-    fn default() -> Self {
-        Self {
-            pgpkey_id: Iso2u8FixedBufType::<350>::default(),
-            pgpkey_packet: None,
-            any: None,
-        }
-    }
-}
-
+#[derive(Default)]
 pub struct Iso2SPKIDataType {
     pub spkisexp: Iso2u8FixedBufType<350>,
     pub any: Option<Iso2u8FixedBufType<4>>,
 }
 
-impl Default for Iso2SPKIDataType {
-    fn default() -> Self {
-        Self {
-            spkisexp: Iso2u8FixedBufType::<350>::default(),
-            any: None,
-        }
-    }
-}
-
+#[derive(Default)]
 pub struct Iso2SignedInfoType {
     pub id: Option<Iso2u8FixedBufType<65>>,
     pub canonicalization_method: Iso2CanonicalizationMethodType,
@@ -576,32 +405,11 @@ pub struct Iso2SignedInfoType {
     pub reference_len: usize,
 }
 
-impl Default for Iso2SignedInfoType {
-    fn default() -> Self {
-        Self {
-            id: None,
-            canonicalization_method: Iso2CanonicalizationMethodType::default(),
-            signature_method: Iso2SignatureMethodType::default(),
-            reference: Default::default(),
-            reference_len: 0,
-        }
-    }
-}
-
+#[derive(Default)]
 pub struct Iso2ProfileEntryType {
     pub charging_profile_entry_start: u32,
     pub charging_profile_entry_max_power: Iso2PhysicalValueType,
     pub charging_profile_entry_max_number_of_phases_in_use: Option<i8>,
-}
-
-impl Default for Iso2ProfileEntryType {
-    fn default() -> Self {
-        Self {
-            charging_profile_entry_start: 0,
-            charging_profile_entry_max_power: Iso2PhysicalValueType::default(),
-            charging_profile_entry_max_number_of_phases_in_use: None,
-        }
-    }
 }
 
 pub struct Iso2DCEVStatusType {
@@ -634,34 +442,17 @@ impl Default for Iso2ParameterSetType {
     }
 }
 
+#[derive(Default)]
 pub struct Iso2SAScheduleTupleType {
     pub saschedule_tuple_id: u8,
     pub pmax_schedule: Iso2PMaxScheduleType,
     pub sales_tariff: Option<Iso2SalesTariffType>,
 }
 
-impl Default for Iso2SAScheduleTupleType {
-    fn default() -> Self {
-        Self {
-            saschedule_tuple_id: 0,
-            pmax_schedule: Iso2PMaxScheduleType::default(),
-            sales_tariff: None,
-        }
-    }
-}
-
+#[derive(Default)]
 pub struct Iso2SelectedServiceType {
     pub service_id: u16,
     pub parameter_set_id: Option<i16>,
-}
-
-impl Default for Iso2SelectedServiceType {
-    fn default() -> Self {
-        Self {
-            service_id: 0,
-            parameter_set_id: None,
-        }
-    }
 }
 
 pub struct Iso2ServiceType {
@@ -684,18 +475,10 @@ impl Default for Iso2ServiceType {
     }
 }
 
+#[derive(Default)]
 pub struct Iso2SignatureValueType {
     pub id: Option<Iso2u8FixedBufType<65>>,
     pub content: Iso2u8FixedBufType<65>,
-}
-
-impl Default for Iso2SignatureValueType {
-    fn default() -> Self {
-        Self {
-            id: None,
-            content: Iso2u8FixedBufType::<65>::default(),
-        }
-    }
 }
 
 pub struct Iso2SubCertificatesType {
@@ -710,6 +493,7 @@ impl Default for Iso2SubCertificatesType {
     }
 }
 
+#[derive(Default)]
 pub struct Iso2KeyInfoType {
     pub id: Option<Iso2u8FixedBufType<65>>,
     pub key_name: Option<Iso2u8FixedBufType<65>>,
@@ -722,38 +506,12 @@ pub struct Iso2KeyInfoType {
     pub any: Option<Iso2u8FixedBufType<4>>,
 }
 
-impl Default for Iso2KeyInfoType {
-    fn default() -> Self {
-        Self {
-            id: None,
-            key_name: None,
-            key_value: None,
-            retrieval_method: None,
-            x509_data: None,
-            pgp_data: None,
-            spki_data: None,
-            mgmt_data: None,
-            any: None,
-        }
-    }
-}
-
+#[derive(Default)]
 pub struct Iso2ObjectType {
     pub encoding: Option<Iso2u8FixedBufType<65>>,
     pub id: Option<Iso2u8FixedBufType<65>>,
     pub mime_type: Option<Iso2u8FixedBufType<65>>,
     pub any: Option<Iso2u8FixedBufType<4>>,
-}
-
-impl Default for Iso2ObjectType {
-    fn default() -> Self {
-        Self {
-            encoding: None,
-            id: None,
-            mime_type: None,
-            any: None,
-        }
-    }
 }
 
 pub struct Iso2SupportedEnergyTransferModeType {
@@ -768,30 +526,16 @@ impl Default for Iso2SupportedEnergyTransferModeType {
     }
 }
 
+#[derive(Default)]
 pub struct Iso2CertificateChainType {
     pub id: Option<Iso2u8FixedBufType<65>>,
     pub certificate: Iso2u8FixedBufType<800>,
     pub sub_certificates: Option<Iso2SubCertificatesType>,
 }
 
-impl Default for Iso2CertificateChainType {
-    fn default() -> Self {
-        Self {
-            id: None,
-            certificate: Iso2u8FixedBufType::<800>::default(),
-            sub_certificates: None,
-        }
-    }
-}
-
+#[derive(Default)]
 pub struct Iso2BodyBaseType {
     pub _unused: i32,
-}
-
-impl Default for Iso2BodyBaseType {
-    fn default() -> Self {
-        Self { _unused: 0 }
-    }
 }
 
 pub struct Iso2NotificationType {
@@ -850,24 +594,13 @@ impl Default for Iso2PaymentOptionListType {
     }
 }
 
+#[derive(Default)]
 pub struct Iso2SignatureType {
     pub id: Option<Iso2u8FixedBufType<65>>,
     pub signed_info: Iso2SignedInfoType,
     pub signature_value: Iso2SignatureValueType,
     pub key_info: Option<Iso2KeyInfoType>,
     pub object: Option<Iso2ObjectType>,
-}
-
-impl Default for Iso2SignatureType {
-    fn default() -> Self {
-        Self {
-            id: None,
-            signed_info: Iso2SignedInfoType::default(),
-            signature_value: Iso2SignatureValueType::default(),
-            key_info: None,
-            object: None,
-        }
-    }
 }
 
 pub struct Iso2ChargingProfileType {
@@ -906,6 +639,7 @@ impl Default for Iso2ListOfRootCertificateIDsType {
     }
 }
 
+#[derive(Default)]
 pub struct Iso2ACEVChargeParameterType {
     pub departure_time: Option<u32>,
     pub e_amount: Iso2PhysicalValueType,
@@ -914,18 +648,7 @@ pub struct Iso2ACEVChargeParameterType {
     pub ev_min_current: Iso2PhysicalValueType,
 }
 
-impl Default for Iso2ACEVChargeParameterType {
-    fn default() -> Self {
-        Self {
-            departure_time: None,
-            e_amount: Iso2PhysicalValueType::default(),
-            ev_max_voltage: Iso2PhysicalValueType::default(),
-            ev_max_current: Iso2PhysicalValueType::default(),
-            ev_min_current: Iso2PhysicalValueType::default(),
-        }
-    }
-}
-
+#[derive(Default)]
 pub struct Iso2DCEVChargeParameterType {
     pub departure_time: Option<u32>,
     pub dc_ev_status: Iso2DCEVStatusType,
@@ -938,36 +661,11 @@ pub struct Iso2DCEVChargeParameterType {
     pub bulk_soc: Option<i8>,
 }
 
-impl Default for Iso2DCEVChargeParameterType {
-    fn default() -> Self {
-        Self {
-            departure_time: None,
-            dc_ev_status: Iso2DCEVStatusType::default(),
-            ev_maximum_current_limit: Iso2PhysicalValueType::default(),
-            ev_maximum_power_limit: None,
-            ev_maximum_voltage_limit: Iso2PhysicalValueType::default(),
-            ev_energy_capacity: None,
-            ev_energy_request: None,
-            full_soc: None,
-            bulk_soc: None,
-        }
-    }
-}
-
+#[derive(Default)]
 pub struct Iso2EVChargeParameterType {
     pub departure_time: Option<u32>,
     pub ac_ev_charge_parameter: Iso2ACEVChargeParameterType,
     pub dc_ev_charge_parameter: Iso2DCEVChargeParameterType,
-}
-
-impl Default for Iso2EVChargeParameterType {
-    fn default() -> Self {
-        Self {
-            departure_time: None,
-            ac_ev_charge_parameter: Iso2ACEVChargeParameterType::default(),
-            dc_ev_charge_parameter: Iso2DCEVChargeParameterType::default(),
-        }
-    }
 }
 
 pub struct Iso2SASchedulesType {
@@ -1012,40 +710,24 @@ pub struct Iso2EVPowerDeliveryParameterType {
     pub _unused: i32,
 }
 
+#[derive(Default)]
 pub struct Iso2DCEVPowerDeliveryParameterType {
     pub dc_ev_status: Iso2DCEVStatusType,
     pub bulk_charging_complete: Option<i32>,
     pub charging_complete: i32,
 }
 
-impl Default for Iso2DCEVPowerDeliveryParameterType {
-    fn default() -> Self {
-        Self {
-            dc_ev_status: Iso2DCEVStatusType::default(),
-            bulk_charging_complete: None,
-            charging_complete: 0,
-        }
-    }
-}
-
+#[derive(Default)]
 pub struct Iso2ContractSignatureEncryptedPrivateKeyType {
     pub id: Iso2u8FixedBufType<65>,
     pub content: Iso2u8FixedBufType<65>,
-}
-
-impl Default for Iso2ContractSignatureEncryptedPrivateKeyType {
-    fn default() -> Self {
-        Self {
-            id: Iso2u8FixedBufType::<65>::default(),
-            content: Iso2u8FixedBufType::<65>::default(),
-        }
-    }
 }
 
 pub struct Iso2EVSEChargeParameterType {
     pub _unused: i32,
 }
 
+#[derive(Default)]
 pub struct Iso2DCEVSEChargeParameterType {
     pub dc_evse_status: Iso2DCEVSEStatusType,
     pub evse_maximum_current_limit: Iso2PhysicalValueType,
@@ -1056,22 +738,6 @@ pub struct Iso2DCEVSEChargeParameterType {
     pub evse_current_regulation_tolerance: Option<Iso2PhysicalValueType>,
     pub evse_peak_current_ripple: Iso2PhysicalValueType,
     pub evse_energy_to_be_delivered: Option<Iso2PhysicalValueType>,
-}
-
-impl Default for Iso2DCEVSEChargeParameterType {
-    fn default() -> Self {
-        Self {
-            dc_evse_status: Iso2DCEVSEStatusType::default(),
-            evse_maximum_current_limit: Iso2PhysicalValueType::default(),
-            evse_maximum_power_limit: Iso2PhysicalValueType::default(),
-            evse_maximum_voltage_limit: Iso2PhysicalValueType::default(),
-            evse_minimum_current_limit: Iso2PhysicalValueType::default(),
-            evse_minimum_voltage_limit: Iso2PhysicalValueType::default(),
-            evse_current_regulation_tolerance: None,
-            evse_peak_current_ripple: Iso2PhysicalValueType::default(),
-            evse_energy_to_be_delivered: None,
-        }
-    }
 }
 
 pub struct Iso2ServiceListType {
@@ -1086,32 +752,16 @@ impl Default for Iso2ServiceListType {
     }
 }
 
+#[derive(Default)]
 pub struct Iso2DiffieHellmanPublickeyType {
     pub id: Iso2u8FixedBufType<65>,
     pub content: Iso2u8FixedBufType<65>,
 }
 
-impl Default for Iso2DiffieHellmanPublickeyType {
-    fn default() -> Self {
-        Self {
-            id: Iso2u8FixedBufType::<65>::default(),
-            content: Iso2u8FixedBufType::<65>::default(),
-        }
-    }
-}
-
+#[derive(Default)]
 pub struct Iso2EMAIDType {
     pub id: Iso2u8FixedBufType<65>,
     pub content: Iso2u8FixedBufType<65>,
-}
-
-impl Default for Iso2EMAIDType {
-    fn default() -> Self {
-        Self {
-            id: Iso2u8FixedBufType::<65>::default(),
-            content: Iso2u8FixedBufType::<65>::default(),
-        }
-    }
 }
 
 pub struct Iso2ACEVSEStatusType {
@@ -1148,22 +798,14 @@ impl Default for Iso2EVSEStatusType {
     }
 }
 
+#[derive(Default)]
 pub struct Iso2ACEVSEChargeParameterType {
     pub ac_evse_status: Iso2ACEVSEStatusType,
     pub evse_nominal_voltage: Iso2PhysicalValueType,
     pub evse_max_current: Iso2PhysicalValueType,
 }
 
-impl Default for Iso2ACEVSEChargeParameterType {
-    fn default() -> Self {
-        Self {
-            ac_evse_status: Iso2ACEVSEStatusType::default(),
-            evse_nominal_voltage: Iso2PhysicalValueType::default(),
-            evse_max_current: Iso2PhysicalValueType::default(),
-        }
-    }
-}
-
+#[derive(Default)]
 pub struct Iso2MeterInfoType {
     pub meter_id: Iso2u8FixedBufType<33>,
     pub meter_reading: Option<u64>,
@@ -1172,32 +814,11 @@ pub struct Iso2MeterInfoType {
     pub t_meter: Option<i64>,
 }
 
-impl Default for Iso2MeterInfoType {
-    fn default() -> Self {
-        Self {
-            meter_id: Iso2u8FixedBufType::<33>::default(),
-            meter_reading: None,
-            sig_meter_reading: None,
-            meter_status: None,
-            t_meter: None,
-        }
-    }
-}
-
+#[derive(Default)]
 pub struct Iso2MessageHeaderType {
     pub session_id: Iso2u8FixedBufType<8>,
     pub notification: Option<Iso2NotificationType>,
     pub signature: Option<Iso2SignatureType>,
-}
-
-impl Default for Iso2MessageHeaderType {
-    fn default() -> Self {
-        Self {
-            session_id: Iso2u8FixedBufType::<8>::default(),
-            notification: None,
-            signature: None,
-        }
-    }
 }
 
 pub struct Iso2PowerDeliveryReqType {
@@ -1282,34 +903,17 @@ impl Default for Iso2ChargingStatusResType {
     }
 }
 
+#[derive(Default)]
 pub struct Iso2AuthorizationReqType {
     pub id: Option<Iso2u8FixedBufType<65>>,
     pub gen_challenge: Option<Iso2u8FixedBufType<16>>,
 }
 
-impl Default for Iso2AuthorizationReqType {
-    fn default() -> Self {
-        Self {
-            id: None,
-            gen_challenge: None,
-        }
-    }
-}
-
+#[derive(Default)]
 pub struct Iso2PreChargeReqType {
     pub dc_ev_status: Option<Iso2DCEVStatusType>,
     pub ev_target_voltage: Option<Iso2PhysicalValueType>,
     pub ev_target_current: Option<Iso2PhysicalValueType>,
-}
-
-impl Default for Iso2PreChargeReqType {
-    fn default() -> Self {
-        Self {
-            dc_ev_status: None,
-            ev_target_voltage: None,
-            ev_target_current: None,
-        }
-    }
 }
 
 pub struct Iso2ServiceDetailResType {
@@ -1340,22 +944,12 @@ impl Default for Iso2PaymentServiceSelectionResType {
     }
 }
 
+#[derive(Default)]
 pub struct Iso2CertificateUpdateReqType {
     pub id: Iso2u8FixedBufType<65>,
     pub contract_signature_cert_chain: Iso2CertificateChainType,
     pub e_maid: Iso2u8FixedBufType<16>,
     pub list_of_root_certificate_ids: Iso2ListOfRootCertificateIDsType,
-}
-
-impl Default for Iso2CertificateUpdateReqType {
-    fn default() -> Self {
-        Self {
-            id: Iso2u8FixedBufType::<65>::default(),
-            contract_signature_cert_chain: Iso2CertificateChainType::default(),
-            e_maid: Iso2u8FixedBufType::<16>::default(),
-            list_of_root_certificate_ids: Iso2ListOfRootCertificateIDsType::default(),
-        }
-    }
 }
 
 pub struct Iso2SessionSetupResType {
@@ -1374,20 +968,11 @@ impl Default for Iso2SessionSetupResType {
     }
 }
 
+#[derive(Default)]
 pub struct Iso2CertificateInstallationReqType {
     pub id: Iso2u8FixedBufType<65>,
     pub oem_provisioning_cert: Iso2u8FixedBufType<800>,
     pub list_of_root_certificate_ids: Iso2ListOfRootCertificateIDsType,
-}
-
-impl Default for Iso2CertificateInstallationReqType {
-    fn default() -> Self {
-        Self {
-            id: Iso2u8FixedBufType::<65>::default(),
-            oem_provisioning_cert: Iso2u8FixedBufType::<800>::default(),
-            list_of_root_certificate_ids: Iso2ListOfRootCertificateIDsType::default(),
-        }
-    }
 }
 
 pub struct Iso2CertificateInstallationResType {
@@ -1429,6 +1014,7 @@ impl Default for Iso2WeldingDetectionResType {
     }
 }
 
+#[derive(Default)]
 pub struct Iso2CurrentDemandReqType {
     pub dc_ev_status: Iso2DCEVStatusType,
     pub ev_target_current: Iso2PhysicalValueType,
@@ -1440,23 +1026,6 @@ pub struct Iso2CurrentDemandReqType {
     pub remaining_time_to_full_soc: Option<Iso2PhysicalValueType>,
     pub remaining_time_to_bulk_soc: Option<Iso2PhysicalValueType>,
     pub ev_target_voltage: Iso2PhysicalValueType,
-}
-
-impl Default for Iso2CurrentDemandReqType {
-    fn default() -> Self {
-        Self {
-            dc_ev_status: Iso2DCEVStatusType::default(),
-            ev_target_current: Iso2PhysicalValueType::default(),
-            ev_maximum_voltage_limit: None,
-            ev_maximum_current_limit: None,
-            ev_maximum_power_limit: None,
-            bulk_charging_complete: None,
-            charging_complete: 0,
-            remaining_time_to_full_soc: None,
-            remaining_time_to_bulk_soc: None,
-            ev_target_voltage: Iso2PhysicalValueType::default(),
-        }
-    }
 }
 
 pub struct Iso2PreChargeResType {
@@ -1500,6 +1069,7 @@ impl Default for Iso2CertificateUpdateResType {
     }
 }
 
+#[derive(Default)]
 pub struct Iso2MeteringReceiptReqType {
     pub id: Option<Iso2u8FixedBufType<65>>,
     pub session_id: Iso2u8FixedBufType<8>,
@@ -1507,25 +1077,9 @@ pub struct Iso2MeteringReceiptReqType {
     pub meter_info: Iso2MeterInfoType,
 }
 
-impl Default for Iso2MeteringReceiptReqType {
-    fn default() -> Self {
-        Self {
-            id: None,
-            session_id: Iso2u8FixedBufType::<8>::default(),
-            sa_schedule_tuple_id: None,
-            meter_info: Iso2MeterInfoType::default(),
-        }
-    }
-}
-
+#[derive(Default)]
 pub struct Iso2ChargingStatusReqType {
     pub _unused: i32,
-}
-
-impl Default for Iso2ChargingStatusReqType {
-    fn default() -> Self {
-        Self { _unused: 0 }
-    }
 }
 
 pub struct Iso2SessionStopResType {
@@ -1560,28 +1114,14 @@ impl Default for Iso2ChargeParameterDiscoveryReqType {
     }
 }
 
+#[derive(Default)]
 pub struct Iso2CableCheckReqType {
     pub dc_ev_status: Iso2DCEVStatusType,
 }
 
-impl Default for Iso2CableCheckReqType {
-    fn default() -> Self {
-        Self {
-            dc_ev_status: Iso2DCEVStatusType::default(),
-        }
-    }
-}
-
+#[derive(Default)]
 pub struct Iso2WeldingDetectionReqType {
     pub dc_ev_status: Iso2DCEVStatusType,
-}
-
-impl Default for Iso2WeldingDetectionReqType {
-    fn default() -> Self {
-        Self {
-            dc_ev_status: Iso2DCEVStatusType::default(),
-        }
-    }
 }
 
 pub struct Iso2PowerDeliveryResType {
@@ -1692,26 +1232,14 @@ impl Default for Iso2ServiceDiscoveryResType {
     }
 }
 
+#[derive(Default)]
 pub struct Iso2ServiceDetailReqType {
     pub service_id: u16,
 }
 
-impl Default for Iso2ServiceDetailReqType {
-    fn default() -> Self {
-        Self { service_id: 0 }
-    }
-}
-
+#[derive(Default)]
 pub struct Iso2SessionSetupReqType {
     pub evcc_id: Iso2u8FixedBufType<6>,
-}
-
-impl Default for Iso2SessionSetupReqType {
-    fn default() -> Self {
-        Self {
-            evcc_id: Iso2u8FixedBufType::<6>::default(),
-        }
-    }
 }
 
 pub struct Iso2SessionStopReqType {
@@ -1726,18 +1254,10 @@ impl Default for Iso2SessionStopReqType {
     }
 }
 
+#[derive(Default)]
 pub struct Iso2ServiceDiscoveryReqType {
     pub service_scope: Option<Iso2u8FixedBufType<65>>,
     pub service_category: Option<Iso2ServiceCategoryType>,
-}
-
-impl Default for Iso2ServiceDiscoveryReqType {
-    fn default() -> Self {
-        Self {
-            service_scope: None,
-            service_category: None,
-        }
-    }
 }
 
 pub struct Iso2AuthorizationResType {
@@ -1754,18 +1274,10 @@ impl Default for Iso2AuthorizationResType {
     }
 }
 
+#[derive(Default)]
 pub struct Iso2PaymentDetailsReqType {
     pub e_maid: Iso2u8FixedBufType<16>,
     pub contract_signature_cert_chain: Iso2CertificateChainType,
-}
-
-impl Default for Iso2PaymentDetailsReqType {
-    fn default() -> Self {
-        Self {
-            e_maid: Iso2u8FixedBufType::<16>::default(),
-            contract_signature_cert_chain: Iso2CertificateChainType::default(),
-        }
-    }
 }
 
 pub struct Iso2PaymentDetailsResType {
@@ -1788,6 +1300,7 @@ pub struct Iso2BodyType {
     pub body_type_component: Iso2BodyTypeEnum,
 }
 
+#[allow(clippy::large_enum_variant)]
 pub enum Iso2BodyTypeEnum {
     AuthorizationReq(Iso2AuthorizationReqType),
     AuthorizationRes(Iso2AuthorizationResType),
@@ -1839,6 +1352,7 @@ pub struct Iso2ExiFragment {
     pub exi_fragment_components: Iso2ExiFragmentEnum,
 }
 
+#[allow(clippy::large_enum_variant)]
 pub enum Iso2ExiFragmentEnum {
     AuthorizationReq(Iso2AuthorizationReqType),
     CertificateInstallationReq(Iso2CertificateInstallationReqType),
@@ -1856,6 +1370,7 @@ pub struct Iso2XmlDSigFragment {
     pub xml_dsig_components: Iso2XmlDSigEnum,
 }
 
+#[allow(clippy::large_enum_variant)]
 pub enum Iso2XmlDSigEnum {
     CanonicalizationMethod(Iso2CanonicalizationMethodType),
     DSAKeyValue(Iso2DSAKeyValueType),
