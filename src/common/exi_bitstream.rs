@@ -13,10 +13,10 @@ pub struct ExiBitstream<'a> {
 
 impl ExiBitstream<'_> {
     pub fn reset(&mut self) {
-        if self.flag_byte_pos != 0 {
-            self.byte_pos = self.flag_byte_pos;
-        } else {
+        if self.flag_byte_pos == 0 {
             self.byte_pos = 0;
+        } else {
+            self.byte_pos = self.flag_byte_pos;
         }
         self.bit_count = 0;
     }
@@ -62,7 +62,11 @@ impl ExiBitstream<'_> {
         Ok(bit)
     }
 
-    pub fn len(&self) -> usize {
+    #[must_use] pub const fn is_empty(&self) -> bool {
+        self.byte_pos == 0 && self.bit_count == 0 && self.flag_byte_pos == 0
+    }
+
+    #[must_use] pub const fn len(&self) -> usize {
         let mut length = self.byte_pos;
         if self.flag_byte_pos != 0 {
             length = length.wrapping_sub(self.flag_byte_pos);
@@ -77,10 +81,10 @@ impl ExiBitstream<'_> {
         }
 
         for idx in 0..bit_count {
-            let bit = if value & (1 << (bit_count - idx - 1)) != 0 {
-                1
-            } else {
+            let bit = if value & (1 << (bit_count - idx - 1)) == 0 {
                 0
+            } else {
+                1
             };
             self.write_bit(bit)?;
         }
@@ -107,7 +111,7 @@ impl ExiBitstream<'_> {
         let mut value: u8 = 0;
         for _ in 0..8 {
             let bit = self.read_bit()?;
-            value = (value << 1) | u8::from(bit);
+            value = (value << 1) | bit;
         }
         Ok(value)
     }
