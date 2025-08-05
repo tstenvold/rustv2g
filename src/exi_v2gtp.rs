@@ -17,12 +17,12 @@ pub fn v2gtp20_write_header(
     }
     stream_data[0] = 0x1;
     stream_data[1] = 0xfe;
-    stream_data[2] = u8::from((v2gtp20_payload_id >> 8) as u8);
-    stream_data[3] = u8::from((v2gtp20_payload_id & 0xff) as u8);
-    stream_data[4] = u8::from((stream_payload_length >> 24) as u8);
-    stream_data[5] = u8::from((stream_payload_length >> 16) as u8);
-    stream_data[6] = u8::from((stream_payload_length >> 8) as u8);
-    stream_data[7] = u8::from((stream_payload_length & 0xff) as u8);
+    stream_data[2] = (v2gtp20_payload_id >> 8) as u8;
+    stream_data[3] = (v2gtp20_payload_id & 0xff) as u8;
+    stream_data[4] = (stream_payload_length >> 24) as u8;
+    stream_data[5] = (stream_payload_length >> 16) as u8;
+    stream_data[6] = (stream_payload_length >> 8) as u8;
+    stream_data[7] = (stream_payload_length & 0xff) as u8;
     Ok(())
 }
 
