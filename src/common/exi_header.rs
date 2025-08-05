@@ -1,6 +1,8 @@
 use core::result::Result;
 
-use crate::common::exi_bitstream::{ExiBitstream, exi_bitstream_read_bits, exi_bitstream_write_bits};
+use crate::common::exi_bitstream::{
+    exi_bitstream_read_bits, exi_bitstream_write_bits, ExiBitstream,
+};
 use crate::common::exi_error_codes::ExiError;
 
 pub fn exi_header_write(stream: &mut ExiBitstream) -> Result<(), ExiError> {

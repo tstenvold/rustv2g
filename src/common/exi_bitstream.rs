@@ -78,6 +78,7 @@ pub fn exi_bitstream_reset(stream: &mut ExiBitstream) {
     stream.bit_count = 0;
 }
 
+#[must_use]
 pub fn exi_bitstream_get_length(stream: &ExiBitstream) -> usize {
     let mut length = stream.byte_pos;
     if stream.init_called && stream.flag_byte_pos > 0 {

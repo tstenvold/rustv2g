@@ -1,8 +1,13 @@
 use core::result::Result;
 use heapless::String;
 
-use crate::common::exi_basetypes::{ExiSigned, ExiUnsigned, exi_basetypes_convert_64_from_unsigned, exi_basetypes_convert_bytes_from_unsigned, exi_basetypes_convert_from_unsigned};
-use crate::common::exi_bitstream::{ExiBitstream, exi_bitstream_read_bits, exi_bitstream_read_octet};
+use crate::common::exi_basetypes::{
+    exi_basetypes_convert_64_from_unsigned, exi_basetypes_convert_bytes_from_unsigned,
+    exi_basetypes_convert_from_unsigned, ExiSigned, ExiUnsigned,
+};
+use crate::common::exi_bitstream::{
+    exi_bitstream_read_bits, exi_bitstream_read_octet, ExiBitstream,
+};
 use crate::common::exi_error_codes::ExiError;
 
 fn exi_basetypes_decoder_read_unsigned(

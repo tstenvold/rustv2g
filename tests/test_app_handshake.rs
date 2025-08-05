@@ -49,9 +49,7 @@ mod tests {
                     "Decoded app protocol array length should match original"
                 );
                 assert_eq!(
-                    decoded_req.app_protocols[0]
-                        .protocol_namespace
-                        .characters,
+                    decoded_req.app_protocols[0].protocol_namespace.characters,
                     app_req.app_protocols[0].protocol_namespace.characters,
                     "Decoded protocol namespace should match original"
                 );
@@ -66,8 +64,7 @@ mod tests {
                     "Decoded minor version should match original"
                 );
                 assert_eq!(
-                    decoded_req.app_protocols[0].schema_id,
-                    app_req.app_protocols[0].schema_id,
+                    decoded_req.app_protocols[0].schema_id, app_req.app_protocols[0].schema_id,
                     "Decoded schema ID should match original"
                 );
             }
@@ -83,50 +80,50 @@ mod tests {
         let app_req = match AppHandSupportedAppProtocolReq::try_from_bytes(&buf, buf.len()) {
             Ok(app_req) => {
                 assert!(
-                    !app_req.app_protocols.array.is_empty(),
+                    !app_req.app_protocols.is_empty(),
                     "App protocol array should not be empty"
                 );
                 assert_eq!(
-                    app_req.app_protocols.array[0].protocol_namespace.characters,
+                    app_req.app_protocols[0].protocol_namespace.characters,
                     "urn:din:70121:2012:MsgDef",
                     "Protocol namespace should match"
                 );
                 assert_eq!(
-                    app_req.app_protocols.array[0].version_number_major, 2,
+                    app_req.app_protocols[0].version_number_major, 2,
                     "Major version should match"
                 );
                 assert_eq!(
-                    app_req.app_protocols.array[0].version_number_minor, 1,
+                    app_req.app_protocols[0].version_number_minor, 1,
                     "Minor version should match"
                 );
                 assert_eq!(
-                    app_req.app_protocols.array[0].schema_id, 3,
+                    app_req.app_protocols[0].schema_id, 3,
                     "Schema ID should match"
                 );
                 assert_eq!(
-                    app_req.app_protocols.array[0].priority, 1,
+                    app_req.app_protocols[0].priority, 1,
                     "Priority should match"
                 );
 
                 assert_eq!(
-                    app_req.app_protocols.array[1].protocol_namespace.characters,
+                    app_req.app_protocols[1].protocol_namespace.characters,
                     "urn:iso:15118:2:2013:MsgDef",
                     "Protocol namespace should match"
                 );
                 assert_eq!(
-                    app_req.app_protocols.array[1].version_number_major, 1,
+                    app_req.app_protocols[1].version_number_major, 1,
                     "Major version should match"
                 );
                 assert_eq!(
-                    app_req.app_protocols.array[1].version_number_minor, 0,
+                    app_req.app_protocols[1].version_number_minor, 0,
                     "Minor version should match"
                 );
                 assert_eq!(
-                    app_req.app_protocols.array[1].schema_id, 1,
+                    app_req.app_protocols[1].schema_id, 1,
                     "Schema ID should match"
                 );
                 assert_eq!(
-                    app_req.app_protocols.array[1].priority, 2,
+                    app_req.app_protocols[1].priority, 2,
                     "Priority should match"
                 );
                 app_req

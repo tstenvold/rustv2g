@@ -1,7 +1,13 @@
 use core::result::Result;
 
-use crate::app_handshake::app_handshake_datatypes::{AppHandAppProtocolType, AppHandExiDocument, AppHandResponseCodeType, AppHandSupportedAppProtocolReq, AppHandSupportedAppProtocolRes};
-use crate::common::exi_basetypes_decoder::{exi_basetypes_decoder_characters, exi_basetypes_decoder_nbit_uint, exi_basetypes_decoder_uint_16};
+use crate::app_handshake::app_handshake_datatypes::{
+    AppHandAppProtocolType, AppHandExiDocument, AppHandResponseCodeType,
+    AppHandSupportedAppProtocolReq, AppHandSupportedAppProtocolRes,
+};
+use crate::common::exi_basetypes_decoder::{
+    exi_basetypes_decoder_characters, exi_basetypes_decoder_nbit_uint,
+    exi_basetypes_decoder_uint_16,
+};
 use crate::common::exi_bitstream::ExiBitstream;
 use crate::common::exi_error_codes::ExiError;
 use crate::common::exi_header::exi_header_read_and_check;
@@ -225,10 +231,9 @@ pub fn decode_app_hand_supported_app_protocol_req(
                         if (supported_app_protocol_req.app_protocols.len() as i32) < 5 {
                             grammar_id = 8;
                             continue;
-                        } else {
-                            grammar_id = 5;
-                            continue;
                         }
+                        grammar_id = 5;
+                        continue;
                     }
                     1 => {
                         //grammar_id = 6 as i32;
@@ -315,9 +320,8 @@ pub fn decode_app_hand_supported_app_protocol_res(
                         if event_code == 0 {
                             grammar_id = 5;
                             continue;
-                        } else {
-                            return Err(ExiError::DeviantsNotSupported);
                         }
+                        return Err(ExiError::DeviantsNotSupported);
                     }
                     1 => {
                         //grammar_id = 6 as i32;

@@ -19,7 +19,8 @@ impl Default for ExiUnsigned {
     }
 }
 impl ExiUnsigned {
-    #[must_use] pub fn new() -> Self {
+    #[must_use]
+    pub fn new() -> Self {
         Self::default()
     }
 }
@@ -31,7 +32,8 @@ pub struct ExiSigned {
 }
 
 impl ExiSigned {
-    #[must_use] pub fn new() -> Self {
+    #[must_use]
+    pub fn new() -> Self {
         Self::default()
     }
 }

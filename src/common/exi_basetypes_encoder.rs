@@ -1,8 +1,13 @@
 use core::result::Result;
 use heapless::String;
 
-use crate::common::exi_basetypes::{ExiSigned, ExiUnsigned, exi_basetypes_convert_64_to_unsigned, exi_basetypes_convert_bytes_to_unsigned, exi_basetypes_convert_to_unsigned};
-use crate::common::exi_bitstream::{ExiBitstream, exi_bitstream_write_bits, exi_bitstream_write_octet};
+use crate::common::exi_basetypes::{
+    exi_basetypes_convert_64_to_unsigned, exi_basetypes_convert_bytes_to_unsigned,
+    exi_basetypes_convert_to_unsigned, ExiSigned, ExiUnsigned,
+};
+use crate::common::exi_bitstream::{
+    exi_bitstream_write_bits, exi_bitstream_write_octet, ExiBitstream,
+};
 use crate::common::exi_error_codes::ExiError;
 
 fn exi_basetypes_encoder_write_unsigned(
@@ -147,7 +152,11 @@ pub fn exi_basetypes_encoder_integer_64(
 ) -> Result<(), ExiError> {
     let sign = if value < 0 { 1 } else { 0 };
     exi_basetypes_encoder_bool(stream, sign)?;
-    let result = if sign != 0 { (-value - 1) as u64 } else { value as u64 };
+    let result = if sign != 0 {
+        (-value - 1) as u64
+    } else {
+        value as u64
+    };
     exi_basetypes_encoder_uint_64(stream, result)
 }
 

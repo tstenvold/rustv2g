@@ -1,7 +1,13 @@
 use core::result::Result;
 
-use crate::app_handshake::app_handshake_datatypes::{AppHandAppProtocolType, AppHandExiDocument, AppHandSupportedAppProtocolReq, AppHandSupportedAppProtocolRes};
-use crate::common::exi_basetypes_encoder::{exi_basetypes_encoder_characters, exi_basetypes_encoder_nbit_uint, exi_basetypes_encoder_uint_16, exi_basetypes_encoder_uint_32};
+use crate::app_handshake::app_handshake_datatypes::{
+    AppHandAppProtocolType, AppHandExiDocument, AppHandSupportedAppProtocolReq,
+    AppHandSupportedAppProtocolRes,
+};
+use crate::common::exi_basetypes_encoder::{
+    exi_basetypes_encoder_characters, exi_basetypes_encoder_nbit_uint,
+    exi_basetypes_encoder_uint_16, exi_basetypes_encoder_uint_32,
+};
 use crate::common::exi_bitstream::ExiBitstream;
 use crate::common::exi_error_codes::ExiError;
 use crate::common::exi_header::exi_header_write;
@@ -90,8 +96,7 @@ pub fn encode_app_hand_supported_app_protocol_req(
     loop {
         match grammar_id {
             7 => {
-                if app_protocol_current_index < supported_app_protocol_req.app_protocols.len()
-                {
+                if app_protocol_current_index < supported_app_protocol_req.app_protocols.len() {
                     exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
 
                     let fresh0 = app_protocol_current_index;
@@ -102,13 +107,11 @@ pub fn encode_app_hand_supported_app_protocol_req(
                     )?;
                     grammar_id = 8;
                     continue;
-                } else {
-                    return Err(ExiError::UnknownEventCode);
                 }
+                return Err(ExiError::UnknownEventCode);
             }
             8 => {
-                if app_protocol_current_index < supported_app_protocol_req.app_protocols.len()
-                {
+                if app_protocol_current_index < supported_app_protocol_req.app_protocols.len() {
                     exi_basetypes_encoder_nbit_uint(stream, 2, 0)?;
 
                     let fresh1 = app_protocol_current_index;
@@ -120,10 +123,9 @@ pub fn encode_app_hand_supported_app_protocol_req(
 
                     grammar_id = 8;
                     continue;
-                } else {
-                    exi_basetypes_encoder_nbit_uint(stream, 2, 1)?;
-                    return Ok(());
                 }
+                exi_basetypes_encoder_nbit_uint(stream, 2, 1)?;
+                return Ok(());
             }
             5 => {
                 exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
@@ -170,10 +172,9 @@ pub fn encode_app_hand_supported_app_protocol_res(
                     exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
                     grammar_id = 5;
                     continue;
-                } else {
-                    exi_basetypes_encoder_nbit_uint(stream, 2, 1)?;
-                    return Ok(());
                 }
+                exi_basetypes_encoder_nbit_uint(stream, 2, 1)?;
+                return Ok(());
             }
             5 => {
                 exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
