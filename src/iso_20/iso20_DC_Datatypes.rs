@@ -1037,7 +1037,7 @@ pub struct iso20_dc_Scheduled_DC_CLReqControlModeType {
 #[derive(Copy, Clone)]
 
 pub struct iso20_dc_CLReqControlModeType {
-    pub _unused: i32,
+    _unused: i32,
 }
 #[derive(Copy, Clone, BitfieldStruct)]
 
@@ -1122,7 +1122,7 @@ pub struct iso20_dc_Scheduled_DC_CLResControlModeType {
 #[derive(Copy, Clone)]
 
 pub struct iso20_dc_CLResControlModeType {
-    pub _unused: i32,
+    _unused: i32,
 }
 #[derive(Copy, Clone)]
 

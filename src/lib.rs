@@ -3,7 +3,6 @@
 #![deny(clippy::cargo)]
 #![warn(clippy::nursery)]
 #![allow(clippy::missing_errors_doc)] // TODO: Document errors and remove this allowance
-#![allow(clippy::module_name_repetitions)] // TODO: Remove this allowance when module names are unique
 
 pub mod exi_v2gtp;
 
@@ -24,4 +23,5 @@ pub mod common {
 
 pub mod iso_2 {
     pub mod iso2_datatypes;
+    pub mod iso2_decoder;
 }

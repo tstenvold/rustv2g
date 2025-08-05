@@ -1176,7 +1176,7 @@ pub struct iso20_dc_Scheduled_DC_CLReqControlModeType {
 #[derive(Copy, Clone)]
 
 pub struct iso20_dc_CLReqControlModeType {
-    pub _unused: i32,
+    _unused: i32,
 }
 #[derive(Copy, Clone, BitfieldStruct)]
 
@@ -1261,7 +1261,7 @@ pub struct iso20_dc_Scheduled_DC_CLResControlModeType {
 #[derive(Copy, Clone)]
 
 pub struct iso20_dc_CLResControlModeType {
-    pub _unused: i32,
+    _unused: i32,
 }
 #[derive(Copy, Clone)]
 
@@ -14512,7 +14512,7 @@ pub unsafe extern "C" fn decode_iso20_dc_exiDocument(
     mut exiDoc: *mut iso20_dc_exiDocument,
 ) -> i32 {
     let mut eventCode: u32 = 0;
-    let mut error: i32 = exi_header_read_and_check(stream);
+    let mut error: i32 = stream.read_and_check()?;
     if error == 0 as i32 {
         init_iso20_dc_exiDocument(exiDoc);
         error = exi_basetypes_decoder_nbit_uint(stream, 6 as i32 as usize, &mut eventCode);
@@ -14844,7 +14844,7 @@ pub unsafe extern "C" fn decode_iso20_dc_exiFragment(
     mut exiFrag: *mut iso20_dc_exiFragment,
 ) -> i32 {
     let mut eventCode: u32 = 0;
-    let mut error: i32 = exi_header_read_and_check(stream);
+    let mut error: i32 = stream.read_and_check()?;
     if error == 0 as i32 {
         init_iso20_dc_exiFragment(exiFrag);
         error = exi_basetypes_decoder_nbit_uint(stream, 8 as i32 as usize, &mut eventCode);
@@ -15034,7 +15034,7 @@ pub unsafe extern "C" fn decode_iso20_dc_xmldsigFragment(
     mut xmldsigFrag: *mut iso20_dc_xmldsigFragment,
 ) -> i32 {
     let mut eventCode: u32 = 0;
-    let mut error: i32 = exi_header_read_and_check(stream);
+    let mut error: i32 = stream.read_and_check()?;
     if error == 0 as i32 {
         init_iso20_dc_xmldsigFragment(xmldsigFrag);
         error = exi_basetypes_decoder_nbit_uint(stream, 6 as i32 as usize, &mut eventCode);

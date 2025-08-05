@@ -1763,12 +1763,12 @@ pub struct C2RustUnnamed_93 {
 #[derive(Copy, Clone)]
 
 pub struct iso20_wpt_CLReqControlModeType {
-    pub _unused: i32,
+    _unused: i32,
 }
 #[derive(Copy, Clone)]
 
 pub struct iso20_wpt_CLResControlModeType {
-    pub _unused: i32,
+    _unused: i32,
 }
 #[derive(Copy, Clone, BitfieldStruct)]
 

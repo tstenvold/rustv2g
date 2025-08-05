@@ -13,9 +13,9 @@ fn exi_basetypes_decoder_read_unsigned(
     exi_unsigned
         .octets
         .resize(EXI_UNSIGNED_MAX_OCTETS, 0)
-        .map_err(|_| ExiError::OctetCountLargerThanTypeSupports)?;
+        .map_err(|()| ExiError::OctetCountLargerThanTypeSupports)?;
 
-    for octet in exi_unsigned.octets.iter_mut() {
+    for octet in &mut exi_unsigned.octets {
         *octet = stream.read_octet()?;
         if *octet & msb == 0 {
             return Ok(());
@@ -30,7 +30,7 @@ pub fn exi_basetypes_decoder_bool(
     value: &mut i32,
 ) -> Result<(), ExiError> {
     let bit: u32 = stream.read_bits(1)?;
-    *value = if bit == 0 { 0 } else { 1 };
+    *value = i32::from(bit != 0);
     Ok(())
 }
 
@@ -174,7 +174,7 @@ pub fn exi_basetypes_decoder_signed(
 ) -> Result<(), ExiError> {
     let mut sign: i32 = 0;
     exi_basetypes_decoder_bool(stream, &mut sign)?;
-    value.is_negative = if sign == 0 { 0 } else { 1 };
+    value.is_negative = u8::from(sign != 0);
     let mut raw_value = ExiUnsigned::default();
     exi_basetypes_decoder_unsigned(stream, &mut raw_value)?;
     exi_basetypes_decoder_unsigned(stream, &mut raw_value)?;
@@ -201,7 +201,7 @@ pub fn exi_basetypes_decoder_characters(
         }
         characters
             .push(n as char)
-            .map_err(|_| ExiError::CharacterBufferTooSmall)?;
+            .map_err(|()| ExiError::CharacterBufferTooSmall)?;
     }
     Ok(())
 }

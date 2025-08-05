@@ -9,14 +9,14 @@ fn exi_basetypes_encoder_write_unsigned(
     stream: &mut ExiBitstream,
     exi_unsigned: &ExiUnsigned,
 ) -> Result<(), ExiError> {
-    for &octet in exi_unsigned.octets.iter() {
+    for &octet in &exi_unsigned.octets {
         stream.write_octet(octet)?;
     }
     Ok(())
 }
 
 pub fn exi_basetypes_encoder_bool(stream: &mut ExiBitstream, value: i32) -> Result<(), ExiError> {
-    let bit: u32 = if value == 0 { 0 } else { 1 };
+    let bit: u32 = u32::from(value != 0);
     stream.write_bits(1, bit)?;
     Ok(())
 }
@@ -25,7 +25,7 @@ pub fn exi_basetypes_encoder_bytes(
     stream: &mut ExiBitstream,
     bytes: &[u8],
 ) -> Result<(), ExiError> {
-    for &byte in bytes.iter() {
+    for &byte in bytes {
         stream.write_octet(byte)?;
     }
     Ok(())
@@ -88,12 +88,12 @@ pub fn exi_basetypes_encoder_integer_8(
     stream: &mut ExiBitstream,
     value: i8,
 ) -> Result<(), ExiError> {
-    let sign = if value < 0 { 1 } else { 0 };
+    let sign = i32::from(value < 0);
     exi_basetypes_encoder_bool(stream, sign)?;
     let result = if value >= 0 {
-        value.unsigned_abs() as u8
+        value.unsigned_abs()
     } else {
-        value.unsigned_abs().wrapping_sub(1) as u8
+        value.unsigned_abs().wrapping_sub(1)
     };
     exi_basetypes_encoder_uint_8(stream, result)
 }
@@ -102,12 +102,12 @@ pub fn exi_basetypes_encoder_integer_16(
     stream: &mut ExiBitstream,
     value: i16,
 ) -> Result<(), ExiError> {
-    let sign = if value < 0 { 1 } else { 0 };
+    let sign = i32::from(value < 0);
     exi_basetypes_encoder_bool(stream, sign)?;
     let result = if value >= 0 {
-        value.unsigned_abs() as u16
+        value.unsigned_abs()
     } else {
-        value.unsigned_abs().wrapping_sub(1) as u16
+        value.unsigned_abs().wrapping_sub(1)
     };
     exi_basetypes_encoder_uint_16(stream, result)
 }
@@ -116,12 +116,12 @@ pub fn exi_basetypes_encoder_integer_32(
     stream: &mut ExiBitstream,
     value: i32,
 ) -> Result<(), ExiError> {
-    let sign = if value < 0 { 1 } else { 0 };
+    let sign = i32::from(value < 0);
     exi_basetypes_encoder_bool(stream, sign)?;
     let result = if value >= 0 {
-        value.unsigned_abs() as u32
+        value.unsigned_abs()
     } else {
-        value.unsigned_abs().wrapping_sub(1) as u32
+        value.unsigned_abs().wrapping_sub(1)
     };
     exi_basetypes_encoder_uint_32(stream, result)
 }
@@ -130,10 +130,10 @@ pub fn exi_basetypes_encoder_integer_64(
     stream: &mut ExiBitstream,
     value: i64,
 ) -> Result<(), ExiError> {
-    let sign: i32 = if value < 0 { 1 } else { 0 };
+    let sign: i32 = i32::from(value < 0);
     exi_basetypes_encoder_bool(stream, sign)?;
     let result = if value >= 0 {
-        value.unsigned_abs() as u64
+        value.unsigned_abs()
     } else {
         value.unsigned_abs().wrapping_sub(1)
     };
@@ -153,8 +153,8 @@ pub fn exi_basetypes_encoder_characters(
     characters: &String<100>,
 ) -> Result<(), ExiError> {
     const ASCII_MAX_VALUE: u8 = 127;
-    for &ch in characters.as_bytes().iter() {
-        let byte = ch as u8;
+    for &ch in characters.as_bytes() {
+        let byte = ch;
         if byte > ASCII_MAX_VALUE {
             return Err(ExiError::UnsupportedCharacterValue);
         }

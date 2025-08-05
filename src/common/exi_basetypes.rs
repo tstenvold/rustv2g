@@ -139,7 +139,7 @@ impl ExiUnsigned {
             tmp >>= 1;
         }
         let total_relevant_input_bits = ((data.len() - bytenum - 1) * 8) + bits_in_byte;
-        let exi_expected_octets_count = (total_relevant_input_bits + 6) / 7;
+        let exi_expected_octets_count = total_relevant_input_bits.div_ceil(7);
         let mut dummy: u16 = 0;
         let mut dummy_count: u8 = 0;
         let mut incount: usize = 0;
@@ -177,7 +177,7 @@ impl ExiSigned {
         Self::default()
     }
 
-    pub fn exi_basetypes_convert_to_signed(
+    pub fn convert_to_signed(
         &mut self,
         value: i32,
         max_octets: usize,
@@ -197,7 +197,7 @@ impl ExiSigned {
         }
     }
 
-    pub fn exi_basetypes_convert_64_to_signed(&mut self, value: i64) -> Result<(), ExiError> {
+    pub fn convert_64_to_signed(&mut self, value: i64) -> Result<(), ExiError> {
         if value < 0 {
             self.is_negative = 1;
             self.data
@@ -209,7 +209,7 @@ impl ExiSigned {
         }
     }
 
-    pub fn exi_basetypes_convert_from_signed(
+    pub fn convert_from_signed(
         &mut self,
         value: &mut i32,
         max_octets: usize,
@@ -224,7 +224,7 @@ impl ExiSigned {
         res
     }
 
-    pub fn exi_basetypes_convert_64_from_signed(
+    pub fn convert_64_from_signed(
         &mut self,
         value: &mut i64,
     ) -> Result<(), ExiError> {

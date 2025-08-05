@@ -15,7 +15,7 @@ use crate::common::exi_types_decoder::decode_exi_type_uint32;
 #[allow(clippy::too_many_lines)]
 pub fn decode_app_hand_app_protocol_type(
     stream: &mut ExiBitstream,
-    mut app_protocol_type: &mut AppHandAppProtocolType,
+    app_protocol_type: &mut AppHandAppProtocolType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 0;
     let mut event_code: u32 = 0;
@@ -67,7 +67,6 @@ pub fn decode_app_hand_app_protocol_type(
                             &mut app_protocol_type.version_number_major,
                         )?;
                         grammar_id = 2;
-                        continue;
                     }
                     _ => {
                         return Err(ExiError::UnknownEventCode);
@@ -83,7 +82,6 @@ pub fn decode_app_hand_app_protocol_type(
                             &mut app_protocol_type.version_number_minor,
                         )?;
                         grammar_id = 3;
-                        continue;
                     }
                     _ => {
                         return Err(ExiError::UnknownEventCode);
@@ -179,7 +177,7 @@ pub fn decode_app_hand_supported_app_protocol_req(
                 match event_code {
                     0 => {
                         if supported_app_protocol_req.app_protocols.len() < 5 {
-                            let idx = supported_app_protocol_req.app_protocols.len() as usize;
+                            let idx = supported_app_protocol_req.app_protocols.len();
 
                             match supported_app_protocol_req
                                 .app_protocols
@@ -199,7 +197,6 @@ pub fn decode_app_hand_supported_app_protocol_req(
                             return Err(ExiError::ArrayOutOfBounds);
                         }
                         grammar_id = 8;
-                        continue;
                     }
                     _ => {
                         return Err(ExiError::UnknownEventCode);
@@ -234,7 +231,6 @@ pub fn decode_app_hand_supported_app_protocol_req(
                             continue;
                         }
                         grammar_id = 5;
-                        continue;
                     }
                     1 => {
                         //grammar_id = 6 as i32;
@@ -266,7 +262,7 @@ pub fn decode_app_hand_supported_app_protocol_req(
 
 pub fn decode_app_hand_supported_app_protocol_res(
     stream: &mut ExiBitstream,
-    mut supported_app_protocol_res: &mut AppHandSupportedAppProtocolRes,
+    supported_app_protocol_res: &mut AppHandSupportedAppProtocolRes,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 9;
     let mut event_code: u32 = 0;

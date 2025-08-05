@@ -1399,7 +1399,7 @@ pub struct C2RustUnnamed_74 {
 #[derive(Copy, Clone)]
 
 pub struct iso20_Dynamic_EVPPTControlModeType {
-    pub _unused: i32,
+    _unused: i32,
 }
 #[derive(Copy, Clone, BitfieldStruct)]
 
@@ -1619,7 +1619,7 @@ pub struct C2RustUnnamed_84 {
 #[derive(Copy, Clone)]
 
 pub struct iso20_Dynamic_SMDTControlModeType {
-    pub _unused: i32,
+    _unused: i32,
 }
 #[derive(Copy, Clone)]
 
@@ -1813,7 +1813,7 @@ pub struct C2RustUnnamed_95 {
 #[derive(Copy, Clone)]
 
 pub struct iso20_EIM_AReqAuthorizationModeType {
-    pub _unused: i32,
+    _unused: i32,
 }
 #[derive(Copy, Clone)]
 
@@ -1972,7 +1972,7 @@ pub struct C2RustUnnamed_102 {
 #[derive(Copy, Clone)]
 
 pub struct iso20_EIM_ASResAuthorizationModeType {
-    pub _unused: i32,
+    _unused: i32,
 }
 #[derive(Copy, Clone, BitfieldStruct)]
 
@@ -2426,12 +2426,12 @@ pub struct iso20_VehicleCheckOutResType {
 #[derive(Copy, Clone)]
 
 pub struct iso20_CLReqControlModeType {
-    pub _unused: i32,
+    _unused: i32,
 }
 #[derive(Copy, Clone)]
 
 pub struct iso20_CLResControlModeType {
-    pub _unused: i32,
+    _unused: i32,
 }
 #[derive(Copy, Clone, BitfieldStruct)]
 
@@ -20171,7 +20171,7 @@ pub unsafe extern "C" fn decode_iso20_exiDocument(
     mut exiDoc: *mut iso20_exiDocument,
 ) -> i32 {
     let mut eventCode: u32 = 0;
-    let mut error: i32 = exi_header_read_and_check(stream);
+    let mut error: i32 = stream.read_and_check()?;
     if error == 0 as i32 {
         init_iso20_exiDocument(exiDoc);
         error = exi_basetypes_decoder_nbit_uint(stream, 6 as i32 as usize, &mut eventCode);
@@ -20528,7 +20528,7 @@ pub unsafe extern "C" fn decode_iso20_exiFragment(
     mut exiFrag: *mut iso20_exiFragment,
 ) -> i32 {
     let mut eventCode: u32 = 0;
-    let mut error: i32 = exi_header_read_and_check(stream);
+    let mut error: i32 = stream.read_and_check()?;
     if error == 0 as i32 {
         init_iso20_exiFragment(exiFrag);
         error = exi_basetypes_decoder_nbit_uint(stream, 9 as i32 as usize, &mut eventCode);
@@ -20874,7 +20874,7 @@ pub unsafe extern "C" fn decode_iso20_xmldsigFragment(
     mut xmldsigFrag: *mut iso20_xmldsigFragment,
 ) -> i32 {
     let mut eventCode: u32 = 0;
-    let mut error: i32 = exi_header_read_and_check(stream);
+    let mut error: i32 = stream.read_and_check()?;
     if error == 0 as i32 {
         init_iso20_xmldsigFragment(xmldsigFrag);
         error = exi_basetypes_decoder_nbit_uint(stream, 6 as i32 as usize, &mut eventCode);

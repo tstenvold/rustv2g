@@ -12,7 +12,7 @@ pub struct ExiBitstream<'a> {
 }
 
 impl ExiBitstream<'_> {
-    pub fn reset(&mut self) {
+    pub const fn reset(&mut self) {
         if self.flag_byte_pos == 0 {
             self.byte_pos = 0;
         } else {
@@ -21,7 +21,7 @@ impl ExiBitstream<'_> {
         self.bit_count = 0;
     }
 
-    pub fn has_overflow(&mut self) -> Result<(), ExiError> {
+    pub const fn has_overflow(&mut self) -> Result<(), ExiError> {
         if self.bit_count == 8 {
             if self.byte_pos < self.data.len() {
                 self.byte_pos = self.byte_pos.wrapping_add(1);
@@ -83,11 +83,7 @@ impl ExiBitstream<'_> {
         }
 
         for idx in 0..bit_count {
-            let bit = if value & (1 << (bit_count - idx - 1)) == 0 {
-                0
-            } else {
-                1
-            };
+            let bit = u8::from(value & (1 << (bit_count - idx - 1)) != 0);
             self.write_bit(bit)?;
         }
         Ok(())

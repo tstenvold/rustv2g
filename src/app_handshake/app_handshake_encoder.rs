@@ -36,7 +36,6 @@ pub fn encode_app_hand_app_protocol_type(
                 exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
 
                 grammar_id = 1;
-                continue;
             }
             1 => {
                 exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
@@ -44,7 +43,6 @@ pub fn encode_app_hand_app_protocol_type(
                 exi_basetypes_encoder_uint_32(stream, app_protocol_type.version_number_major)?;
                 exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
                 grammar_id = 2;
-                continue;
             }
             2 => {
                 exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
@@ -53,7 +51,6 @@ pub fn encode_app_hand_app_protocol_type(
                 exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
 
                 grammar_id = 3;
-                continue;
             }
             3 => {
                 exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
@@ -61,7 +58,6 @@ pub fn encode_app_hand_app_protocol_type(
                 exi_basetypes_encoder_nbit_uint(stream, 8, u32::from(app_protocol_type.schema_id))?;
                 exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
                 grammar_id = 4;
-                continue;
             }
             4 => {
                 exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
@@ -74,7 +70,6 @@ pub fn encode_app_hand_app_protocol_type(
 
                 exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
                 grammar_id = 5;
-                continue;
             }
             5 => {
                 exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
@@ -157,7 +152,6 @@ pub fn encode_app_hand_supported_app_protocol_res(
                 exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
 
                 grammar_id = 10;
-                continue;
             }
             10 => {
                 if supported_app_protocol_res.schema_id == Some(1) {

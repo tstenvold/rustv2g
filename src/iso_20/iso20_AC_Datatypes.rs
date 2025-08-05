@@ -1088,7 +1088,7 @@ pub struct iso20_ac_Scheduled_AC_CLReqControlModeType {
 #[derive(Copy, Clone)]
 
 pub struct iso20_ac_CLReqControlModeType {
-    pub _unused: i32,
+    _unused: i32,
 }
 #[derive(Copy, Clone, BitfieldStruct)]
 
@@ -1295,7 +1295,7 @@ pub struct iso20_ac_Dynamic_AC_CLResControlModeType {
 #[derive(Copy, Clone)]
 
 pub struct iso20_ac_CLResControlModeType {
-    pub _unused: i32,
+    _unused: i32,
 }
 #[derive(Copy, Clone, BitfieldStruct)]
 

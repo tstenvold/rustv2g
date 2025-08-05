@@ -1045,12 +1045,12 @@ pub struct iso20_acdp_ACDP_SystemStatusResType {
 #[derive(Copy, Clone)]
 
 pub struct iso20_acdp_CLReqControlModeType {
-    pub _unused: i32,
+    _unused: i32,
 }
 #[derive(Copy, Clone)]
 
 pub struct iso20_acdp_CLResControlModeType {
-    pub _unused: i32,
+    _unused: i32,
 }
 #[derive(Copy, Clone, BitfieldStruct)]
 
@@ -7479,7 +7479,7 @@ pub unsafe extern "C" fn decode_iso20_acdp_exiDocument(
     mut exiDoc: *mut iso20_acdp_exiDocument,
 ) -> i32 {
     let mut eventCode: u32 = 0;
-    let mut error: i32 = exi_header_read_and_check(stream);
+    let mut error: i32 = stream.read_and_check()?;
     if error == 0 as i32 {
         init_iso20_acdp_exiDocument(exiDoc);
         error = exi_basetypes_decoder_nbit_uint(stream, 6 as i32 as usize, &mut eventCode);

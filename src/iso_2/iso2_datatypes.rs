@@ -180,7 +180,7 @@ impl<const N: usize> Default for Iso2u8FixedBufType<N> {
 
 #[derive(Default)]
 pub struct Iso2IntervalType {
-    pub _unused: i32,
+    _unused: i32,
 }
 
 #[derive(Default)]
@@ -535,7 +535,7 @@ pub struct Iso2CertificateChainType {
 
 #[derive(Default)]
 pub struct Iso2BodyBaseType {
-    pub _unused: i32,
+    _unused: i32,
 }
 
 pub struct Iso2NotificationType {
@@ -669,7 +669,7 @@ pub struct Iso2EVChargeParameterType {
 }
 
 pub struct Iso2SASchedulesType {
-    pub _unused: i32,
+    _unused: i32,
 }
 
 pub struct Iso2SAScheduleListType {
@@ -707,7 +707,7 @@ impl Default for Iso2ChargeServiceType {
 }
 
 pub struct Iso2EVPowerDeliveryParameterType {
-    pub _unused: i32,
+    _unused: i32,
 }
 
 #[derive(Default)]
@@ -724,7 +724,7 @@ pub struct Iso2ContractSignatureEncryptedPrivateKeyType {
 }
 
 pub struct Iso2EVSEChargeParameterType {
-    pub _unused: i32,
+    _unused: i32,
 }
 
 #[derive(Default)]
@@ -1079,7 +1079,7 @@ pub struct Iso2MeteringReceiptReqType {
 
 #[derive(Default)]
 pub struct Iso2ChargingStatusReqType {
-    pub _unused: i32,
+    _unused: i32,
 }
 
 pub struct Iso2SessionStopResType {

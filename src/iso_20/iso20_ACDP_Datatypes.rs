@@ -949,12 +949,12 @@ pub struct iso20_acdp_ACDP_SystemStatusResType {
 #[derive(Copy, Clone)]
 
 pub struct iso20_acdp_CLReqControlModeType {
-    pub _unused: i32,
+    _unused: i32,
 }
 #[derive(Copy, Clone)]
 
 pub struct iso20_acdp_CLResControlModeType {
-    pub _unused: i32,
+    _unused: i32,
 }
 #[derive(Copy, Clone, BitfieldStruct)]
 

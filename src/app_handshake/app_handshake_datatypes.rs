@@ -44,7 +44,7 @@ pub struct AppHandSupportedAppProtocolReq {
 
 impl AppHandSupportedAppProtocolReq {
     #[must_use]
-    pub fn new(app_protocols: Vec<AppHandAppProtocolType, 5>) -> Self {
+    pub const fn new(app_protocols: Vec<AppHandAppProtocolType, 5>) -> Self {
         Self { app_protocols }
     }
 

@@ -1221,7 +1221,7 @@ pub struct C2RustUnnamed_74 {
 #[derive(Copy, Clone)]
 
 pub struct iso20_Dynamic_EVPPTControlModeType {
-    pub _unused: i32,
+    _unused: i32,
 }
 #[derive(Copy, Clone, BitfieldStruct)]
 
@@ -1441,7 +1441,7 @@ pub struct C2RustUnnamed_84 {
 #[derive(Copy, Clone)]
 
 pub struct iso20_Dynamic_SMDTControlModeType {
-    pub _unused: i32,
+    _unused: i32,
 }
 #[derive(Copy, Clone)]
 
@@ -1635,7 +1635,7 @@ pub struct C2RustUnnamed_95 {
 #[derive(Copy, Clone)]
 
 pub struct iso20_EIM_AReqAuthorizationModeType {
-    pub _unused: i32,
+    _unused: i32,
 }
 #[derive(Copy, Clone)]
 
@@ -1794,7 +1794,7 @@ pub struct C2RustUnnamed_102 {
 #[derive(Copy, Clone)]
 
 pub struct iso20_EIM_ASResAuthorizationModeType {
-    pub _unused: i32,
+    _unused: i32,
 }
 #[derive(Copy, Clone, BitfieldStruct)]
 
@@ -2248,12 +2248,12 @@ pub struct iso20_VehicleCheckOutResType {
 #[derive(Copy, Clone)]
 
 pub struct iso20_CLReqControlModeType {
-    pub _unused: i32,
+    _unused: i32,
 }
 #[derive(Copy, Clone)]
 
 pub struct iso20_CLResControlModeType {
-    pub _unused: i32,
+    _unused: i32,
 }
 #[derive(Copy, Clone, BitfieldStruct)]
 

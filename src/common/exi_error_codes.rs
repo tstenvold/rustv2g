@@ -48,7 +48,7 @@ pub enum ExiError {
     DeviantsNotSupported = -170,
 
     // datatype errors -200 to -229
-    StringvaluesNotSupported = -200,
+    StringValuesNotSupported = -200,
     UnsupportedIntegerValueType = -210,
     UnsupportedDatetimeType = -211,
     UnsupportedCharacterValue = -212,
