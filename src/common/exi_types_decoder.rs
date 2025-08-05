@@ -134,7 +134,6 @@ pub fn decode_exi_type_uint16(stream: &mut ExiBitstream, value: &mut u16) -> Res
     Ok(())
 }
 
-
 pub fn decode_exi_type_uint32(stream: &mut ExiBitstream, value: &mut u32) -> Result<(), ExiError> {
     let mut event_code: u32 = 0;
     exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;

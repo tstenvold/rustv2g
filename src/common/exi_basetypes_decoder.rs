@@ -5,9 +5,7 @@ use crate::common::exi_basetypes::{
     exi_basetypes_convert_64_from_unsigned, exi_basetypes_convert_bytes_from_unsigned,
     exi_basetypes_convert_from_unsigned, ExiSigned, ExiUnsigned,
 };
-use crate::common::exi_bitstream::{
-    exi_bitstream_read_bits, exi_bitstream_read_octet, ExiBitstream,
-};
+use crate::common::exi_bitstream::ExiBitstream;
 use crate::common::exi_error_codes::ExiError;
 
 fn exi_basetypes_decoder_read_unsigned(
@@ -22,7 +20,7 @@ fn exi_basetypes_decoder_read_unsigned(
             .octets
             .get_mut(exi_unsigned.octets_count)
             .ok_or(ExiError::SupportedMaxOctetsOverrun)?;
-        exi_bitstream_read_octet(stream, octet)?;
+        *octet = stream.read_octet()?;
         exi_unsigned.octets_count += 1;
         if *octet & msb == 0 {
             found_sequence_end = true;
@@ -40,8 +38,7 @@ pub fn exi_basetypes_decoder_bool(
     stream: &mut ExiBitstream,
     value: &mut i32,
 ) -> Result<(), ExiError> {
-    let mut bit: u32 = 0;
-    exi_bitstream_read_bits(stream, 1, &mut bit)?;
+    let bit: u32 = stream.read_bits(1)?;
     *value = if bit != 0 { 1 } else { 0 };
     Ok(())
 }
@@ -55,7 +52,7 @@ pub fn exi_basetypes_decoder_bytes(
         return Err(ExiError::ByteBufferTooSmall);
     }
     for b in bytes.iter_mut().take(bytes_len) {
-        exi_bitstream_read_octet(stream, b)?;
+        *b = stream.read_octet()?;
     }
     Ok(())
 }
@@ -65,7 +62,8 @@ pub fn exi_basetypes_decoder_nbit_uint(
     bit_count: usize,
     value: &mut u32,
 ) -> Result<(), ExiError> {
-    exi_bitstream_read_bits(stream, bit_count, value).map(|_| ())
+    *value = stream.read_bits(bit_count)?;
+    Ok(())
 }
 
 pub fn exi_basetypes_decoder_uint_8(
@@ -222,8 +220,7 @@ pub fn exi_basetypes_decoder_characters(
         return Err(ExiError::CharacterBufferTooSmall);
     }
     for _ in 0..characters_len {
-        let mut n: u8 = 0;
-        exi_bitstream_read_octet(stream, &mut n)?;
+        let n: u8 = stream.read_octet()?;
         match n > ascii_max_value {
             true => return Err(ExiError::UnsupportedCharacterValue),
             false => characters

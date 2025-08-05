@@ -5,9 +5,8 @@ use crate::app_handshake::app_handshake_decoder::decode_app_hand_supported_app_p
 use crate::app_handshake::app_handshake_encoder::encode_app_hand_supported_app_protocol_req;
 use crate::common::exi_basetypes_decoder::exi_basetypes_decoder_nbit_uint;
 use crate::common::exi_basetypes_encoder::exi_basetypes_encoder_nbit_uint;
-use crate::common::exi_bitstream::{exi_bitstream_get_length, ExiBitstream};
+use crate::common::exi_bitstream::ExiBitstream;
 use crate::common::exi_error_codes::ExiError;
-use crate::common::exi_header::{exi_header_read_and_check, exi_header_write};
 
 #[derive(Copy, Clone)]
 #[repr(u8)]
@@ -57,11 +56,15 @@ impl AppHandSupportedAppProtocolReq {
             ..Default::default()
         };
 
-        exi_header_write(&mut stream)?;
+        stream.write_header()?;
         exi_basetypes_encoder_nbit_uint(&mut stream, 2, 0)?;
         encode_app_hand_supported_app_protocol_req(&mut stream, self)?;
-        let len = exi_bitstream_get_length(&stream);
-        Ok((buf, len))
+
+        let len = stream.len();
+        let mut s_buf: [u8; 1024] = [0; 1024];
+        s_buf[..len].copy_from_slice(&stream.data[..len]);
+
+        Ok((s_buf, len))
     }
 
     pub fn try_from_bytes(bytes: &[u8], len: usize) -> Result<Self, ExiError> {
@@ -78,7 +81,7 @@ impl AppHandSupportedAppProtocolReq {
 
         let mut req = Self::default();
         let mut event_code: u32 = 0;
-        exi_header_read_and_check(&mut stream)?;
+        stream.read_and_check_header()?;
         exi_basetypes_decoder_nbit_uint(&mut stream, 2, &mut event_code)?;
         match event_code {
             0 => {

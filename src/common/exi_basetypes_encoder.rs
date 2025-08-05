@@ -5,9 +5,7 @@ use crate::common::exi_basetypes::{
     exi_basetypes_convert_64_to_unsigned, exi_basetypes_convert_bytes_to_unsigned,
     exi_basetypes_convert_to_unsigned, ExiSigned, ExiUnsigned,
 };
-use crate::common::exi_bitstream::{
-    exi_bitstream_write_bits, exi_bitstream_write_octet, ExiBitstream,
-};
+use crate::common::exi_bitstream::ExiBitstream;
 use crate::common::exi_error_codes::ExiError;
 
 fn exi_basetypes_encoder_write_unsigned(
@@ -15,14 +13,14 @@ fn exi_basetypes_encoder_write_unsigned(
     exi_unsigned: &ExiUnsigned,
 ) -> Result<(), ExiError> {
     for &octet in exi_unsigned.octets[..exi_unsigned.octets_count].iter() {
-        exi_bitstream_write_octet(stream, octet)?;
+        stream.write_octet(octet)?;
     }
     Ok(())
 }
 
 pub fn exi_basetypes_encoder_bool(stream: &mut ExiBitstream, value: i32) -> Result<(), ExiError> {
     let bit: u32 = if value != 0 { 1 } else { 0 };
-    exi_bitstream_write_bits(stream, 1, bit)?;
+    stream.write_bits(1, bit)?;
     Ok(())
 }
 
@@ -31,7 +29,7 @@ pub fn exi_basetypes_encoder_bytes(
     bytes: &[u8],
 ) -> Result<(), ExiError> {
     for &byte in bytes.iter() {
-        exi_bitstream_write_octet(stream, byte)?;
+        stream.write_octet(byte)?;
     }
     Ok(())
 }
@@ -41,7 +39,7 @@ pub fn exi_basetypes_encoder_nbit_uint(
     bit_count: usize,
     value: u32,
 ) -> Result<(), ExiError> {
-    exi_bitstream_write_bits(stream, bit_count, value)?;
+    stream.write_bits(bit_count, value)?;
     Ok(())
 }
 
@@ -178,7 +176,7 @@ pub fn exi_basetypes_encoder_characters(
         if byte > ASCII_MAX_VALUE {
             return Err(ExiError::UnsupportedCharacterValue);
         }
-        exi_bitstream_write_octet(stream, byte)?;
+        stream.write_octet(byte)?;
     }
     Ok(())
 }

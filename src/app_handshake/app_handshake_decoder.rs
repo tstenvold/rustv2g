@@ -10,7 +10,6 @@ use crate::common::exi_basetypes_decoder::{
 };
 use crate::common::exi_bitstream::ExiBitstream;
 use crate::common::exi_error_codes::ExiError;
-use crate::common::exi_header::exi_header_read_and_check;
 use crate::common::exi_types_decoder::decode_exi_type_uint32;
 
 pub fn decode_app_hand_app_protocol_type(
@@ -356,7 +355,7 @@ pub fn decode_app_hand_exi_document(
     exi_doc: &mut AppHandExiDocument,
 ) -> Result<(), ExiError> {
     let mut event_code: u32 = 0;
-    exi_header_read_and_check(stream)?;
+    stream.read_and_check_header()?;
     exi_basetypes_decoder_nbit_uint(stream, 2, &mut event_code)?;
     match event_code {
         0 => {

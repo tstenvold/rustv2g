@@ -10,7 +10,6 @@ use crate::common::exi_basetypes_encoder::{
 };
 use crate::common::exi_bitstream::ExiBitstream;
 use crate::common::exi_error_codes::ExiError;
-use crate::common::exi_header::exi_header_write;
 
 pub fn encode_app_hand_app_protocol_type(
     stream: &mut ExiBitstream,
@@ -191,7 +190,7 @@ pub fn encode_app_handshake_exi_document(
     stream: &mut ExiBitstream,
     exi_doc: AppHandExiDocument,
 ) -> Result<(), ExiError> {
-    exi_header_write(stream)?;
+    stream.write_header()?;
     if let Some(req) = exi_doc.supported_app_protocol_req {
         exi_basetypes_encoder_nbit_uint(stream, 2, 0)?;
         encode_app_hand_supported_app_protocol_req(stream, &req)?;
