@@ -1,14 +1,14 @@
 use heapless::Vec;
 
 use crate::common::exi_basetypes_decoder::*;
-use crate::common::exi_types_decoder::*;
 use crate::common::exi_bitstream::*;
 use crate::common::exi_error_codes::ExiError;
+use crate::common::exi_types_decoder::*;
 use crate::iso_2::iso2_datatypes::*;
 
 pub fn decode_iso2_cost(
     stream: &mut ExiBitstream,
-	message: &mut Iso2CostType,
+    message: &mut Iso2CostType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 0 as i32;
     let mut event_code: u32 = 0;
@@ -149,7 +149,7 @@ pub fn decode_iso2_cost(
 
 pub fn decode_iso2_transform(
     stream: &mut ExiBitstream,
-	message: &mut Iso2TransformType,
+    message: &mut Iso2TransformType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 5 as i32;
     let mut event_code: u32 = 0;
@@ -168,14 +168,12 @@ pub fn decode_iso2_transform(
                             if error == 0 as i32 {
                                 if (*message).algorithm.len() >= 2 {
                                     (*message).algorithm.len =
-                                        ((*message).algorithm.len() as i32 - 2 as i32)
-                                            as usize;
+                                        ((*message).algorithm.len() as i32 - 2 as i32) as usize;
 
                                     exi_basetypes_decoder_characters(
                                         stream,
                                         (*message).algorithm.len() as usize,
                                         &mut ((*message).algorithm.data),
-                                        (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
                                     return Err(ExiError::StringValuesNotSupported);
@@ -212,7 +210,6 @@ pub fn decode_iso2_transform(
                                                 stream,
                                                 (*message).xpath.unwrap().len(),
                                                 &mut (*message).xpath.unwrap(),
-                                                (64 as i32 + 1 as i32) as usize,
                                             )?;
                                         } else {
                                             return Err(ExiError::StringValuesNotSupported);
@@ -280,7 +277,7 @@ pub fn decode_iso2_transform(
 }
 pub fn decode_iso2_interval(
     stream: &mut ExiBitstream,
-	message: &mut Iso2IntervalType,
+    message: &mut Iso2IntervalType,
 ) -> Result<(), ExiError> {
     let mut event_code: u32 = 0;
     exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
@@ -292,7 +289,7 @@ pub fn decode_iso2_interval(
 }
 pub fn decode_iso2_transforms(
     stream: &mut ExiBitstream,
-	message: &mut Iso2TransformsType,
+    message: &mut Iso2TransformsType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 7 as i32;
     let mut event_code: u32 = 0;
@@ -350,7 +347,7 @@ pub fn decode_iso2_transforms(
 }
 pub fn decode_iso2_dsa_key_value(
     stream: &mut ExiBitstream,
-	message: &mut Iso2DSAKeyValueType,
+    message: &mut Iso2DSAKeyValueType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 9 as i32;
     let mut event_code: u32 = 0;
@@ -597,9 +594,9 @@ pub fn decode_iso2_x509_issuer_serial(
                                             (*x509_issuer_serial).x509_issuer_name.len -= 2;
                                             exi_basetypes_decoder_characters(
                                                 stream,
-                                                (*x509_issuer_serial).x509_issuer_name.len() as usize,
+                                                (*x509_issuer_serial).x509_issuer_name.len()
+                                                    as usize,
                                                 &mut (*x509_issuer_serial).x509_issuer_name,
-                                                (64 as i32 + 1 as i32) as usize,
                                             )?;
                                         } else {
                                             return Err(ExiError::StringValuesNotSupported);
@@ -682,7 +679,7 @@ pub fn decode_iso2_x509_issuer_serial(
 }
 pub fn decode_iso2_relative_time_interval(
     stream: &mut ExiBitstream,
-	message: &mut Iso2RelativeTimeIntervalType,
+    message: &mut Iso2RelativeTimeIntervalType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 18 as i32;
     let mut event_code: u32 = 0;
@@ -748,7 +745,7 @@ pub fn decode_iso2_relative_time_interval(
 }
 pub fn decode_iso2_digest_method(
     stream: &mut ExiBitstream,
-	message: &mut Iso2DigestMethodType,
+    message: &mut Iso2DigestMethodType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 20 as i32;
 
@@ -767,7 +764,6 @@ pub fn decode_iso2_digest_method(
                             )?;
                             if error == 0 as i32 {
                                 if (*message).algorithm.len() >= 2 {
-                                    (*message).algorithm.len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
                                         (*message).algorithm.len() as usize,
@@ -833,7 +829,7 @@ pub fn decode_iso2_digest_method(
 }
 pub fn decode_iso2_rsakey_value(
     stream: &mut ExiBitstream,
-	message: &mut Iso2RSAKeyValueType,
+    message: &mut Iso2RSAKeyValueType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 22 as i32;
 
@@ -900,7 +896,7 @@ pub fn decode_iso2_rsakey_value(
 }
 pub fn decode_iso2_canonicalization_method(
     stream: &mut ExiBitstream,
-	message: &mut Iso2CanonicalizationMethodType,
+    message: &mut Iso2CanonicalizationMethodType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 24 as i32;
 
@@ -919,12 +915,10 @@ pub fn decode_iso2_canonicalization_method(
                             )?;
                             if error == 0 as i32 {
                                 if (*message).algorithm.len() >= 2 {
-                                    (*message).algorithm.len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
                                         (*message).algorithm.len() as usize,
                                         &mut (*message).algorithm,
-                                        (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
                                     return Err(ExiError::StringValuesNotSupported);
@@ -985,7 +979,7 @@ pub fn decode_iso2_canonicalization_method(
 }
 pub fn decode_iso2_signature_method(
     stream: &mut ExiBitstream,
-	message: &mut Iso2SignatureMethodType,
+    message: &mut Iso2SignatureMethodType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 26 as i32;
 
@@ -1004,12 +998,10 @@ pub fn decode_iso2_signature_method(
                             )?;
                             if error == 0 as i32 {
                                 if (*message).algorithm.len() >= 2 {
-                                    (*message).algorithm.len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
                                         (*message).algorithm.len() as usize,
                                         &mut (*message).algorithm,
-                                        (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
                                     return Err(ExiError::StringValuesNotSupported);
@@ -1117,7 +1109,7 @@ pub fn decode_iso2_signature_method(
 }
 pub fn decode_iso2_key_value(
     stream: &mut ExiBitstream,
-	message: &mut Iso2KeyValueType,
+    message: &mut Iso2KeyValueType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 29 as i32;
 
@@ -1184,7 +1176,7 @@ pub fn decode_iso2_key_value(
 }
 pub fn decode_iso2_physical_value(
     stream: &mut ExiBitstream,
-	message: &mut Iso2PhysicalValueType,
+    message: &mut Iso2PhysicalValueType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 30 as i32;
     let mut event_code: u32 = 0;
@@ -1321,7 +1313,7 @@ pub fn decode_iso2_physical_value(
 }
 pub fn decode_iso2_consumption_cost(
     stream: &mut ExiBitstream,
-	message: &mut Iso2ConsumptionCostType,
+    message: &mut Iso2ConsumptionCostType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 33 as i32;
     let mut event_code: u32 = 0;
@@ -1333,10 +1325,7 @@ pub fn decode_iso2_consumption_cost(
                 if error == 0 as i32 {
                     match event_code {
                         0 => {
-                            decode_iso2_physical_value(
-                                stream,
-                                &mut (*message).start_value,
-                            )?;
+                            decode_iso2_physical_value(stream, &mut (*message).start_value)?;
                             if error == 0 as i32 {
                                 grammar_id = 34 as i32;
                             }
@@ -1354,11 +1343,7 @@ pub fn decode_iso2_consumption_cost(
                         0 => {
                             if ((*message).cost.len() as i32) < 3 as i32 {
                                 let fresh0 = (*message).cost.len();
-                                (*message).cost.len() =
-                                    ((*message).cost.len()).wrapping_add(1);
-                                if let Some(cost) =
-                                    (*message).cost.get_mut(fresh0 as usize)
-                                {
+                                if let Some(cost) = (*message).cost.get_mut(fresh0 as usize) {
                                     decode_iso2_cost(stream, cost)?;
                                 } else {
                                     return Err(ExiError::ArrayOutOfBounds);
@@ -1381,9 +1366,8 @@ pub fn decode_iso2_consumption_cost(
                         0 => {
                             if ((*message).cost.len() as i32) < 3 as i32 {
                                 let fresh1 = (*message).cost.len();
-                                (*message).cost.len() = ((*message).cost.len()).wrapping_add(1);
                                 if let Some(cost) = (*message).cost.get_mut(fresh1 as usize) {
-                                    decode_iso2_Cost(stream, cost)?;
+                                    decode_iso2_cost(stream, cost)?;
                                 } else {
                                     return Err(ExiError::ArrayOutOfBounds);
                                 }
@@ -1426,7 +1410,7 @@ pub fn decode_iso2_consumption_cost(
 }
 pub fn decode_iso2_pmax_schedule_entry(
     stream: &mut ExiBitstream,
-	message: &mut Iso2PMaxScheduleEntryType,
+    message: &mut Iso2PMaxScheduleEntryType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 36 as i32;
     let mut event_code: u32 = 0;
@@ -1440,8 +1424,8 @@ pub fn decode_iso2_pmax_schedule_entry(
                         0 => {
                             decode_iso2_relative_time_interval(
                                 stream,
-                                &mut (*pmax_schedule_entry_type)
-                                    .RelativeTimeInterval
+                                &mut (*message)
+                                    .relative_time_interval
                                     .unwrap()
                                     .clone(),
                             )?;
@@ -1452,7 +1436,7 @@ pub fn decode_iso2_pmax_schedule_entry(
                         1 => {
                             decode_iso2_interval(
                                 stream,
-                                &mut (*message).TimeInterval.unwrap().clone(),
+                                &mut (*message).time_interval.unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 37 as i32;
@@ -1469,10 +1453,7 @@ pub fn decode_iso2_pmax_schedule_entry(
                 if error == 0 as i32 {
                     match event_code {
                         0 => {
-                            decode_iso2_physical_value(
-                                stream,
-                                &mut (*message).PMax,
-                            )?;
+                            decode_iso2_physical_value(stream, &mut (*message).PMax)?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
                             }
@@ -1504,7 +1485,7 @@ pub fn decode_iso2_pmax_schedule_entry(
 }
 pub fn decode_iso2_sales_tariff_entry(
     stream: &mut ExiBitstream,
-	message: &mut Iso2SalesTariffEntryType,
+    message: &mut Iso2SalesTariffEntryType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 38 as i32;
 
@@ -1519,7 +1500,7 @@ pub fn decode_iso2_sales_tariff_entry(
                         0 => {
                             decode_iso2_relative_time_interval(
                                 stream,
-                                &mut (*message).RelativeTimeInterval.unwrap().clone(),
+                                &mut (*message).relative_time_interval.unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 39 as i32;
@@ -1528,7 +1509,7 @@ pub fn decode_iso2_sales_tariff_entry(
                         1 => {
                             decode_iso2_interval(
                                 stream,
-                                &mut (*message).TimeInterval.unwrap().clone(),
+                                &mut (*message).time_interval.unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 39 as i32;
@@ -1559,7 +1540,7 @@ pub fn decode_iso2_sales_tariff_entry(
                                         &mut value,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*message).EPriceLevel = Some(value as u8);
+                                        (*message).e_price_level = Some(value as u8);
                                     }
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
@@ -1581,14 +1562,12 @@ pub fn decode_iso2_sales_tariff_entry(
                             }
                         }
                         1 => {
-                            if ((*message).ConsumptionCost.len() as i32) < 3 as i32 {
-                                let fresh2 = (*message).ConsumptionCost.len();
-                                (*message).ConsumptionCost.len() =
-                                    ((*message).ConsumptionCost.len()).wrapping_add(1);
-                                if let Some(consumption_cost) = (*SalesTariffEntryType)
-                                    .ConsumptionCost
-                                    .array
-                                    .get_mut(fresh2 as usize)
+                            if ((*message).consumption_cost.len() as i32) < 3 as i32 {
+                                let fresh2 = (*message).consumption_cost.len();
+                                (*message).consumption_cost.len() =
+                                    ((*message).consumption_cost.len()).wrapping_add(1);
+                                if let Some(consumption_cost) =
+                                    (*message).consumption_cost.get_mut(fresh2 as usize)
                                 {
                                     decode_iso2_consumption_cost(stream, consumption_cost)?;
                                 } else {
@@ -1613,14 +1592,12 @@ pub fn decode_iso2_sales_tariff_entry(
                 if error == 0 as i32 {
                     match event_code {
                         0 => {
-                            if ((*message).ConsumptionCost.len() as i32) < 3 as i32 {
-                                let fresh3 = (*message).ConsumptionCost.len();
-                                (*message).ConsumptionCost.len() =
-                                    ((*message).ConsumptionCost.len()).wrapping_add(1);
-                                if let Some(consumption_cost) = (*SalesTariffEntryType)
-                                    .ConsumptionCost
-                                    .array
-                                    .get_mut(fresh3 as usize)
+                            if ((*message).consumption_cost.len() as i32) < 3 as i32 {
+                                let fresh3 = (*message).consumption_cost.len();
+                                (*message).consumption_cost.len() =
+                                    ((*message).consumption_cost.len()).wrapping_add(1);
+                                if let Some(consumption_cost) =
+                                    (*message).consumption_cost.get_mut(fresh3 as usize)
                                 {
                                     decode_iso2_consumption_cost(stream, consumption_cost)?;
                                 } else {
@@ -1629,7 +1606,7 @@ pub fn decode_iso2_sales_tariff_entry(
                             } else {
                                 return Err(ExiError::ArrayOutOfBounds);
                             }
-                            if ((*message).ConsumptionCost.len() as i32) < 3 as i32 {
+                            if ((*message).consumption_cost.len() as i32) < 3 as i32 {
                                 grammar_id = 40 as i32;
                             } else {
                                 grammar_id = 41 as i32;
@@ -1649,14 +1626,12 @@ pub fn decode_iso2_sales_tariff_entry(
                 if error == 0 as i32 {
                     match event_code {
                         0 => {
-                            if ((*message).ConsumptionCost.len() as i32) < 3 as i32 {
-                                let fresh4 = (*message).ConsumptionCost.len();
-                                (*message).ConsumptionCost.len() =
-                                    ((*message).ConsumptionCost.len()).wrapping_add(1);
-                                if let Some(consumption_cost) = (*SalesTariffEntryType)
-                                    .ConsumptionCost
-                                    .array
-                                    .get_mut(fresh4 as usize)
+                            if ((*message).consumption_cost.len() as i32) < 3 as i32 {
+                                let fresh4 = (*message).consumption_cost.len();
+                                (*message).consumption_cost.len() =
+                                    ((*message).consumption_cost.len()).wrapping_add(1);
+                                if let Some(consumption_cost) =
+                                    (*message).consumption_cost.get_mut(fresh4 as usize)
                                 {
                                     decode_iso2_consumption_cost(stream, consumption_cost)?;
                                 } else {
@@ -1681,14 +1656,12 @@ pub fn decode_iso2_sales_tariff_entry(
                 if error == 0 as i32 {
                     match event_code {
                         0 => {
-                            if ((*message).ConsumptionCost.len() as i32) < 3 as i32 {
-                                let fresh5 = (*message).ConsumptionCost.len();
-                                (*message).ConsumptionCost.len() =
-                                    ((*message).ConsumptionCost.len()).wrapping_add(1);
-                                if let Some(consumption_cost) = (*SalesTariffEntryType)
-                                    .ConsumptionCost
-                                    .array
-                                    .get_mut(fresh5 as usize)
+                            if ((*message).consumption_cost.len() as i32) < 3 as i32 {
+                                let fresh5 = (*message).consumption_cost.len();
+                                (*message).consumption_cost.len() =
+                                    ((*message).consumption_cost.len()).wrapping_add(1);
+                                if let Some(consumption_cost) =
+                                    (*message).consumption_cost.get_mut(fresh5 as usize)
                                 {
                                     decode_iso2_consumption_cost(stream, consumption_cost)?;
                                 } else {
@@ -1697,7 +1670,7 @@ pub fn decode_iso2_sales_tariff_entry(
                             } else {
                                 return Err(ExiError::ArrayOutOfBounds);
                             }
-                            if ((*message).ConsumptionCost.len() as i32) < 3 as i32 {
+                            if ((*message).consumption_cost.len() as i32) < 3 as i32 {
                                 grammar_id = 42 as i32;
                             } else {
                                 grammar_id = 3 as i32;
@@ -1733,7 +1706,7 @@ pub fn decode_iso2_sales_tariff_entry(
 }
 pub fn decode_iso2_parameter(
     stream: &mut ExiBitstream,
-	message: &mut Iso2ParameterType,
+    message: &mut Iso2ParameterType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 43 as i32;
 
@@ -1748,15 +1721,14 @@ pub fn decode_iso2_parameter(
                         0 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut ((*message).Name.len() as u16),
+                                &mut ((*message).name.len() as u16),
                             )?;
                             if error == 0 as i32 {
-                                if (*message).Name.len() >= 2 {
-                                    (*message).Name.len -= 2;
+                                if (*message).name.len() >= 2 {
                                     exi_basetypes_decoder_characters(
                                         stream,
-                                        (*message).Name.len() as usize,
-                                        &mut (*message).Name,
+                                        (*message).name.len() as usize,
+                                        &mut (*message).name,
                                         (64 as i32 + 1 as i32) as usize,
                                     )?;
                                 } else {
@@ -1790,7 +1762,7 @@ pub fn decode_iso2_parameter(
                                         &mut value,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*message).boolValue = Some(value as i32);
+                                        (*message).bool_value = Some(value as i32);
                                     }
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
@@ -1826,7 +1798,7 @@ pub fn decode_iso2_parameter(
                                         &mut value_0,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*message).byteValue =
+                                        (*message).byte_value =
                                             Some(value_0.wrapping_sub(128) as i8);
                                     }
                                 } else {
@@ -1851,7 +1823,7 @@ pub fn decode_iso2_parameter(
                         2 => {
                             decode_exi_type_integer16(
                                 stream,
-                                &mut (*message).shortValue.unwrap().clone(),
+                                &mut (*message).short_value.unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -1860,7 +1832,7 @@ pub fn decode_iso2_parameter(
                         3 => {
                             decode_exi_type_integer32(
                                 stream,
-                                &mut (*message).intValue.unwrap().clone(),
+                                &mut (*message).int_value.unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -1869,7 +1841,7 @@ pub fn decode_iso2_parameter(
                         4 => {
                             decode_iso2_physical_value(
                                 stream,
-                                &mut (*message).physicalValue.unwrap().clone(),
+                                &mut (*message).physical_value.unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -1885,15 +1857,15 @@ pub fn decode_iso2_parameter(
                                 if event_code == 0 as i32 as u32 {
                                     exi_basetypes_decoder_uint_16(
                                         stream,
-                                        &mut ((*message).stringValue.unwrap().len() as u16),
+                                        &mut ((*message).string_value.unwrap().len() as u16),
                                     )?;
                                     if error == 0 as i32 {
-                                        if (*message).stringValue.unwrap().len() >= 2 {
-                                            (*message).stringValue.unwrap().len -= 2;
+                                        if (*message).string_value.unwrap().len() >= 2 {
+                                            (*message).string_value.unwrap().len -= 2;
                                             exi_basetypes_decoder_characters(
                                                 stream,
-                                                (*message).stringValue.unwrap().len() as usize,
-                                                &mut (*message).stringValue.unwrap(),
+                                                (*message).string_value.unwrap().len() as usize,
+                                                &mut (*message).string_value.unwrap(),
                                                 (64 as i32 + 1 as i32) as usize,
                                             )?;
                                         } else {
@@ -1946,7 +1918,7 @@ pub fn decode_iso2_parameter(
 }
 pub fn decode_iso2_pmax_schedule(
     stream: &mut ExiBitstream,
-	message: &mut Iso2PMaxScheduleType,
+    message: &mut Iso2PMaxScheduleType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 45 as i32;
 
@@ -1965,7 +1937,6 @@ pub fn decode_iso2_pmax_schedule(
                                     ((*message).PMaxScheduleEntry.len()).wrapping_add(1);
                                 if let Some(entry) = (*PMaxScheduleType)
                                     .PMaxScheduleEntry
-                                    .array
                                     .get_mut(fresh6 as usize)
                                 {
                                     decode_iso2_pmax_schedule_entry(stream, entry)?;
@@ -1994,7 +1965,6 @@ pub fn decode_iso2_pmax_schedule(
                                     ((*message).PMaxScheduleEntry.len()).wrapping_add(1);
                                 if let Some(entry) = (*PMaxScheduleType)
                                     .PMaxScheduleEntry
-                                    .array
                                     .get_mut(fresh7 as usize)
                                 {
                                     decode_iso2_pmax_schedule_entry(stream, entry)?;
@@ -2040,7 +2010,7 @@ pub fn decode_iso2_pmax_schedule(
 }
 pub fn decode_iso2_reference(
     stream: &mut ExiBitstream,
-	message: &mut Iso2ReferenceType,
+    message: &mut Iso2ReferenceType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 47 as i32;
 
@@ -2325,7 +2295,7 @@ pub fn decode_iso2_reference(
 }
 pub fn decode_iso2_retrieval_method(
     stream: &mut ExiBitstream,
-	message: &mut Iso2RetrievalMethodType,
+    message: &mut Iso2RetrievalMethodType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 53 as i32;
 
@@ -2480,7 +2450,7 @@ pub fn decode_iso2_retrieval_method(
 }
 pub fn decode_iso2_sales_tariff(
     stream: &mut ExiBitstream,
-	message: &mut Iso2SalesTariffType,
+    message: &mut Iso2SalesTariffType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 56 as i32;
 
@@ -2620,8 +2590,7 @@ pub fn decode_iso2_sales_tariff(
                                             as u16),
                                     )?;
                                     if error == 0 as i32 {
-                                        if (*message).sales_tariff_description.unwrap().len
-                                            as i32
+                                        if (*message).sales_tariff_description.unwrap().len as i32
                                             >= 2 as i32
                                         {
                                             (*sales_tariff)
@@ -2636,8 +2605,7 @@ pub fn decode_iso2_sales_tariff(
                                                     .len(),
                                                 &mut (*sales_tariff)
                                                     .sales_tariff_description
-                                                    .unwrap()
-                                                    ,
+                                                    .unwrap(),
                                                 (32 as i32 + 1 as i32) as usize,
                                             )?;
                                         } else {
@@ -2704,10 +2672,8 @@ pub fn decode_iso2_sales_tariff(
                                 let fresh8 = (*message).sales_tariff_entry.len();
                                 (*message).sales_tariff_entry.len() =
                                     ((*message).sales_tariff_entry.len()).wrapping_add(1);
-                                if let Some(entry) = (*sales_tariff)
-                                    .sales_tariff_entry
-                                    .array
-                                    .get_mut(fresh8 as usize)
+                                if let Some(entry) =
+                                    (*sales_tariff).sales_tariff_entry.get_mut(fresh8 as usize)
                                 {
                                     decode_iso2_sales_tariff_entry(stream, entry)?;
                                 } else {
@@ -2733,10 +2699,8 @@ pub fn decode_iso2_sales_tariff(
                                 let fresh9 = (*message).sales_tariff_entry.len();
                                 (*message).sales_tariff_entry.len() =
                                     ((*message).sales_tariff_entry.len()).wrapping_add(1);
-                                if let Some(entry) = (*sales_tariff)
-                                    .sales_tariff_entry
-                                    .array
-                                    .get_mut(fresh9 as usize)
+                                if let Some(entry) =
+                                    (*sales_tariff).sales_tariff_entry.get_mut(fresh9 as usize)
                                 {
                                     decode_iso2_sales_tariff_entry(stream, entry)?;
                                 } else {
@@ -2805,10 +2769,8 @@ pub fn decode_iso2_sales_tariff(
                                 let fresh10 = (*message).sales_tariff_entry.len();
                                 (*message).sales_tariff_entry.len() =
                                     ((*message).sales_tariff_entry.len()).wrapping_add(1);
-                                if let Some(entry) = (*sales_tariff)
-                                    .sales_tariff_entry
-                                    .array
-                                    .get_mut(fresh10 as usize)
+                                if let Some(entry) =
+                                    (*sales_tariff).sales_tariff_entry.get_mut(fresh10 as usize)
                                 {
                                     decode_iso2_sales_tariff_entry(stream, entry)?;
                                 } else {
@@ -2834,10 +2796,8 @@ pub fn decode_iso2_sales_tariff(
                                 let fresh11 = (*message).sales_tariff_entry.len();
                                 (*message).sales_tariff_entry.len() =
                                     ((*message).sales_tariff_entry.len()).wrapping_add(1);
-                                if let Some(entry) = (*sales_tariff)
-                                    .sales_tariff_entry
-                                    .array
-                                    .get_mut(fresh11 as usize)
+                                if let Some(entry) =
+                                    (*sales_tariff).sales_tariff_entry.get_mut(fresh11 as usize)
                                 {
                                     decode_iso2_sales_tariff_entry(stream, entry)?;
                                 } else {
@@ -2870,10 +2830,8 @@ pub fn decode_iso2_sales_tariff(
                                 let fresh12 = (*message).sales_tariff_entry.len();
                                 (*message).sales_tariff_entry.len() =
                                     ((*message).sales_tariff_entry.len()).wrapping_add(1);
-                                if let Some(entry) = (*sales_tariff)
-                                    .sales_tariff_entry
-                                    .array
-                                    .get_mut(fresh12 as usize)
+                                if let Some(entry) =
+                                    (*sales_tariff).sales_tariff_entry.get_mut(fresh12 as usize)
                                 {
                                     decode_iso2_sales_tariff_entry(stream, entry)?;
                                 } else {
@@ -2899,10 +2857,8 @@ pub fn decode_iso2_sales_tariff(
                                 let fresh13 = (*message).sales_tariff_entry.len();
                                 (*message).sales_tariff_entry.len() =
                                     ((*message).sales_tariff_entry.len()).wrapping_add(1);
-                                if let Some(entry) = (*sales_tariff)
-                                    .sales_tariff_entry
-                                    .array
-                                    .get_mut(fresh13 as usize)
+                                if let Some(entry) =
+                                    (*sales_tariff).sales_tariff_entry.get_mut(fresh13 as usize)
                                 {
                                     decode_iso2_sales_tariff_entry(stream, entry)?;
                                 } else {
@@ -2982,13 +2938,15 @@ pub fn decode_iso2_x509_data(
                             exi_basetypes_decoder_nbit_uint(
                                 stream,
                                 1 as i32 as usize,
-                                &mut event_code,x509_x509_issuer_serial
+                                &mut event_code,
+                                x509_x509_issuer_serial,
                             )?;
                             if error == 0 as i32 {
                                 if event_code == 0 as i32 as u32 {
                                     exi_basetypes_decoder_uint_16(
                                         stream,
-                                        &mut ((*X509DataType).X509SubjectName.unwrap().len() as u16),
+                                        &mut ((*X509DataType).X509SubjectName.unwrap().len()
+                                            as u16),
                                     )?;
                                     if error == 0 as i32 {
                                         if (*X509DataType).X509SubjectName.unwrap().len() as i32
@@ -3081,7 +3039,7 @@ pub fn decode_iso2_x509_data(
 }
 pub fn decode_iso2_pgp_data(
     stream: &mut ExiBitstream,
-	message: &mut Iso2PGPDataType,
+    message: &mut Iso2PGPDataType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 65 as i32;
     let mut event_code: u32 = 0;
@@ -3276,7 +3234,7 @@ pub fn decode_iso2_pgp_data(
 }
 pub fn decode_iso2_spki_data(
     stream: &mut ExiBitstream,
-	message: &mut Iso2SPKIDataType,
+    message: &mut Iso2SPKIDataType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 70 as i32;
 
@@ -3293,7 +3251,6 @@ pub fn decode_iso2_spki_data(
                                 stream,
                                 &mut (*message).SPKISexp.len(),
                                 &mut (*message).SPKISexp,
-
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 71 as i32;
@@ -3352,7 +3309,7 @@ pub fn decode_iso2_spki_data(
 }
 pub fn decode_iso2_signed_info(
     stream: &mut ExiBitstream,
-	message: &mut Iso2SignedInfoType,
+    message: &mut Iso2SignedInfoType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 72 as i32;
 
@@ -3510,7 +3467,7 @@ pub fn decode_iso2_signed_info(
 }
 pub fn decode_iso2_profile_entry(
     stream: &mut ExiBitstream,
-	message: &mut Iso2ProfileEntryType,
+    message: &mut Iso2ProfileEntryType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 77 as i32;
 
@@ -3628,7 +3585,7 @@ pub fn decode_iso2_profile_entry(
 }
 pub fn decode_iso2_dc_ev_status(
     stream: &mut ExiBitstream,
-	message: &mut Iso2DCEVStatusType,
+    message: &mut Iso2DCEVStatusType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 80 as i32;
 
@@ -3701,8 +3658,7 @@ pub fn decode_iso2_dc_ev_status(
                                         &mut value_0,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*message).EVErrorCode =
-                                            value_0 as Iso2DcEvErrorCodeType;
+                                        (*message).EVErrorCode = value_0 as Iso2DcEvErrorCodeType;
                                     }
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
@@ -3796,7 +3752,7 @@ pub fn decode_iso2_dc_ev_status(
 }
 pub fn decode_iso2_parameter_set(
     stream: &mut ExiBitstream,
-	message: &mut Iso2ParameterSetType,
+    message: &mut Iso2ParameterSetType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 83 as i32;
 
@@ -3829,10 +3785,8 @@ pub fn decode_iso2_parameter_set(
                                 let fresh16 = (*message).Parameter.len();
                                 (*message).Parameter.len() =
                                     ((*message).Parameter.len()).wrapping_add(1);
-                                if let Some(param) = (*ParameterSetType)
-                                    .Parameter
-                                    .array
-                                    .get_mut(fresh16 as usize)
+                                if let Some(param) =
+                                    (*ParameterSetType).Parameter.get_mut(fresh16 as usize)
                                 {
                                     decode_iso2_parameter(stream, param)?;
                                 } else {
@@ -3858,10 +3812,8 @@ pub fn decode_iso2_parameter_set(
                                 let fresh17 = (*message).Parameter.len();
                                 (*message).Parameter.len() =
                                     ((*message).Parameter.len()).wrapping_add(1);
-                                if let Some(param) = (*ParameterSetType)
-                                    .Parameter
-                                    .array
-                                    .get_mut(fresh17 as usize)
+                                if let Some(param) =
+                                    (*ParameterSetType).Parameter.get_mut(fresh17 as usize)
                                 {
                                     decode_iso2_parameter(stream, param)?;
                                 } else {
@@ -3906,7 +3858,7 @@ pub fn decode_iso2_parameter_set(
 }
 pub fn decode_iso2_sa_schedule_tuple(
     stream: &mut ExiBitstream,
-	message: &mut Iso2SAScheduleTupleType,
+    message: &mut Iso2SAScheduleTupleType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 86 as i32;
 
@@ -4020,7 +3972,7 @@ pub fn decode_iso2_sa_schedule_tuple(
 }
 pub fn decode_iso2_selected_service(
     stream: &mut ExiBitstream,
-	message: &mut Iso2SelectedServiceType,
+    message: &mut Iso2SelectedServiceType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 89 as i32;
 
@@ -4087,7 +4039,7 @@ pub fn decode_iso2_selected_service(
 }
 pub fn decode_iso2_service(
     stream: &mut ExiBitstream,
-	message: &mut Iso2ServiceType,
+    message: &mut Iso2ServiceType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 91 as i32;
 
@@ -4406,7 +4358,7 @@ pub fn decode_iso2_service(
 }
 pub fn decode_iso2_signature_value(
     stream: &mut ExiBitstream,
-	message: &mut Iso2SignatureValueType,
+    message: &mut Iso2SignatureValueType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 96 as i32;
 
@@ -4507,7 +4459,7 @@ pub fn decode_iso2_signature_value(
 }
 pub fn decode_iso2_sub_certificates(
     stream: &mut ExiBitstream,
-	message: &mut Iso2SubCertificatesType,
+    message: &mut Iso2SubCertificatesType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 98 as i32;
 
@@ -4523,11 +4475,7 @@ pub fn decode_iso2_sub_certificates(
                             if (sub_certificates_type.Certificate.len() as i32) < 4 as i32 {
                                 let idx = sub_certificates.Certificate.len() as usize;
                                 if let Some(cert) = sub_certificates.Certificate.get_mut(idx) {
-                                    decode_exi_type_hex_binary(
-                                        stream,
-                                        &mut cert.len(),
-                                        &mut cert,
-                                    )?;
+                                    decode_exi_type_hex_binary(stream, &mut cert.len(), &mut cert)?;
                                     if error == 0 as i32 {
                                         (*message).Certificate.len() =
                                             ((*message).Certificate.len()).wrapping_add(1);
@@ -4554,11 +4502,7 @@ pub fn decode_iso2_sub_certificates(
                             if (sub_certificates.Certificate.len() as i32) < 4 as i32 {
                                 let idx = sub_certificates.Certificate.len() as usize;
                                 if let Some(cert) = sub_certificates.Certificate.get_mut(idx) {
-                                    decode_exi_type_hex_binary(
-                                        stream,
-                                        &mut cert.len(),
-                                        &mut cert,
-                                    )?;
+                                    decode_exi_type_hex_binary(stream, &mut cert.len(), &mut cert)?;
                                     if error == 0 as i32 {
                                         sub_certificates.Certificate.len() =
                                             (sub_certificates.Certificate.len()).wrapping_add(1);
@@ -4601,7 +4545,7 @@ pub fn decode_iso2_sub_certificates(
 }
 pub fn decode_iso2_key_info(
     stream: &mut ExiBitstream,
-	message: &mut Iso2KeyInfoType,
+    message: &mut Iso2KeyInfoType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 100 as i32;
 
@@ -4951,7 +4895,7 @@ pub fn decode_iso2_key_info(
 }
 pub fn decode_iso2_object(
     stream: &mut ExiBitstream,
-	message: &mut Iso2ObjectType,
+    message: &mut Iso2ObjectType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 102 as i32;
     let mut event_code: u32 = 0;
@@ -5203,7 +5147,7 @@ pub fn decode_iso2_object(
 }
 pub fn decode_iso2_supported_energy_transfer_mode(
     stream: &mut ExiBitstream,
-	message: &mut Iso2SupportedEnergyTransferModeType,
+    message: &mut Iso2SupportedEnergyTransferModeType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 106 as i32;
 
@@ -5233,9 +5177,7 @@ pub fn decode_iso2_supported_energy_transfer_mode(
                                             &mut value,
                                         )?;
                                         if error == 0 as i32 {
-                                            (*SupportedEnergyTransferModeType)
-                                                .EnergyTransferMode
-                                                .array
+                                            (*SupportedEnergyTransferModeType).EnergyTransferMode
                                                 [(*SupportedEnergyTransferModeType)
                                                     .EnergyTransferMode
                                                     .len()
@@ -5300,9 +5242,7 @@ pub fn decode_iso2_supported_energy_transfer_mode(
                                             &mut value_0,
                                         )?;
                                         if error == 0 as i32 {
-                                            (*SupportedEnergyTransferModeType)
-                                                .EnergyTransferMode
-                                                .array
+                                            (*SupportedEnergyTransferModeType).EnergyTransferMode
                                                 [(*SupportedEnergyTransferModeType)
                                                     .EnergyTransferMode
                                                     .len()
@@ -5370,7 +5310,7 @@ pub fn decode_iso2_supported_energy_transfer_mode(
 }
 pub fn decode_iso2_certificate_chain(
     stream: &mut ExiBitstream,
-	message: &mut Iso2CertificateChainType,
+    message: &mut Iso2CertificateChainType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 108 as i32;
 
@@ -5482,7 +5422,7 @@ pub fn decode_iso2_certificate_chain(
 }
 pub fn decode_iso2_body_base(
     stream: &mut ExiBitstream,
-	message: &mut Iso2BodyBaseType,
+    message: &mut Iso2BodyBaseType,
 ) -> Result<(), ExiError> {
     let mut event_code: u32 = 0;
     exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
@@ -5493,7 +5433,7 @@ pub fn decode_iso2_body_base(
 }
 pub fn decode_iso2_notification(
     stream: &mut ExiBitstream,
-	message: &mut Iso2NotificationType,
+    message: &mut Iso2NotificationType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 111 as i32;
 
@@ -5625,7 +5565,7 @@ pub fn decode_iso2_notification(
 }
 pub fn decode_iso2_dc_evse_status(
     stream: &mut ExiBitstream,
-	message: &mut Iso2DCEVSEStatusType,
+    message: &mut Iso2DCEvseStatusType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 113 as i32;
 
@@ -5851,7 +5791,7 @@ pub fn decode_iso2_dc_evse_status(
 }
 pub fn decode_iso2_selected_service_list(
     stream: &mut ExiBitstream,
-	message: &mut Iso2SelectedServiceListType,
+    message: &mut Iso2SelectedServiceListType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 117 as i32;
 
@@ -5870,7 +5810,6 @@ pub fn decode_iso2_selected_service_list(
                                     ((*message).SelectedService.len()).wrapping_add(1);
                                 if let Some(selected_service) = (*SelectedServiceListType)
                                     .SelectedService
-                                    .array
                                     .get_mut(fresh18 as usize)
                                 {
                                     decode_iso2_SelectedService(stream, selected_service)?;
@@ -5899,7 +5838,6 @@ pub fn decode_iso2_selected_service_list(
                                     ((*message).SelectedService.len()).wrapping_add(1);
                                 if let Some(selected_service) = (*SelectedServiceListType)
                                     .SelectedService
-                                    .array
                                     .get_mut(fresh19 as usize)
                                 {
                                     decode_iso2_SelectedService(stream, selected_service)?;
@@ -5945,7 +5883,7 @@ pub fn decode_iso2_selected_service_list(
 }
 pub fn decode_iso2_payment_option_list(
     stream: &mut ExiBitstream,
-	message: &mut Iso2PaymentOptionListType,
+    message: &mut Iso2PaymentOptionListType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 119 as i32;
 
@@ -5973,7 +5911,7 @@ pub fn decode_iso2_payment_option_list(
                                             &mut value,
                                         )?;
                                         if error == 0 as i32 {
-                                            (*message).PaymentOption.array
+                                            (*message).PaymentOption
                                                 [(*message).PaymentOption.len() as usize] =
                                                 value as Iso2PaymentOptionType;
                                             (*message).PaymentOption.len() =
@@ -6013,7 +5951,7 @@ pub fn decode_iso2_payment_option_list(
                 if error == 0 as i32 {
                     match event_code {
                         0 => {
-                            if ((*message).PaymentOption.len() as i32) < 2 as i32 {
+                            if ((*message).payment_option.len() as i32) < 2 as i32 {
                                 exi_basetypes_decoder_nbit_uint(
                                     stream,
                                     1 as i32 as usize,
@@ -6028,12 +5966,12 @@ pub fn decode_iso2_payment_option_list(
                                             &mut value_0,
                                         )?;
                                         if error == 0 as i32 {
-                                            (*message).PaymentOption.array
-                                                [(*message).PaymentOption.len() as usize] =
+                                            (*message).payment_option
+                                                [(*message).payment_option.len() as usize] =
                                                 value_0 as Iso2PaymentOptionType;
-                                            (*message).PaymentOption.len() =
-                                                ((*message).PaymentOption.len()).wrapping_add(1);
-                                            (*message).PaymentOption.len();
+                                            (*message).payment_option.len() =
+                                                ((*message).payment_option.len()).wrapping_add(1);
+                                            (*message).payment_option.len();
                                         }
                                     } else {
                                         return Err(ExiError::UnsupportedSubEvent);
@@ -6087,7 +6025,7 @@ pub fn decode_iso2_payment_option_list(
 }
 pub fn decode_iso2_signature(
     stream: &mut ExiBitstream,
-	message: &mut Iso2SignatureType,
+    message: &mut Iso2SignatureType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 121 as i32;
 
@@ -6120,7 +6058,7 @@ pub fn decode_iso2_signature(
                             grammar_id = 122 as i32;
                         }
                         1 => {
-                            decode_iso2_SignedInfo(stream, &mut (*message).SignedInfo)?;
+                            decode_iso2_signed_info(stream, &mut (*message).signed_info)?;
                             if error == 0 as i32 {
                                 grammar_id = 123 as i32;
                             }
@@ -6152,7 +6090,7 @@ pub fn decode_iso2_signature(
                 if error == 0 as i32 {
                     match event_code {
                         0 => {
-                            decode_iso2_signature_value(stream, &mut (*message).SignatureValue)?;
+                            decode_iso2_signature_value(stream, &mut (*message).signature_value)?;
                             if error == 0 as i32 {
                                 grammar_id = 124 as i32;
                             }
@@ -6168,13 +6106,16 @@ pub fn decode_iso2_signature(
                 if error == 0 as i32 {
                     match event_code {
                         0 => {
-                            decode_iso2_KeyInfo(stream, &mut (*message).KeyInfo.unwrap().clone())?;
+                            decode_iso2_key_info(
+                                stream,
+                                &mut (*message).key_info.unwrap().clone(),
+                            )?;
                             if error == 0 as i32 {
                                 grammar_id = 126 as i32;
                             }
                         }
                         1 => {
-                            decode_iso2_object(stream, &mut (*message).Object.unwrap())?;
+                            decode_iso2_object(stream, &mut (*message).object.unwrap())?;
                             if error == 0 as i32 {
                                 grammar_id = 125 as i32;
                             }
@@ -6209,7 +6150,7 @@ pub fn decode_iso2_signature(
                 if error == 0 as i32 {
                     match event_code {
                         0 => {
-                            decode_iso2_object(stream, &mut (*message).Object.unwrap())?;
+                            decode_iso2_object(stream, &mut (*message).object.unwrap())?;
                             if error == 0 as i32 {
                                 grammar_id = 127 as i32;
                             }
@@ -6260,7 +6201,7 @@ pub fn decode_iso2_signature(
 }
 pub fn decode_iso2_charging_profile(
     stream: &mut ExiBitstream,
-	message: &mut Iso2ChargingProfileType,
+    message: &mut Iso2ChargingProfileType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 128 as i32;
 
@@ -6273,16 +6214,15 @@ pub fn decode_iso2_charging_profile(
                 if error == 0 as i32 {
                     match event_code {
                         0 => {
-                            if ((*message).ProfileEntry.len() as i32) < 24 as i32 {
-                                let fresh20 = (*message).ProfileEntry.len();
-                                (*message).ProfileEntry.len() =
-                                    ((*message).ProfileEntry.len()).wrapping_add(1);
-                                if let Some(entry) = (*ChargingProfileType)
-                                    .ProfileEntry
-                                    .array
+                            if ((*message).profile_entry.len() as i32) < 24 as i32 {
+                                let fresh20 = (*message).profile_entry.len();
+                                (*message).profile_entry.len() =
+                                    ((*message).profile_entry.len()).wrapping_add(1);
+                                if let Some(entry) = (*charging_profile_type)
+                                    .profile_entry
                                     .get_mut(fresh20 as usize)
                                 {
-                                    decode_iso2_ProfileEntry(stream, entry)?;
+                                    decode_iso2_profile_entry(stream, entry)?;
                                 } else {
                                     return Err(ExiError::ArrayOutOfBounds);
                                 }
@@ -6308,7 +6248,6 @@ pub fn decode_iso2_charging_profile(
                                     ((*message).ProfileEntry.len()).wrapping_add(1);
                                 if let Some(entry) = (*ChargingProfileType)
                                     .ProfileEntry
-                                    .array
                                     .get_mut(fresh21 as usize)
                                 {
                                     decode_iso2_ProfileEntry(stream, entry)?;
@@ -6354,7 +6293,7 @@ pub fn decode_iso2_charging_profile(
 }
 pub fn decode_iso2_service_parameter_list(
     stream: &mut ExiBitstream,
-	message: &mut Iso2ServiceParameterListType,
+    message: &mut Iso2ServiceParameterListType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 130 as i32;
 
@@ -6373,7 +6312,6 @@ pub fn decode_iso2_service_parameter_list(
                                     ((*message).ParameterSet.len()).wrapping_add(1);
                                 if let Some(param_set) = (*ServiceParameterListType)
                                     .ParameterSet
-                                    .array
                                     .get_mut(fresh22 as usize)
                                 {
                                     decode_iso2_parameter_set(stream, param_set)?;
@@ -6402,7 +6340,6 @@ pub fn decode_iso2_service_parameter_list(
                                     ((*message).ParameterSet.len()).wrapping_add(1);
                                 if let Some(param_set) = (*ServiceParameterListType)
                                     .ParameterSet
-                                    .array
                                     .get_mut(fresh23 as usize)
                                 {
                                     decode_iso2_parameter_set(stream, param_set)?;
@@ -6448,7 +6385,7 @@ pub fn decode_iso2_service_parameter_list(
 }
 pub fn decode_iso2_list_of_root_certificate_ids(
     stream: &mut ExiBitstream,
-	message: &mut Iso2ListOfRootCertificateIDsType,
+    message: &mut Iso2ListOfRootCertificateIDsType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 132 as i32;
 
@@ -6467,7 +6404,6 @@ pub fn decode_iso2_list_of_root_certificate_ids(
                                     ((*message).RootCertificateID.len()).wrapping_add(1);
                                 if let Some(root_cert) = (*ListOfRootCertificateIDsType)
                                     .RootCertificateID
-                                    .array
                                     .get_mut(fresh24 as usize)
                                 {
                                     decode_iso2_X509IssuerSerial(stream, root_cert)?;
@@ -6496,7 +6432,6 @@ pub fn decode_iso2_list_of_root_certificate_ids(
                                     ((*message).RootCertificateID.len()).wrapping_add(1);
                                 if let Some(root_cert) = (*ListOfRootCertificateIDsType)
                                     .RootCertificateID
-                                    .array
                                     .get_mut(fresh25 as usize)
                                 {
                                     decode_iso2_X509IssuerSerial(stream, root_cert)?;
@@ -6542,7 +6477,7 @@ pub fn decode_iso2_list_of_root_certificate_ids(
 }
 pub fn decode_iso2_ac_ev_charge_parameter(
     stream: &mut ExiBitstream,
-	message: &mut Iso2ACEVChargeParameterType,
+    message: &mut Iso2ACEVChargeParameterType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 134 as i32;
 
@@ -6675,7 +6610,7 @@ pub fn decode_iso2_ac_ev_charge_parameter(
 }
 pub fn decode_iso2_dc_ev_charge_parameter(
     stream: &mut ExiBitstream,
-	message: &mut Iso2DCEVChargeParameterType,
+    message: &mut Iso2DcEvChargeParameterType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 139 as i32;
 
@@ -6690,7 +6625,7 @@ pub fn decode_iso2_dc_ev_charge_parameter(
                         0 => {
                             decode_exi_type_uint32(
                                 stream,
-                                &mut (*DC_EVChargeParameterType).DepartureTime.unwrap().clone(),
+                                &mut (*message).departure_time.as_mut().unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 140 as i32;
@@ -6699,7 +6634,7 @@ pub fn decode_iso2_dc_ev_charge_parameter(
                         1 => {
                             decode_iso2_dc_ev_status(
                                 stream,
-                                &mut (*DC_EVChargeParameterType).dc_ev_status,
+                                &mut (*message).dc_ev_status,
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 141 as i32;
@@ -6718,7 +6653,7 @@ pub fn decode_iso2_dc_ev_charge_parameter(
                         0 => {
                             decode_iso2_dc_ev_status(
                                 stream,
-                                &mut (*DC_EVChargeParameterType).dc_ev_status,
+                                &mut (*message).dc_ev_status,
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 141 as i32;
@@ -6737,7 +6672,7 @@ pub fn decode_iso2_dc_ev_charge_parameter(
                         0 => {
                             decode_iso2_physical_value(
                                 stream,
-                                &mut (*DC_EVChargeParameterType).EVMaximumCurrentLimit,
+                                &mut (*message).ev_maximum_current_limit,
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 142 as i32;
@@ -6756,8 +6691,9 @@ pub fn decode_iso2_dc_ev_charge_parameter(
                         0 => {
                             decode_iso2_physical_value(
                                 stream,
-                                &mut (*DC_EVChargeParameterType)
-                                    .EVMaximumPowerLimit
+                                &mut (*message)
+                                    .ev_maximum_power_limit
+                                    .as_mut()
                                     .unwrap()
                                     .clone(),
                             )?;
@@ -6768,7 +6704,7 @@ pub fn decode_iso2_dc_ev_charge_parameter(
                         1 => {
                             decode_iso2_physical_value(
                                 stream,
-                                &mut (*DC_EVChargeParameterType).EVMaximumVoltageLimit,
+                                &mut (*message).ev_maximum_voltage_limit,
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 144 as i32;
@@ -6787,7 +6723,7 @@ pub fn decode_iso2_dc_ev_charge_parameter(
                         0 => {
                             decode_iso2_physical_value(
                                 stream,
-                                &mut (*DC_EVChargeParameterType).EVMaximumVoltageLimit,
+                                &mut (*message).ev_maximum_voltage_limit,
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 144 as i32;
@@ -6806,8 +6742,9 @@ pub fn decode_iso2_dc_ev_charge_parameter(
                         0 => {
                             decode_iso2_physical_value(
                                 stream,
-                                &mut (*DC_EVChargeParameterType)
-                                    .EVEnergyCapacity
+                                &mut (*message)
+                                    .ev_energy_capacity
+                                    .as_mut()
                                     .unwrap()
                                     .clone(),
                             )?;
@@ -6818,7 +6755,7 @@ pub fn decode_iso2_dc_ev_charge_parameter(
                         1 => {
                             decode_iso2_physical_value(
                                 stream,
-                                &mut (*DC_EVChargeParameterType).EVEnergyRequest.unwrap().clone(),
+                                &mut (*message).ev_energy_request.as_mut().unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 146 as i32;
@@ -6839,7 +6776,7 @@ pub fn decode_iso2_dc_ev_charge_parameter(
                                         &mut value,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*DC_EVChargeParameterType).FullSOC = Some(value as i8);
+                                        (*message).full_soc = Some(value as i8);
                                     }
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
@@ -6875,7 +6812,7 @@ pub fn decode_iso2_dc_ev_charge_parameter(
                                         &mut value_0,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*DC_EVChargeParameterType).BulkSOC = Some(value_0 as i8);
+                                        (*message).bulk_soc = Some(value_0 as i8);
                                     }
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
@@ -6912,7 +6849,7 @@ pub fn decode_iso2_dc_ev_charge_parameter(
                         0 => {
                             decode_iso2_physical_value(
                                 stream,
-                                &mut (*DC_EVChargeParameterType).EVEnergyRequest.unwrap().clone(),
+                                &mut (*message).ev_energy_request.as_mut().unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 146 as i32;
@@ -6933,7 +6870,7 @@ pub fn decode_iso2_dc_ev_charge_parameter(
                                         &mut value_1,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*DC_EVChargeParameterType).FullSOC = Some(value_1 as i8);
+                                        (*message).full_soc = Some(value_1 as i8);
                                     }
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
@@ -6969,7 +6906,7 @@ pub fn decode_iso2_dc_ev_charge_parameter(
                                         &mut value_2,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*DC_EVChargeParameterType).BulkSOC = Some(value_2 as i8);
+                                        (*message).bulk_soc = Some(value_2 as i8);
                                     }
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
@@ -7018,7 +6955,7 @@ pub fn decode_iso2_dc_ev_charge_parameter(
                                         &mut value_3,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*DC_EVChargeParameterType).FullSOC = Some(value_3 as i8);
+                                        (*message).full_soc = Some(value_3 as i8);
                                     }
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
@@ -7054,7 +6991,7 @@ pub fn decode_iso2_dc_ev_charge_parameter(
                                         &mut value_4,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*DC_EVChargeParameterType).BulkSOC = Some(value_4 as i8);
+                                        (*message).bulk_soc = Some(value_4 as i8);
                                     }
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
@@ -7154,7 +7091,7 @@ pub fn decode_iso2_dc_ev_charge_parameter(
 }
 pub fn decode_iso2_ev_charge_parameter(
     stream: &mut ExiBitstream,
-	message: &mut Iso2EVChargeParameterType,
+    message: &mut Iso2EvChargeParameterType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 148 as i32;
 
@@ -7169,16 +7106,16 @@ pub fn decode_iso2_ev_charge_parameter(
                         0 => {
                             decode_exi_type_uint32(
                                 stream,
-                                &mut (*message).DepartureTime.unwrap().clone(),
+                                &mut (*message).departure_time.as_mut().unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 149 as i32;
                             }
                         }
                         1 => {
-                            decode_iso2_ac_evcharge_parameter(
+                            decode_iso2_ac_ev_charge_parameter(
                                 stream,
-                                &mut (*message).AC_EVChargeParameter,
+                                &mut (*message).ac_ev_charge_parameter,
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 150 as i32;
@@ -7195,9 +7132,9 @@ pub fn decode_iso2_ev_charge_parameter(
                 if error == 0 as i32 {
                     match event_code {
                         0 => {
-                            decode_iso2_ac_evcharge_parameter(
+                            decode_iso2_ac_ev_charge_parameter(
                                 stream,
-                                &mut (*message).AC_EVChargeParameter,
+                                &mut (*message).ac_ev_charge_parameter,
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 150 as i32;
@@ -7214,9 +7151,9 @@ pub fn decode_iso2_ev_charge_parameter(
                 if error == 0 as i32 {
                     match event_code {
                         0 => {
-                            decode_iso2_dc_evcharge_parameter(
+                            decode_iso2_dc_ev_charge_parameter(
                                 stream,
-                                &mut (*message).DC_EVChargeParameter,
+                                &mut (*message).dc_ev_charge_parameter,
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -7249,7 +7186,7 @@ pub fn decode_iso2_ev_charge_parameter(
 }
 pub fn decode_iso2_sa_schedules(
     stream: &mut ExiBitstream,
-	message: &mut Iso2SASchedulesType,
+    message: &mut Iso2SASchedulesType,
 ) -> Result<(), ExiError> {
     let mut event_code: u32 = 0;
     exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
@@ -7260,7 +7197,7 @@ pub fn decode_iso2_sa_schedules(
 }
 pub fn decode_iso2_sa_schedule_list(
     stream: &mut ExiBitstream,
-	message: &mut Iso2SAScheduleListType,
+    message: &mut Iso2SAScheduleListType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 151 as i32;
 
@@ -7279,7 +7216,6 @@ pub fn decode_iso2_sa_schedule_list(
                                     ((*message).SAScheduleTuple.len()).wrapping_add(1);
                                 if let Some(tuple) = (*SAScheduleListType)
                                     .SAScheduleTuple
-                                    .array
                                     .get_mut(fresh26 as usize)
                                 {
                                     decode_iso2_saschedule_tuple(stream, tuple)?;
@@ -7308,7 +7244,6 @@ pub fn decode_iso2_sa_schedule_list(
                                     ((*message).SAScheduleTuple.len()).wrapping_add(1);
                                 if let Some(tuple) = (*SAScheduleListType)
                                     .SAScheduleTuple
-                                    .array
                                     .get_mut(fresh27 as usize)
                                 {
                                     decode_iso2_saschedule_tuple(stream, tuple)?;
@@ -7354,7 +7289,7 @@ pub fn decode_iso2_sa_schedule_list(
 }
 pub fn decode_iso2_charge_service(
     stream: &mut ExiBitstream,
-	message: &mut Iso2ChargeServiceType,
+    message: &mut Iso2ChargeServiceType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 153 as i32;
     let mut event_code: u32 = 0;
@@ -7527,19 +7462,14 @@ pub fn decode_iso2_charge_service(
                                 if event_code == 0 as i32 as u32 {
                                     exi_basetypes_decoder_uint_16(
                                         stream,
-                                        &mut ((*message).ServiceScope.unwrap().len() as u16),
+                                        &mut ((*message).service_scope.unwrap().len() as u16),
                                     )?;
                                     if error == 0 as i32 {
-                                        if (*message).ServiceScope.unwrap().len >= 2 {
-                                            (*message).ServiceScope.unwrap().len -= 2;
+                                        if (*message).service_scope.unwrap().len() >= 2 {
                                             exi_basetypes_decoder_characters(
                                                 stream,
-                                                (*message).ServiceScope.unwrap().len() as usize,
-                                                &mut (*ChargeServiceType)
-                                                    .ServiceScope
-                                                    .unwrap()
-                                                    ,
-                                                65,
+                                                (*message).service_scope.unwrap().len() as usize,
+                                                &mut (*message).service_scope.unwrap(),
                                             )?;
                                         } else {
                                             return Err(ExiError::StringValuesNotSupported);
@@ -7579,7 +7509,7 @@ pub fn decode_iso2_charge_service(
                                         &mut value_1,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*message).FreeService = value_1 as i32;
+                                        (*message).free_service = value_1 as i32;
                                     }
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
@@ -7625,7 +7555,7 @@ pub fn decode_iso2_charge_service(
                                         &mut value_2,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*message).FreeService = value_2 as i32;
+                                        (*message).free_service = value_2 as i32;
                                     }
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
@@ -7659,7 +7589,7 @@ pub fn decode_iso2_charge_service(
                         0 => {
                             decode_iso2_supported_energy_transfer_mode(
                                 stream,
-                                &mut (*message).SupportedEnergyTransferMode,
+                                &mut (*message).supported_energy_transfer_mode,
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -7692,7 +7622,7 @@ pub fn decode_iso2_charge_service(
 }
 pub fn decode_iso2_ev_power_delivery_parameter(
     stream: &mut ExiBitstream,
-	message: &mut Iso2EVPowerDeliveryParameterType,
+    _message: &mut Iso2EVPowerDeliveryParameterType,
 ) -> Result<(), ExiError> {
     let mut event_code: u32 = 0;
     exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
@@ -7703,7 +7633,7 @@ pub fn decode_iso2_ev_power_delivery_parameter(
 }
 pub fn decode_iso2_dc_ev_power_delivery_parameter(
     stream: &mut ExiBitstream,
-	message: &mut Iso2DCEVPowerDeliveryParameterType,
+    message: &mut Iso2DCEVPowerDeliveryParameterType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 159 as i32;
 
@@ -7718,7 +7648,7 @@ pub fn decode_iso2_dc_ev_power_delivery_parameter(
                         0 => {
                             decode_iso2_dc_ev_status(
                                 stream,
-                                &mut (*DC_EVPowerDeliveryParameterType).dc_ev_status,
+                                &mut (*message).dc_ev_status,
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 160 as i32;
@@ -7749,7 +7679,7 @@ pub fn decode_iso2_dc_ev_power_delivery_parameter(
                                         &mut value,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*DC_EVPowerDeliveryParameterType).BulkChargingComplete =
+                                        (*message).bulk_charging_complete =
                                             Some(value as i32);
                                     }
                                 } else {
@@ -7786,7 +7716,7 @@ pub fn decode_iso2_dc_ev_power_delivery_parameter(
                                         &mut value_0,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*DC_EVPowerDeliveryParameterType).ChargingComplete =
+                                        (*message).charging_complete =
                                             value_0 as i32;
                                     }
                                 } else {
@@ -7833,7 +7763,7 @@ pub fn decode_iso2_dc_ev_power_delivery_parameter(
                                         &mut value_1,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*DC_EVPowerDeliveryParameterType).ChargingComplete =
+                                        (*message).charging_complete =
                                             value_1 as i32;
                                     }
                                 } else {
@@ -7882,7 +7812,7 @@ pub fn decode_iso2_dc_ev_power_delivery_parameter(
 }
 pub fn decode_iso2_contract_signature_encrypted_private_key(
     stream: &mut ExiBitstream,
-	message: &mut Iso2ContractSignatureEncryptedPrivateKeyType,
+    message: &mut Iso2ContractSignatureEncryptedPrivateKeyType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 162 as i32;
 
@@ -7895,16 +7825,16 @@ pub fn decode_iso2_contract_signature_encrypted_private_key(
                 if error == 0 as i32 {
                     match event_code {
                         0 => {
-                            exi_basetypes_decoder_uint_16(stream, &mut ((*message).id.len() as u16))?;
+                            exi_basetypes_decoder_uint_16(
+                                stream,
+                                &mut ((*message).id.len() as u16),
+                            )?;
                             if error == 0 as i32 {
-                                if (*message).id.len >= 2 {
-                                    (*message).id.len -= 2;
-
+                                if (*message).id.len() >= 2 {
                                     exi_basetypes_decoder_characters(
                                         stream,
                                         (*message).id.len() as usize,
                                         &mut (*message).id,
-                                        65,
                                     )?;
                                 } else {
                                     return Err(ExiError::StringValuesNotSupported);
@@ -7925,13 +7855,13 @@ pub fn decode_iso2_contract_signature_encrypted_private_key(
                         0 => {
                             exi_basetypes_decoder_uint_16(
                                 stream,
-                                &mut ((*message).CONTENT.len() as u16),
+                                &mut ((*message).content.len() as u16),
                             )?;
                             if error == 0 as i32 {
                                 exi_basetypes_decoder_bytes(
                                     stream,
-                                    (*message).CONTENT.len() as usize,
-                                    &mut (*message).CONTENT,
+                                    (*message).content.len() as usize,
+                                    &mut (*message).content,
                                 )?;
                                 if error == 0 as i32 {
                                     grammar_id = 3 as i32;
@@ -7965,7 +7895,7 @@ pub fn decode_iso2_contract_signature_encrypted_private_key(
 }
 pub fn decode_iso2_evse_charge_parameter(
     stream: &mut ExiBitstream,
-	message: &mut Iso2EVSEChargeParameterType,
+    message: &mut Iso2EVSEChargeParameterType,
 ) -> Result<(), ExiError> {
     let mut event_code: u32 = 0;
     exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
@@ -7976,7 +7906,7 @@ pub fn decode_iso2_evse_charge_parameter(
 }
 pub fn decode_iso2_dc_evse_charge_parameter(
     stream: &mut ExiBitstream,
-	message: &mut Iso2DCEVSEChargeParameterType,
+    message: &mut Iso2DCEVSEChargeParameterType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 164 as i32;
     let mut event_code: u32 = 0;
@@ -7988,9 +7918,9 @@ pub fn decode_iso2_dc_evse_charge_parameter(
                 if error == 0 as i32 {
                     match event_code {
                         0 => {
-                            decode_iso2_DC_EVSEStatus(
+                            decode_iso2_dc_evse_status(
                                 stream,
-                                &mut (*DC_EVSEChargeParameterType).DC_EVSEStatus,
+                                &mut (*message).dc_evse_status,
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 165 as i32;
@@ -8009,7 +7939,7 @@ pub fn decode_iso2_dc_evse_charge_parameter(
                         0 => {
                             decode_iso2_physical_value(
                                 stream,
-                                &mut (*DC_EVSEChargeParameterType).EVSEMaximumCurrentLimit,
+                                &mut (*message).evse_maximum_current_limit,
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 166 as i32;
@@ -8028,7 +7958,7 @@ pub fn decode_iso2_dc_evse_charge_parameter(
                         0 => {
                             decode_iso2_physical_value(
                                 stream,
-                                &mut (*DC_EVSEChargeParameterType).EVSEMaximumPowerLimit,
+                                &mut (*message).evse_maximum_power_limit,
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 167 as i32;
@@ -8047,7 +7977,7 @@ pub fn decode_iso2_dc_evse_charge_parameter(
                         0 => {
                             decode_iso2_physical_value(
                                 stream,
-                                &mut (*DC_EVSEChargeParameterType).EVSEMaximumVoltageLimit,
+                                &mut (*message).evse_maximum_voltage_limit,
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 168 as i32;
@@ -8066,7 +7996,7 @@ pub fn decode_iso2_dc_evse_charge_parameter(
                         0 => {
                             decode_iso2_physical_value(
                                 stream,
-                                &mut (*DC_EVSEChargeParameterType).EVSEMinimumCurrentLimit,
+                                &mut (*message).evse_minimum_current_limit,
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 169 as i32;
@@ -8085,7 +8015,7 @@ pub fn decode_iso2_dc_evse_charge_parameter(
                         0 => {
                             decode_iso2_physical_value(
                                 stream,
-                                &mut (*DC_EVSEChargeParameterType).EVSEMinimumVoltageLimit,
+                                &mut (*message).evse_minimum_voltage_limit,
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 170 as i32;
@@ -8104,8 +8034,9 @@ pub fn decode_iso2_dc_evse_charge_parameter(
                         0 => {
                             decode_iso2_physical_value(
                                 stream,
-                                &mut (*DC_EVSEChargeParameterType)
-                                    .EVSECurrentRegulationTolerance
+                                &mut (*message)
+                                    .evse_current_regulation_tolerance
+                                    .as_mut()
                                     .unwrap()
                                     .clone(),
                             )?;
@@ -8116,7 +8047,7 @@ pub fn decode_iso2_dc_evse_charge_parameter(
                         1 => {
                             decode_iso2_physical_value(
                                 stream,
-                                &mut (*DC_EVSEChargeParameterType).EVSEPeakCurrentRipple,
+                                &mut (*message).evse_peak_current_ripple,
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 172 as i32;
@@ -8135,7 +8066,7 @@ pub fn decode_iso2_dc_evse_charge_parameter(
                         0 => {
                             decode_iso2_physical_value(
                                 stream,
-                                &mut (*DC_EVSEChargeParameterType).EVSEPeakCurrentRipple,
+                                &mut (*message).evse_peak_current_ripple,
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 172 as i32;
@@ -8154,8 +8085,9 @@ pub fn decode_iso2_dc_evse_charge_parameter(
                         0 => {
                             decode_iso2_physical_value(
                                 stream,
-                                &mut (*DC_EVSEChargeParameterType)
-                                    .EVSEEnergyToBeDelivered
+                                &mut (*message)
+                                    .evse_energy_to_be_delivered
+                                    .as_mut()
                                     .unwrap()
                                     .clone(),
                             )?;
@@ -8193,7 +8125,7 @@ pub fn decode_iso2_dc_evse_charge_parameter(
 }
 pub fn decode_iso2_service_list(
     stream: &mut ExiBitstream,
-	message: &mut Iso2ServiceListType,
+    message: &mut Iso2ServiceListType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 173 as i32;
 
@@ -8206,14 +8138,11 @@ pub fn decode_iso2_service_list(
                 if error == 0 as i32 {
                     match event_code {
                         0 => {
-                            if ((*message).Service.len() as i32) < 8 as i32 {
-                                let fresh28 = (*message).Service.len();
-                                (*message).Service.len() =
-                                    ((*message).Service.len()).wrapping_add(1);
-                                // Use safe borrows instead of pointer arithmetic
-                                if let Some(service) = (*message).Service.get_mut(fresh28 as usize)
+                            if ((*message).service.len() as i32) < 8 as i32 {
+                                let fresh28 = (*message).service.len();
+                                if let Some(service) = (*message).service.get_mut(fresh28 as usize)
                                 {
-                                    decode_iso2_Service(stream, service)?;
+                                    decode_iso2_service(stream, service)?;
                                 } else {
                                     return Err(ExiError::ArrayOutOfBounds);
                                 }
@@ -8233,21 +8162,18 @@ pub fn decode_iso2_service_list(
                 if error == 0 as i32 {
                     match event_code {
                         0 => {
-                            if ((*message).Service.len() as i32) < 8 as i32 {
-                                let fresh29 = (*message).Service.len();
-                                (*message).Service.len() =
-                                    ((*message).Service.len()).wrapping_add(1);
-                                // Use safe borrows instead of pointer arithmetic
-                                if let Some(service) = (*message).Service.get_mut(fresh29 as usize)
+                            if ((*message).service.len() as i32) < 8 as i32 {
+                                let fresh29 = (*message).service.len();
+                                if let Some(service) = (*message).service.get_mut(fresh29 as usize)
                                 {
-                                    decode_iso2_Service(stream, service)?;
+                                    decode_iso2_service(stream, service)?;
                                 } else {
                                     return Err(ExiError::ArrayOutOfBounds);
                                 }
                             } else {
                                 return Err(ExiError::ArrayOutOfBounds);
                             }
-                            if ((*message).Service.len() as i32) < 8 as i32 {
+                            if ((*message).service.len() as i32) < 8 as i32 {
                                 grammar_id = 174 as i32;
                             } else {
                                 grammar_id = 3 as i32;
@@ -8283,7 +8209,7 @@ pub fn decode_iso2_service_list(
 }
 pub fn decode_iso2_diffie_hellman_publickey(
     stream: &mut ExiBitstream,
-	message: &mut Iso2DiffieHellmanPublickeyType,
+    message: &mut Iso2DiffieHellmanPublickeyType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 175 as i32;
 
@@ -8296,15 +8222,16 @@ pub fn decode_iso2_diffie_hellman_publickey(
                 if error == 0 as i32 {
                     match event_code {
                         0 => {
-                            exi_basetypes_decoder_uint_16(stream, &mut ((*message).id.len() as u16))?;
+                            exi_basetypes_decoder_uint_16(
+                                stream,
+                                &mut ((*message).id.len() as u16),
+                            )?;
                             if error == 0 as i32 {
                                 if (*message).id.len >= 2 {
-                                    (*message).id.len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
                                         (*message).id.len() as usize,
                                         &mut (*message).id,
-                                        65,
                                     )?;
                                 } else {
                                     return Err(ExiError::StringValuesNotSupported);
@@ -8329,8 +8256,8 @@ pub fn decode_iso2_diffie_hellman_publickey(
                             )?;
                             exi_basetypes_decoder_bytes(
                                 stream,
-                                DiffieHellmanPublickeyType.CONTENT.len(),
-                                &mut DiffieHellmanPublickeyType.CONTENT,
+                                message.content.len(),
+                                &mut message.content,
                             )?;
                             grammar_id = 3 as i32;
                         }
@@ -8361,7 +8288,7 @@ pub fn decode_iso2_diffie_hellman_publickey(
 }
 pub fn decode_iso2_emaid(
     stream: &mut ExiBitstream,
-	message: &mut Iso2EMAIDType,
+    message: &mut Iso2EMAIDType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 177 as i32;
 
@@ -8374,15 +8301,16 @@ pub fn decode_iso2_emaid(
                 if error == 0 as i32 {
                     match event_code {
                         0 => {
-                            exi_basetypes_decoder_uint_16(stream, &mut ((*message).id.len() as u16))?;
+                            exi_basetypes_decoder_uint_16(
+                                stream,
+                                &mut ((*message).id.len() as u16),
+                            )?;
                             if error == 0 as i32 {
                                 if (*message).id.len >= 2 {
-                                    (*message).id.len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
                                         (*message).id.len() as usize,
                                         &mut (*message).id,
-                                        65,
                                     )?;
                                 } else {
                                     return Err(ExiError::StringValuesNotSupported);
@@ -8407,12 +8335,10 @@ pub fn decode_iso2_emaid(
                             )?;
                             if error == 0 as i32 {
                                 if (*message).CONTENT.len >= 2 {
-                                    (*message).CONTENT.len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
                                         (*message).CONTENT.len() as usize,
                                         &mut (*message).CONTENT,
-                                        65,
                                     )?;
                                 } else {
                                     return Err(ExiError::StringValuesNotSupported);
@@ -8447,7 +8373,7 @@ pub fn decode_iso2_emaid(
 }
 pub fn decode_iso2_ac_evse_status(
     stream: &mut ExiBitstream,
-	message: &mut Iso2ACEVSEStatusType,
+    message: &mut Iso2ACEVSEStatusType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 179 as i32;
 
@@ -8462,7 +8388,7 @@ pub fn decode_iso2_ac_evse_status(
                         0 => {
                             decode_exi_type_uint16(
                                 stream,
-                                &mut (*AC_EVSEStatusType).NotificationMaxDelay,
+                                &mut (*message).notification_max_delay,
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 180 as i32;
@@ -8493,7 +8419,7 @@ pub fn decode_iso2_ac_evse_status(
                                         &mut value,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*AC_EVSEStatusType).EVSENotification =
+                                        (*message).evse_notification =
                                             value as Iso2EvseNotificationType;
                                     }
                                 } else {
@@ -8540,7 +8466,7 @@ pub fn decode_iso2_ac_evse_status(
                                         &mut value_0,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*AC_EVSEStatusType).RCD = value_0 as i32;
+                                        (*message).rcd = value_0 as i32;
                                     }
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
@@ -8588,7 +8514,7 @@ pub fn decode_iso2_ac_evse_status(
 }
 pub fn decode_iso2_evse_status(
     stream: &mut ExiBitstream,
-	message: &mut Iso2EVSEStatusType,
+    message: &mut Iso2EVSEStatusType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 182 as i32;
 
@@ -8601,7 +8527,7 @@ pub fn decode_iso2_evse_status(
                 if error == 0 as i32 {
                     match event_code {
                         0 => {
-                            decode_exi_type_uint16(stream, &mut (*message).NotificationMaxDelay)?;
+                            decode_exi_type_uint16(stream, &mut (*message).notification_max_delay)?;
                             if error == 0 as i32 {
                                 grammar_id = 183 as i32;
                             }
@@ -8631,7 +8557,7 @@ pub fn decode_iso2_evse_status(
                                         &mut value,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*message).EVSENotification =
+                                        (*message).evse_notification =
                                             value as Iso2EvseNotificationType;
                                     }
                                 } else {
@@ -8664,7 +8590,7 @@ pub fn decode_iso2_evse_status(
                 if error == 0 as i32 {
                     match event_code {
                         0 => {
-                            decode_iso2_ac_evsestatus(stream, &mut (*message).AC_EVSEStatus)?;
+                            decode_iso2_ac_evse_status(stream, &mut (*message).ac_evse_status)?;
                             if error == 0 as i32 {
                                 grammar_id = 185 as i32;
                             }
@@ -8680,7 +8606,7 @@ pub fn decode_iso2_evse_status(
                 if error == 0 as i32 {
                     match event_code {
                         0 => {
-                            decode_iso2_DC_EVSEStatus(stream, &mut (*message).DC_EVSEStatus)?;
+                            decode_iso2_DC_EVSEStatus(stream, &mut (*message).dc_evse_status)?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
                             }
@@ -8712,7 +8638,7 @@ pub fn decode_iso2_evse_status(
 }
 pub fn decode_iso2_ac_evse_charge_parameter(
     stream: &mut ExiBitstream,
-	message: &mut Iso2ACEVSEChargeParameterType,
+    message: &mut Iso2ACEVSEChargeParameterType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 186 as i32;
 
@@ -8725,9 +8651,9 @@ pub fn decode_iso2_ac_evse_charge_parameter(
                 if error == 0 as i32 {
                     match event_code {
                         0 => {
-                            decode_iso2_ac_evsestatus(
+                            decode_iso2_ac_evse_status(
                                 stream,
-                                &mut (*AC_EVSEChargeParameterType).AC_EVSEStatus,
+                                &mut (*message).ac_evse_status,
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 187 as i32;
@@ -8746,7 +8672,7 @@ pub fn decode_iso2_ac_evse_charge_parameter(
                         0 => {
                             decode_iso2_physical_value(
                                 stream,
-                                &mut (*AC_EVSEChargeParameterType).EVSENominalVoltage,
+                                &mut (*message).evse_nominal_voltage,
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 188 as i32;
@@ -8765,7 +8691,7 @@ pub fn decode_iso2_ac_evse_charge_parameter(
                         0 => {
                             decode_iso2_physical_value(
                                 stream,
-                                &mut (*AC_EVSEChargeParameterType).EVSEMaxCurrent,
+                                &mut (*message).evse_max_current,
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -8798,7 +8724,7 @@ pub fn decode_iso2_ac_evse_charge_parameter(
 }
 pub fn decode_iso2_meter_info(
     stream: &mut ExiBitstream,
-	message: &mut Iso2MeterInfoType,
+    message: &mut Iso2MeterInfoType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 189 as i32;
 
@@ -8820,16 +8746,14 @@ pub fn decode_iso2_meter_info(
                                 if event_code == 0 as i32 as u32 {
                                     exi_basetypes_decoder_uint_16(
                                         stream,
-                                        &mut ((*message).MeterID.len() as u16),
+                                        &mut ((*message).meter_id.len() as u16),
                                     )?;
                                     if error == 0 as i32 {
-                                        if (*message).MeterID.len >= 2 {
-                                            (*message).MeterID.len -= 2;
+                                        if (*message).meter_id.len >= 2 {
                                             exi_basetypes_decoder_characters(
                                                 stream,
-                                                (*message).MeterID.len() as usize,
-                                                &mut (*message).MeterID,
-                                                33,
+                                                (*message).meter_id.len() as usize,
+                                                &mut (*message).meter_id,
                                             )?;
                                         } else {
                                             return Err(ExiError::StringValuesNotSupported);
@@ -8867,15 +8791,15 @@ pub fn decode_iso2_meter_info(
                         0 => {
                             decode_exi_type_uint64(
                                 stream,
-                                &mut (*message).MeterReading.unwrap().clone(),
+                                &mut (*message).meter_reading.as_mut().unwrap().clone(),
                             )?;
                             grammar_id = 191 as i32;
                         }
                         1 => {
                             decode_exi_type_hex_binary(
                                 stream,
-                                &mut (*message).SigMeterReading.unwrap().len(),
-                                &mut (*message).SigMeterReading.unwrap(),
+                                &mut (*message).sig_meter_reading.as_mut().unwrap().len(),
+                                &mut (*message).sig_meter_reading.as_mut().unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 192 as i32;
@@ -8884,7 +8808,7 @@ pub fn decode_iso2_meter_info(
                         2 => {
                             decode_exi_type_integer16(
                                 stream,
-                                &mut (*message).MeterStatus.unwrap().clone(),
+                                &mut (*message).meter_status.as_mut().unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 193 as i32;
@@ -8893,7 +8817,7 @@ pub fn decode_iso2_meter_info(
                         3 => {
                             decode_exi_type_integer64(
                                 stream,
-                                &mut (*message).TMeter.unwrap().clone(),
+                                &mut (*message).t_meter.as_mut().unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -8915,8 +8839,8 @@ pub fn decode_iso2_meter_info(
                         0 => {
                             decode_exi_type_hex_binary(
                                 stream,
-                                &mut (*message).SigMeterReading.unwrap().len(),
-                                &mut (*message).SigMeterReading.unwrap(),
+                                &mut (*message).sig_meter_reading.as_mut().unwrap().len(),
+                                &mut (*message).sig_meter_reading.as_mut().unwrap(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 192 as i32;
@@ -8925,7 +8849,7 @@ pub fn decode_iso2_meter_info(
                         1 => {
                             decode_exi_type_integer16(
                                 stream,
-                                &mut (*message).MeterStatus.unwrap().clone(),
+                                &mut (*message).meter_status.as_mut().unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 193 as i32;
@@ -8934,7 +8858,7 @@ pub fn decode_iso2_meter_info(
                         2 => {
                             decode_exi_type_integer64(
                                 stream,
-                                &mut (*message).TMeter.unwrap().clone(),
+                                &mut (*message).t_meter.as_mut().unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -8956,7 +8880,7 @@ pub fn decode_iso2_meter_info(
                         0 => {
                             decode_exi_type_integer16(
                                 stream,
-                                &mut (*message).MeterStatus.unwrap().clone(),
+                                &mut (*message).meter_status.as_mut().unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 193 as i32;
@@ -8965,7 +8889,7 @@ pub fn decode_iso2_meter_info(
                         1 => {
                             decode_exi_type_integer64(
                                 stream,
-                                &mut (*message).TMeter.unwrap().clone(),
+                                &mut (*message).t_meter.as_mut().unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -9023,7 +8947,7 @@ pub fn decode_iso2_meter_info(
 }
 pub fn decode_iso2_message_header(
     stream: &mut ExiBitstream,
-	message: &mut Iso2MessageHeaderType,
+    message: &mut Iso2MessageHeaderType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 194 as i32;
 
@@ -9068,10 +8992,10 @@ pub fn decode_iso2_message_header(
                             }
                         }
                         1 => {
-                            if (*message).Signature.is_some() {
+                            if (*message).signature.is_some() {
                                 decode_iso2_signature(
                                     stream,
-                                    &mut (*message).Signature.unwrap().clone(),
+                                    &mut (*message).signature.as_mut().unwrap().clone(),
                                 )?;
                             }
                             if error == 0 as i32 {
@@ -9132,7 +9056,7 @@ pub fn decode_iso2_message_header(
 }
 pub fn decode_iso2_power_delivery_req(
     stream: &mut ExiBitstream,
-	message: &mut Iso2PowerDeliveryReqType,
+    message: &mut Iso2PowerDeliveryReqType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 197 as i32;
 
@@ -9159,7 +9083,7 @@ pub fn decode_iso2_power_delivery_req(
                                         &mut value,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*message).ChargeProgress = value as Iso2ChargeProgressType;
+                                        (*message).charge_progress = value as Iso2ChargeProgressType;
                                     }
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
@@ -9205,7 +9129,7 @@ pub fn decode_iso2_power_delivery_req(
                                         &mut value_0,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*message).SAScheduleTupleID =
+                                        (*message).sa_schedule_tuple_id =
                                             value_0.wrapping_add(1) as u8;
                                     }
                                 } else {
@@ -9240,25 +9164,25 @@ pub fn decode_iso2_power_delivery_req(
                         0 => {
                             decode_iso2_charging_profile(
                                 stream,
-                                &mut (*message).ChargingProfile.unwrap().clone(),
+                                &mut (*message).charging_profile.as_mut().unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 200 as i32;
                             }
                         }
                         1 => {
-                            decode_iso2_DC_EVPowerDeliveryParameter(
+                            decode_iso2_dc_ev_power_delivery_parameter(
                                 stream,
-                                &mut (*message).DC_EVPowerDeliveryParameter.unwrap().clone(),
+                                &mut (*message).dc_ev_power_delivery_parameter.as_mut().unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
                             }
                         }
                         2 => {
-                            decode_iso2_evpower_delivery_parameter(
+                            decode_iso2_ev_power_delivery_parameter(
                                 stream,
-                                &mut (*message).EVPowerDeliveryParameter.unwrap().clone(),
+                                &mut (*message).ev_power_delivery_parameter.as_mut().unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -9278,18 +9202,18 @@ pub fn decode_iso2_power_delivery_req(
                 if error == 0 as i32 {
                     match event_code {
                         0 => {
-                            decode_iso2_DC_EVPowerDeliveryParameter(
+                            decode_iso2_dc_ev_power_delivery_parameter(
                                 stream,
-                                &mut (*message).DC_EVPowerDeliveryParameter.unwrap().clone(),
+                                &mut (*message).dc_ev_power_delivery_parameter.as_mut().unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
                             }
                         }
                         1 => {
-                            decode_iso2_evpower_delivery_parameter(
+                            decode_iso2_ev_power_delivery_parameter(
                                 stream,
-                                &mut (*message).EVPowerDeliveryParameter.unwrap().clone(),
+                                &mut (*message).ev_power_delivery_parameter.as_mut().unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -9325,7 +9249,7 @@ pub fn decode_iso2_power_delivery_req(
 }
 pub fn decode_iso2_current_demand_res(
     stream: &mut ExiBitstream,
-	message: &mut Iso2CurrentDemandResType,
+    message: &mut Iso2CurrentDemandResType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 201 as i32;
 
@@ -9384,7 +9308,7 @@ pub fn decode_iso2_current_demand_res(
                 if error == 0 as i32 {
                     match event_code {
                         0 => {
-                            decode_iso2_DC_EVSEStatus(stream, &mut (*message).DC_EVSEStatus)?;
+                            decode_iso2_dc_evse_status(stream, &mut (*message).dc_evse_status)?;
                             if error == 0 as i32 {
                                 grammar_id = 203 as i32;
                             }
@@ -9400,7 +9324,7 @@ pub fn decode_iso2_current_demand_res(
                 if error == 0 as i32 {
                     match event_code {
                         0 => {
-                            decode_iso2_physical_value(stream, &mut (*message).EVSEPresentVoltage)?;
+                            decode_iso2_physical_value(stream, &mut (*message).evse_present_voltage)?;
                             if error == 0 as i32 {
                                 grammar_id = 204 as i32;
                             }
@@ -9416,7 +9340,7 @@ pub fn decode_iso2_current_demand_res(
                 if error == 0 as i32 {
                     match event_code {
                         0 => {
-                            decode_iso2_physical_value(stream, &mut (*message).EVSEPresentCurrent)?;
+                            decode_iso2_physical_value(stream, &mut (*message).evse_present_current)?;
                             if error == 0 as i32 {
                                 grammar_id = 205 as i32;
                             }
@@ -9446,7 +9370,7 @@ pub fn decode_iso2_current_demand_res(
                                         &mut value_0,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*message).EVSECurrentLimitAchieved = value_0 as i32;
+                                        (*message).evse_current_limit_achieved = value_0 as i32;
                                     }
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
@@ -9492,7 +9416,7 @@ pub fn decode_iso2_current_demand_res(
                                         &mut value_1,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*message).EVSEVoltageLimitAchieved = value_1 as i32;
+                                        (*message).evse_voltage_limit_achieved = value_1 as i32;
                                     }
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
@@ -9538,7 +9462,7 @@ pub fn decode_iso2_current_demand_res(
                                         &mut value_2,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*message).EVSEPowerLimitAchieved = value_2 as i32;
+                                        (*message).evse_power_limit_achieved = value_2 as i32;
                                     }
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
@@ -9572,7 +9496,7 @@ pub fn decode_iso2_current_demand_res(
                         0 => {
                             decode_iso2_physical_value(
                                 stream,
-                                &mut (*message).EVSEMaximumVoltageLimit.unwrap().clone(),
+                                &mut (*message).evse_maximum_voltage_limit.as_mut().unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 209 as i32;
@@ -9581,7 +9505,7 @@ pub fn decode_iso2_current_demand_res(
                         1 => {
                             decode_iso2_physical_value(
                                 stream,
-                                &mut (*message).EVSEMaximumCurrentLimit.unwrap().clone(),
+                                &mut (*message).evse_maximum_current_limit.as_mut().unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 210 as i32;
@@ -9590,7 +9514,7 @@ pub fn decode_iso2_current_demand_res(
                         2 => {
                             decode_iso2_physical_value(
                                 stream,
-                                &mut (*message).EVSEMaximumPowerLimit.unwrap().clone(),
+                                &mut (*message).evse_maximum_power_limit.as_mut().unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 211 as i32;
@@ -9610,7 +9534,6 @@ pub fn decode_iso2_current_demand_res(
                                     )?;
                                     if error == 0 as i32 {
                                         if (*message).evse_id.len() >= 2 {
-                                            (*message).evse_id.len -= 2;
                                             exi_basetypes_decoder_characters(
                                                 stream,
                                                 (*message).evse_id.len() as usize,
@@ -9682,7 +9605,6 @@ pub fn decode_iso2_current_demand_res(
                                     )?;
                                     if error == 0 as i32 {
                                         if (*message).evse_id.len() >= 2 {
-                                            (*message).evse_id.len -= 2;
                                             exi_basetypes_decoder_characters(
                                                 stream,
                                                 (*message).evse_id.len() as usize,
@@ -9745,7 +9667,6 @@ pub fn decode_iso2_current_demand_res(
                                     )?;
                                     if error == 0 as i32 {
                                         if (*message).evse_id.len() >= 2 {
-                                            (*message).evse_id.len -= 2;
                                             exi_basetypes_decoder_characters(
                                                 stream,
                                                 (*message).evse_id.len() as usize,
@@ -9799,7 +9720,6 @@ pub fn decode_iso2_current_demand_res(
                                     )?;
                                     if error == 0 as i32 {
                                         if (*message).evse_id.len() >= 2 {
-                                            (*message).evse_id.len -= 2;
                                             exi_basetypes_decoder_characters(
                                                 stream,
                                                 (*message).evse_id.len(),
@@ -9854,7 +9774,7 @@ pub fn decode_iso2_current_demand_res(
                                         &mut value_3,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*message).SAScheduleTupleID =
+                                        (*message).sa_schedule_tuple_id =
                                             value_3.wrapping_add(1 as i32 as u32) as u8;
                                     }
                                 } else {
@@ -9889,7 +9809,7 @@ pub fn decode_iso2_current_demand_res(
                         0 => {
                             decode_iso2_meter_info(
                                 stream,
-                                &mut (*message).MeterInfo.unwrap().clone(),
+                                &mut (*message).meter_info.as_mut().unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 214 as i32;
@@ -9910,7 +9830,7 @@ pub fn decode_iso2_current_demand_res(
                                         &mut value_4,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*message).ReceiptRequired = Some(value_4 as i32);
+                                        (*message).receipt_required = Some(value_4 as i32);
                                     }
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
@@ -9959,7 +9879,7 @@ pub fn decode_iso2_current_demand_res(
                                         &mut value_5,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*message).ReceiptRequired = Some(value_5 as i32);
+                                        (*message).receipt_required = Some(value_5 as i32);
                                     }
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
@@ -10010,7 +9930,7 @@ pub fn decode_iso2_current_demand_res(
 }
 pub fn decode_iso2_charging_status_res(
     stream: &mut ExiBitstream,
-	message: &mut Iso2ChargingStatusResType,
+    message: &mut Iso2ChargingStatusResType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 215 as i32;
 
@@ -10082,7 +10002,6 @@ pub fn decode_iso2_charging_status_res(
                                     )?;
                                     if error == 0 as i32 {
                                         if (*message).evse_id.len() >= 2 {
-                                            (*message).evse_id.len -= 2;
                                             exi_basetypes_decoder_characters(
                                                 stream,
                                                 (*message).evse_id.len(),
@@ -10137,7 +10056,7 @@ pub fn decode_iso2_charging_status_res(
                                         &mut value_0,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*message).SAScheduleTupleID =
+                                        (*message).sa_schedule_tuple_id =
                                             value_0.wrapping_add(1 as i32 as u32) as u8;
                                     }
                                 } else {
@@ -10172,7 +10091,7 @@ pub fn decode_iso2_charging_status_res(
                         0 => {
                             decode_iso2_physical_value(
                                 stream,
-                                &mut (*message).EVSEMaxCurrent.unwrap().clone(),
+                                &mut (*message).evse_max_current.unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 219 as i32;
@@ -10181,7 +10100,7 @@ pub fn decode_iso2_charging_status_res(
                         1 => {
                             decode_iso2_meter_info(
                                 stream,
-                                &mut (*message).MeterInfo.unwrap().clone(),
+                                &mut (*message).meter_info.unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 220 as i32;
@@ -10202,7 +10121,7 @@ pub fn decode_iso2_charging_status_res(
                                         &mut value_1,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*message).ReceiptRequired = Some(value_1 as i32);
+                                        (*message).receipt_required = Some(value_1 as i32);
                                     }
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
@@ -10224,7 +10143,7 @@ pub fn decode_iso2_charging_status_res(
                             }
                         }
                         3 => {
-                            decode_iso2_ac_evsestatus(stream, &mut (*message).AC_EVSEStatus)?;
+                            decode_iso2_ac_evsestatus(stream, &mut (*message).ac_evse_status)?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
                             }
@@ -10242,7 +10161,7 @@ pub fn decode_iso2_charging_status_res(
                         0 => {
                             decode_iso2_meter_info(
                                 stream,
-                                &mut (*message).MeterInfo.unwrap().clone(),
+                                &mut (*message).meter_info.as_mut().unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 220 as i32;
@@ -10263,7 +10182,7 @@ pub fn decode_iso2_charging_status_res(
                                         &mut value_2,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*message).ReceiptRequired = Some(value_2 as i32);
+                                        (*message).receipt_required = Some(value_2 as i32);
                                     }
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
@@ -10315,7 +10234,7 @@ pub fn decode_iso2_charging_status_res(
                                         &mut value_3,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*message).ReceiptRequired = Some(value_3 as i32);
+                                        (*message).receipt_required = Some(value_3 as i32);
                                     }
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
@@ -10337,7 +10256,7 @@ pub fn decode_iso2_charging_status_res(
                             }
                         }
                         1 => {
-                            decode_iso2_ac_evsestatus(stream, &mut (*message).AC_EVSEStatus)?;
+                            decode_iso2_ac_evse_status(stream, &mut (*message).ac_evse_status)?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
                             }
@@ -10353,7 +10272,7 @@ pub fn decode_iso2_charging_status_res(
                 if error == 0 as i32 {
                     match event_code {
                         0 => {
-                            decode_iso2_ac_evsestatus(stream, &mut (*message).AC_EVSEStatus)?;
+                            decode_iso2_ac_evse_status(stream, &mut (*message).ac_evse_status)?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
                             }
@@ -10385,7 +10304,7 @@ pub fn decode_iso2_charging_status_res(
 }
 pub fn decode_iso2_authorization_req(
     stream: &mut ExiBitstream,
-	message: &mut Iso2AuthorizationReqType,
+    message: &mut Iso2AuthorizationReqType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 222 as i32;
 
@@ -10478,7 +10397,7 @@ pub fn decode_iso2_authorization_req(
 }
 pub fn decode_iso2_pre_charge_req(
     stream: &mut ExiBitstream,
-	message: &mut Iso2PreChargeReqType,
+    message: &mut Iso2PreChargeReqType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 224 as i32;
 
@@ -10493,7 +10412,7 @@ pub fn decode_iso2_pre_charge_req(
                         0 => {
                             decode_iso2_dc_ev_status(
                                 stream,
-                                &mut (*message).dc_ev_status.unwrap().clone(),
+                                &mut (*message).dc_ev_status.as_mut().unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 225 as i32;
@@ -10512,7 +10431,7 @@ pub fn decode_iso2_pre_charge_req(
                         0 => {
                             decode_iso2_physical_value(
                                 stream,
-                                &mut (*message).ev_target_voltage.clone().unwrap(),
+                                &mut (*message).ev_target_voltage.as_mut().unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 226 as i32;
@@ -10531,7 +10450,7 @@ pub fn decode_iso2_pre_charge_req(
                         0 => {
                             decode_iso2_physical_value(
                                 stream,
-                                &mut (*message).ev_target_current.clone().unwrap(),
+                                &mut (*message).ev_target_current.as_mut().unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -10564,7 +10483,7 @@ pub fn decode_iso2_pre_charge_req(
 }
 pub fn decode_iso2_service_detail_res(
     stream: &mut ExiBitstream,
-	message: &mut Iso2ServiceDetailResType,
+    message: &mut Iso2ServiceDetailResType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 227 as i32;
 
@@ -10641,7 +10560,7 @@ pub fn decode_iso2_service_detail_res(
                         0 => {
                             decode_iso2_service_parameter_list(
                                 stream,
-                                &mut (*message).ServiceParameterList.unwrap().clone(),
+                                &mut (*message).service_parameter_list.as_mut().unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -10677,7 +10596,7 @@ pub fn decode_iso2_service_detail_res(
 }
 pub fn decode_iso2_payment_service_selection_res(
     stream: &mut ExiBitstream,
-	message: &mut Iso2PaymentServiceSelectionResType,
+    message: &mut Iso2PaymentServiceSelectionResType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 230 as i32;
 
@@ -10752,7 +10671,7 @@ pub fn decode_iso2_payment_service_selection_res(
 }
 pub fn decode_iso2_certificate_update_req(
     stream: &mut ExiBitstream,
-	message: &mut Iso2CertificateUpdateReqType,
+    message: &mut Iso2CertificateUpdateReqType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 231 as i32;
 
@@ -10765,10 +10684,12 @@ pub fn decode_iso2_certificate_update_req(
                 if error == 0 as i32 {
                     match event_code {
                         0 => {
-                            exi_basetypes_decoder_uint_16(stream, &mut ((*message).id.len() as u16))?;
+                            exi_basetypes_decoder_uint_16(
+                                stream,
+                                &mut ((*message).id.len() as u16),
+                            )?;
                             if error == 0 as i32 {
                                 if (*message).id.len() >= 2 {
-                                    (*message).id.len -= 2;
                                     exi_basetypes_decoder_characters(
                                         stream,
                                         (*message).id.len() as usize,
@@ -10897,7 +10818,7 @@ pub fn decode_iso2_certificate_update_req(
 }
 pub fn decode_iso2_session_setup_res(
     stream: &mut ExiBitstream,
-	message: &mut Iso2SessionSetupResType,
+    message: &mut Iso2SessionSetupResType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 235 as i32;
 
@@ -11046,7 +10967,7 @@ pub fn decode_iso2_session_setup_res(
 }
 pub fn decode_iso2_certificate_installation_req(
     stream: &mut ExiBitstream,
-	message: &mut Iso2CertificateInstallationReqType,
+    message: &mut Iso2CertificateInstallationReqType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 238 as i32;
 
@@ -11059,7 +10980,10 @@ pub fn decode_iso2_certificate_installation_req(
                 if error == 0 as i32 {
                     match event_code {
                         0 => {
-                            exi_basetypes_decoder_uint_16(stream, &mut ((*message).id.len() as u16))?;
+                            exi_basetypes_decoder_uint_16(
+                                stream,
+                                &mut ((*message).id.len() as u16),
+                            )?;
                             if error == 0 as i32 {
                                 if (*message).id.len() >= 2 {
                                     exi_basetypes_decoder_characters(
@@ -11139,7 +11063,7 @@ pub fn decode_iso2_certificate_installation_req(
 }
 pub fn decode_iso2_certificate_installation_res(
     stream: &mut ExiBitstream,
-	message: &mut Iso2CertificateInstallationResType,
+    message: &mut Iso2CertificateInstallationResType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 241 as i32;
 
@@ -11238,8 +11162,7 @@ pub fn decode_iso2_certificate_installation_res(
                         0 => {
                             decode_iso2_contract_signature_encrypted_private_key(
                                 stream,
-                                &mut (*message)
-                                    .ContractSignatureEncryptedPrivateKey,
+                                &mut (*message).ContractSignatureEncryptedPrivateKey,
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 245 as i32;
@@ -11307,7 +11230,7 @@ pub fn decode_iso2_certificate_installation_res(
 }
 pub fn decode_iso2_welding_detection_res(
     stream: &mut ExiBitstream,
-	message: &mut Iso2WeldingDetectionResType,
+    message: &mut Iso2WeldingDetectionResType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 247 as i32;
 
@@ -11414,7 +11337,7 @@ pub fn decode_iso2_welding_detection_res(
 }
 pub fn decode_iso2_current_demand_req(
     stream: &mut ExiBitstream,
-	message: &mut Iso2CurrentDemandReqType,
+    message: &mut Iso2CurrentDemandReqType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 250 as i32;
 
@@ -11978,7 +11901,7 @@ pub fn decode_iso2_current_demand_req(
 }
 pub fn decode_iso2_pre_charge_res(
     stream: &mut ExiBitstream,
-	message: &mut Iso2PreChargeResType,
+    message: &mut Iso2PreChargeResType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 260 as i32;
 
@@ -12037,7 +11960,7 @@ pub fn decode_iso2_pre_charge_res(
                 if error == 0 as i32 {
                     match event_code {
                         0 => {
-                            decode_iso2_DC_EVSEStatus(stream, &mut (*message).dc_evse_status)?;
+                            decode_iso2_dc_evse_status(stream, &mut (*message).dc_evse_status)?;
                             if error == 0 as i32 {
                                 grammar_id = 262 as i32;
                             }
@@ -12053,7 +11976,10 @@ pub fn decode_iso2_pre_charge_res(
                 if error == 0 as i32 {
                     match event_code {
                         0 => {
-                            decode_iso2_physical_value(stream, &mut (*message).evse_present_voltage)?;
+                            decode_iso2_physical_value(
+                                stream,
+                                &mut (*message).evse_present_voltage,
+                            )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
                             }
@@ -12085,7 +12011,7 @@ pub fn decode_iso2_pre_charge_res(
 }
 pub fn decode_iso2_certificate_update_res(
     stream: &mut ExiBitstream,
-	message: &mut Iso2CertificateUpdateResType,
+    message: &mut Iso2CertificateUpdateResType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 263 as i32;
 
@@ -12184,8 +12110,7 @@ pub fn decode_iso2_certificate_update_res(
                         0 => {
                             decode_iso2_contract_signature_encrypted_private_key(
                                 stream,
-                                &mut (*message)
-                                    .contract_signature_encrypted_private_key,
+                                &mut (*message).contract_signature_encrypted_private_key,
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 267 as i32;
@@ -12275,7 +12200,7 @@ pub fn decode_iso2_certificate_update_res(
 }
 pub fn decode_iso2_metering_receipt_req(
     stream: &mut ExiBitstream,
-	message: &mut Iso2MeteringReceiptReqType,
+    message: &mut Iso2MeteringReceiptReqType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 270 as i32;
 
@@ -12431,7 +12356,7 @@ pub fn decode_iso2_metering_receipt_req(
 }
 pub fn decode_iso2_charging_status_req(
     stream: &mut ExiBitstream,
-	_message: &mut Iso2ChargingStatusReqType,
+    _message: &mut Iso2ChargingStatusReqType,
 ) -> Result<(), ExiError> {
     let mut event_code: u32 = 0;
     exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
@@ -12443,7 +12368,7 @@ pub fn decode_iso2_charging_status_req(
 }
 pub fn decode_iso2_session_stop_res(
     stream: &mut ExiBitstream,
-	message: &mut Iso2SessionStopResType,
+    message: &mut Iso2SessionStopResType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 274 as i32;
 
@@ -12518,7 +12443,7 @@ pub fn decode_iso2_session_stop_res(
 }
 pub fn decode_iso2_charge_parameter_discovery_req(
     stream: &mut ExiBitstream,
-	message: &mut Iso2ChargeParameterDiscoveryReqType,
+    message: &mut Iso2ChargeParameterDiscoveryReqType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 275 as i32;
 
@@ -12533,10 +12458,7 @@ pub fn decode_iso2_charge_parameter_discovery_req(
                         0 => {
                             decode_exi_type_uint16(
                                 stream,
-                                &mut (*message)
-                                    .max_entries_sa_schedule_tuple
-                                    .unwrap()
-                                    .clone(),
+                                &mut (*message).max_entries_sa_schedule_tuple.unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 276 as i32;
@@ -12557,8 +12479,7 @@ pub fn decode_iso2_charge_parameter_discovery_req(
                                         &mut value,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*message)
-                                            .requested_energy_transfer_mode =
+                                        (*message).requested_energy_transfer_mode =
                                             value as Iso2EnergyTransferModeType;
                                     }
                                 } else {
@@ -12605,8 +12526,7 @@ pub fn decode_iso2_charge_parameter_discovery_req(
                                         &mut value_0,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*message)
-                                            .requested_energy_transfer_mode =
+                                        (*message).requested_energy_transfer_mode =
                                             value_0 as Iso2EnergyTransferModeType;
                                     }
                                 } else {
@@ -12641,10 +12561,7 @@ pub fn decode_iso2_charge_parameter_discovery_req(
                         0 => {
                             decode_iso2_ac_evcharge_parameter(
                                 stream,
-                                &mut (*message)
-                                    .ac_ev_charge_parameter
-                                    .unwrap()
-                                    .clone(),
+                                &mut (*message).ac_ev_charge_parameter.unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -12653,10 +12570,7 @@ pub fn decode_iso2_charge_parameter_discovery_req(
                         1 => {
                             decode_iso2_dc_evcharge_parameter(
                                 stream,
-                                &mut (*message)
-                                    .dc_ev_charge_parameter
-                                    .unwrap()
-                                    .clone(),
+                                &mut (*message).dc_ev_charge_parameter.unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -12665,10 +12579,7 @@ pub fn decode_iso2_charge_parameter_discovery_req(
                         2 => {
                             decode_iso2_evcharge_parameter(
                                 stream,
-                                &mut (*message)
-                                    .ev_charge_parameter
-                                    .unwrap()
-                                    .clone(),
+                                &mut (*message).ev_charge_parameter.unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -12701,7 +12612,7 @@ pub fn decode_iso2_charge_parameter_discovery_req(
 }
 pub fn decode_iso2_cable_check_req(
     stream: &mut ExiBitstream,
-	message: &mut Iso2CableCheckReqType,
+    message: &mut Iso2CableCheckReqType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 278 as i32;
 
@@ -12746,7 +12657,7 @@ pub fn decode_iso2_cable_check_req(
 }
 pub fn decode_iso2_welding_detection_req(
     stream: &mut ExiBitstream,
-	message: &mut Iso2WeldingDetectionReqType,
+    message: &mut Iso2WeldingDetectionReqType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 279 as i32;
     let mut event_code: u32 = 0;
@@ -12790,7 +12701,7 @@ pub fn decode_iso2_welding_detection_req(
 }
 pub fn decode_iso2_power_delivery_res(
     stream: &mut ExiBitstream,
-	message: &mut Iso2PowerDeliveryResType,
+    message: &mut Iso2PowerDeliveryResType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 280 as i32;
 
@@ -12817,8 +12728,7 @@ pub fn decode_iso2_power_delivery_res(
                                         &mut value,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*message).response_code =
-                                            value as Iso2ResponseCodeType;
+                                        (*message).response_code = value as Iso2ResponseCodeType;
                                     }
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
@@ -12903,7 +12813,7 @@ pub fn decode_iso2_power_delivery_res(
 }
 pub fn decode_iso2_charge_parameter_discovery_res(
     stream: &mut ExiBitstream,
-	message: &mut Iso2ChargeParameterDiscoveryResType,
+    message: &mut Iso2ChargeParameterDiscoveryResType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 282 as i32;
 
@@ -12930,8 +12840,7 @@ pub fn decode_iso2_charge_parameter_discovery_res(
                                         &mut value,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*message).response_code =
-                                            value as Iso2ResponseCodeType;
+                                        (*message).response_code = value as Iso2ResponseCodeType;
                                     }
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
@@ -13012,10 +12921,7 @@ pub fn decode_iso2_charge_parameter_discovery_res(
                         0 => {
                             decode_iso2_sa_schedule_list(
                                 stream,
-                                &mut (*message)
-                                    .sa_schedule_list
-                                    .unwrap()
-                                    .clone(),
+                                &mut (*message).sa_schedule_list.unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 285 as i32;
@@ -13024,10 +12930,7 @@ pub fn decode_iso2_charge_parameter_discovery_res(
                         1 => {
                             decode_iso2_sa_schedules(
                                 stream,
-                                &mut (*message)
-                                    .sa_schedules
-                                    .unwrap()
-                                    .clone(),
+                                &mut (*message).sa_schedules.unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 285 as i32;
@@ -13036,10 +12939,7 @@ pub fn decode_iso2_charge_parameter_discovery_res(
                         2 => {
                             decode_iso2_ac_evse_charge_parameter(
                                 stream,
-                                &mut (*message)
-                                    .ac_evse_charge_parameter
-                                    .unwrap()
-                                    .clone(),
+                                &mut (*message).ac_evse_charge_parameter.unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -13048,10 +12948,7 @@ pub fn decode_iso2_charge_parameter_discovery_res(
                         3 => {
                             decode_iso2_dc_evse_charge_parameter(
                                 stream,
-                                &mut (*message)
-                                    .dc_evse_charge_parameter
-                                    .unwrap()
-                                    .clone(),
+                                &mut (*message).dc_evse_charge_parameter.unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -13060,10 +12957,7 @@ pub fn decode_iso2_charge_parameter_discovery_res(
                         4 => {
                             decode_iso2_evse_charge_parameter(
                                 stream,
-                                &mut (*message)
-                                    .evse_charge_parameter
-                                    .unwrap()
-                                    .clone(),
+                                &mut (*message).evse_charge_parameter.unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -13082,10 +12976,7 @@ pub fn decode_iso2_charge_parameter_discovery_res(
                         0 => {
                             decode_iso2_ac_evse_charge_parameter(
                                 stream,
-                                &mut (*message)
-                                    .ac_evse_charge_parameter
-                                    .unwrap()
-                                    .clone(),
+                                &mut (*message).ac_evse_charge_parameter.unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -13094,10 +12985,7 @@ pub fn decode_iso2_charge_parameter_discovery_res(
                         1 => {
                             decode_iso2_dc_evse_charge_parameter(
                                 stream,
-                                &mut (*message)
-                                    .dc_evse_charge_parameter
-                                    .unwrap()
-                                    .clone(),
+                                &mut (*message).dc_evse_charge_parameter.unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -13106,10 +12994,7 @@ pub fn decode_iso2_charge_parameter_discovery_res(
                         2 => {
                             decode_iso2_evse_charge_parameter(
                                 stream,
-                                &mut (*message)
-                                    .evse_charge_parameter
-                                    .unwrap()
-                                    .clone(),
+                                &mut (*message).evse_charge_parameter.unwrap().clone(),
                             )?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
@@ -13142,7 +13027,7 @@ pub fn decode_iso2_charge_parameter_discovery_res(
 }
 pub fn decode_iso2_payment_service_selection_req(
     stream: &mut ExiBitstream,
-	message: &mut Iso2PaymentServiceSelectionReqType,
+    message: &mut Iso2PaymentServiceSelectionReqType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 286 as i32;
 
@@ -13169,8 +13054,7 @@ pub fn decode_iso2_payment_service_selection_req(
                                         &mut value,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*message)
-                                            .selected_payment_option =
+                                        (*message).selected_payment_option =
                                             value as Iso2PaymentOptionType;
                                     }
                                 } else {
@@ -13238,7 +13122,7 @@ pub fn decode_iso2_payment_service_selection_req(
 }
 pub fn decode_iso2_metering_receipt_res(
     stream: &mut ExiBitstream,
-	message: &mut Iso2MeteringReceiptResType,
+    message: &mut Iso2MeteringReceiptResType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 288 as i32;
 
@@ -13265,8 +13149,7 @@ pub fn decode_iso2_metering_receipt_res(
                                         &mut value,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*message).response_code =
-                                            value as Iso2ResponseCodeType;
+                                        (*message).response_code = value as Iso2ResponseCodeType;
                                     }
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
@@ -13351,7 +13234,7 @@ pub fn decode_iso2_metering_receipt_res(
 }
 pub fn decode_iso2_cable_check_res(
     stream: &mut ExiBitstream,
-	message: &mut Iso2CableCheckResType,
+    message: &mut Iso2CableCheckResType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 290 as i32;
 
@@ -13378,8 +13261,7 @@ pub fn decode_iso2_cable_check_res(
                                         &mut value,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*message).response_code =
-                                            value as Iso2ResponseCodeType;
+                                        (*message).response_code = value as Iso2ResponseCodeType;
                                     }
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
@@ -13493,7 +13375,7 @@ pub fn decode_iso2_cable_check_res(
 }
 pub fn decode_iso2_service_discovery_res(
     stream: &mut ExiBitstream,
-	message: &mut Iso2ServiceDiscoveryResType,
+    message: &mut Iso2ServiceDiscoveryResType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 293 as i32;
 
@@ -13520,8 +13402,7 @@ pub fn decode_iso2_service_discovery_res(
                                         &mut value,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*message).response_code =
-                                            value as Iso2ResponseCodeType;
+                                        (*message).response_code = value as Iso2ResponseCodeType;
                                     }
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
@@ -13572,10 +13453,7 @@ pub fn decode_iso2_service_discovery_res(
                 if error == 0 as i32 {
                     match event_code {
                         0 => {
-                            decode_iso2_charge_service(
-                                stream,
-                                &mut (*message).charge_service,
-                            )?;
+                            decode_iso2_charge_service(stream, &mut (*message).charge_service)?;
                             if error == 0 as i32 {
                                 grammar_id = 296 as i32;
                             }
@@ -13629,7 +13507,7 @@ pub fn decode_iso2_service_discovery_res(
 }
 pub fn decode_iso2_service_detail_req(
     stream: &mut ExiBitstream,
-	message: &mut Iso2ServiceDetailReqType,
+    message: &mut Iso2ServiceDetailReqType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 297 as i32;
 
@@ -13674,7 +13552,7 @@ pub fn decode_iso2_service_detail_req(
 }
 pub fn decode_iso2_session_setup_req(
     stream: &mut ExiBitstream,
-	message: &mut Iso2SessionSetupReqType,
+    message: &mut Iso2SessionSetupReqType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 298 as i32;
 
@@ -13723,7 +13601,7 @@ pub fn decode_iso2_session_setup_req(
 }
 pub fn decode_iso2_session_stop_req(
     stream: &mut ExiBitstream,
-	message: &mut Iso2SessionStopReqType,
+    message: &mut Iso2SessionStopReqType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 299 as i32;
 
@@ -13799,7 +13677,7 @@ pub fn decode_iso2_session_stop_req(
 }
 pub fn decode_iso2_service_discovery_req(
     stream: &mut ExiBitstream,
-	message: &mut Iso2ServiceDiscoveryReqType,
+    message: &mut Iso2ServiceDiscoveryReqType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 300 as i32;
 
@@ -13819,14 +13697,15 @@ pub fn decode_iso2_service_discovery_req(
                             )?;
                             if error == 0 as i32 {
                                 if event_code == 0 as i32 as u32 {
-
                                     exi_basetypes_decoder_uint_16(
                                         stream,
-                                        &mut ((*message).service_scope.clone().unwrap().len() as u16),
+                                        &mut ((*message).service_scope.clone().unwrap().len()
+                                            as u16),
                                     )?;
                                     if error == 0 as i32 {
-                                        if (*message).service_scope.clone().unwrap().len() as i32 >= 2 as i32 {
-
+                                        if (*message).service_scope.clone().unwrap().len() as i32
+                                            >= 2 as i32
+                                        {
                                             exi_basetypes_decoder_characters(
                                                 stream,
                                                 (*message).service_scope.clone().unwrap().len(),
@@ -13972,7 +13851,7 @@ pub fn decode_iso2_service_discovery_req(
 }
 pub fn decode_iso2_authorization_res(
     stream: &mut ExiBitstream,
-	message: &mut Iso2AuthorizationResType,
+    message: &mut Iso2AuthorizationResType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 302 as i32;
 
@@ -14094,7 +13973,7 @@ pub fn decode_iso2_authorization_res(
 }
 pub fn decode_iso2_payment_details_req(
     stream: &mut ExiBitstream,
-	message: &mut Iso2PaymentDetailsReqType,
+    message: &mut Iso2PaymentDetailsReqType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 304 as i32;
 
@@ -14120,7 +13999,6 @@ pub fn decode_iso2_payment_details_req(
                                     )?;
                                     if error == 0 as i32 {
                                         if (*message).e_maid.len() as i32 >= 2 as i32 {
-
                                             exi_basetypes_decoder_characters(
                                                 stream,
                                                 (*message).e_maid.len(),
@@ -14195,7 +14073,7 @@ pub fn decode_iso2_payment_details_req(
 }
 pub fn decode_iso2_payment_details_res(
     stream: &mut ExiBitstream,
-	message: &mut Iso2PaymentDetailsResType,
+    message: &mut Iso2PaymentDetailsResType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 306 as i32;
     let mut event_code: u32 = 0;
@@ -14221,8 +14099,7 @@ pub fn decode_iso2_payment_details_res(
                                         &mut value,
                                     )?;
                                     if error == 0 as i32 {
-                                        (*message).response_code =
-                                            value as Iso2ResponseCodeType;
+                                        (*message).response_code = value as Iso2ResponseCodeType;
                                     }
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
@@ -14274,10 +14151,7 @@ pub fn decode_iso2_payment_details_res(
                 if error == 0 as i32 {
                     match event_code {
                         0 => {
-                            decode_exi_type_integer64(
-                                stream,
-                                &mut (*message).evse_time_stamp,
-                            )?;
+                            decode_exi_type_integer64(stream, &mut (*message).evse_time_stamp)?;
                             if error == 0 as i32 {
                                 grammar_id = 3 as i32;
                             }
@@ -14310,7 +14184,7 @@ pub fn decode_iso2_payment_details_res(
 
 pub fn decode_iso2_body(
     stream: &mut ExiBitstream,
-	message: &mut Iso2BodyType,
+    message: &mut Iso2BodyType,
 ) -> Result<(), ExiError> {
     let mut event_code: u32 = 0;
     exi_basetypes_decoder_nbit_uint(stream, 6 as i32 as usize, &mut event_code)?;
@@ -14409,12 +14283,14 @@ pub fn decode_iso2_body(
         15 => {
             let mut metering_receipt_req: Iso2MeteringReceiptReqType = Default::default();
             decode_iso2_metering_receipt_req(stream, &mut metering_receipt_req)?;
-            message.body_type_component = Iso2BodyTypeEnum::MeteringReceiptReq(metering_receipt_req);
+            message.body_type_component =
+                Iso2BodyTypeEnum::MeteringReceiptReq(metering_receipt_req);
         }
         16 => {
             let mut metering_receipt_res: Iso2MeteringReceiptResType = Default::default();
             decode_iso2_metering_receipt_res(stream, &mut metering_receipt_res)?;
-            message.body_type_component = Iso2BodyTypeEnum::MeteringReceiptRes(metering_receipt_res);
+            message.body_type_component =
+                Iso2BodyTypeEnum::MeteringReceiptRes(metering_receipt_res);
         }
         17 => {
             let mut payment_details_req: Iso2PaymentDetailsReqType = Default::default();
@@ -14473,12 +14349,14 @@ pub fn decode_iso2_body(
         27 => {
             let mut service_discovery_req: Iso2ServiceDiscoveryReqType = Default::default();
             decode_iso2_service_discovery_req(stream, &mut service_discovery_req)?;
-            message.body_type_component = Iso2BodyTypeEnum::ServiceDiscoveryReq(service_discovery_req);
+            message.body_type_component =
+                Iso2BodyTypeEnum::ServiceDiscoveryReq(service_discovery_req);
         }
         28 => {
             let mut service_discovery_res: Iso2ServiceDiscoveryResType = Default::default();
             decode_iso2_service_discovery_res(stream, &mut service_discovery_res)?;
-            message.body_type_component = Iso2BodyTypeEnum::ServiceDiscoveryRes(service_discovery_res);
+            message.body_type_component =
+                Iso2BodyTypeEnum::ServiceDiscoveryRes(service_discovery_res);
         }
         29 => {
             let mut session_setup_req: Iso2SessionSetupReqType = Default::default();
@@ -14503,12 +14381,14 @@ pub fn decode_iso2_body(
         33 => {
             let mut welding_detection_req: Iso2WeldingDetectionReqType = Default::default();
             decode_iso2_welding_detection_req(stream, &mut welding_detection_req)?;
-            message.body_type_component = Iso2BodyTypeEnum::WeldingDetectionReq(welding_detection_req);
+            message.body_type_component =
+                Iso2BodyTypeEnum::WeldingDetectionReq(welding_detection_req);
         }
         34 => {
             let mut welding_detection_res: Iso2WeldingDetectionResType = Default::default();
             decode_iso2_welding_detection_res(stream, &mut welding_detection_res)?;
-            message.body_type_component = Iso2BodyTypeEnum::WeldingDetectionRes(welding_detection_res);
+            message.body_type_component =
+                Iso2BodyTypeEnum::WeldingDetectionRes(welding_detection_res);
         }
         _ => {
             return Err(ExiError::UnknownEventCode);
@@ -14585,7 +14465,7 @@ pub fn decode_iso2_v2g_message(
 
 pub fn decode_iso2_exi_document(
     stream: &mut ExiBitstream,
-	message: &mut Iso2ExiDocument,
+    message: &mut Iso2ExiDocument,
 ) -> Result<(), ExiError> {
     let mut event_code: u32 = 0;
     stream.read_and_check_header()?;
@@ -14603,7 +14483,7 @@ pub fn decode_iso2_exi_document(
 
 pub fn decode_iso2_exi_fragment(
     stream: &mut ExiBitstream,
-	_message: &mut Iso2ExiFragment,
+    _message: &mut Iso2ExiFragment,
 ) -> Result<(), ExiError> {
     let mut event_code: u32 = 0;
     stream.read_and_check_header()?;
@@ -14928,7 +14808,7 @@ pub fn decode_iso2_exi_fragment(
 
 pub fn decode_iso2_xmldsig_fragment(
     stream: &mut ExiBitstream,
-	_message: &mut Iso2XmlDSigFragment,
+    _message: &mut Iso2XmlDSigFragment,
 ) -> Result<(), ExiError> {
     let mut event_code: u32 = 0;
     stream.read_and_check_header()?;

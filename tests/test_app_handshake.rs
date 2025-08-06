@@ -81,14 +81,14 @@ mod tests {
                     !app_req.app_protocols.is_empty(),
                     "App protocol array should not be empty"
                 );
-                let ns0: &str = match str::from_utf8(&app_req.app_protocols[0].protocol_namespace.characters) {
-                    Ok(ns) => ns,
-                    Err(_) => panic!("Failed to convert protocol namespace to string"),
-                };
+                let ns0: &str =
+                    match str::from_utf8(&app_req.app_protocols[0].protocol_namespace.characters) {
+                        Ok(ns) => ns,
+                        Err(_) => panic!("Failed to convert protocol namespace to string"),
+                    };
 
                 assert_eq!(
-                    ns0,
-                    "urn:din:70121:2012:MsgDef",
+                    ns0, "urn:din:70121:2012:MsgDef",
                     "Protocol namespace should match"
                 );
                 assert_eq!(
@@ -108,14 +108,14 @@ mod tests {
                     "Priority should match"
                 );
 
-                let ns1: &str = match str::from_utf8(&app_req.app_protocols[1].protocol_namespace.characters) {
-                    Ok(ns) => ns,
-                    Err(_) => panic!("Failed to convert protocol namespace to string"),
-                };
+                let ns1: &str =
+                    match str::from_utf8(&app_req.app_protocols[1].protocol_namespace.characters) {
+                        Ok(ns) => ns,
+                        Err(_) => panic!("Failed to convert protocol namespace to string"),
+                    };
 
                 assert_eq!(
-                    ns1,
-                    "urn:iso:15118:2:2013:MsgDef",
+                    ns1, "urn:iso:15118:2:2013:MsgDef",
                     "Protocol namespace should match"
                 );
                 assert_eq!(
