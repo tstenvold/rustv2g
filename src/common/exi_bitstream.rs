@@ -12,7 +12,7 @@ pub struct ExiBitstream<'a> {
 }
 
 impl ExiBitstream<'_> {
-    pub const fn reset(&mut self) {
+    pub fn reset(&mut self) {
         if self.flag_byte_pos == 0 {
             self.byte_pos = 0;
         } else {
@@ -21,7 +21,7 @@ impl ExiBitstream<'_> {
         self.bit_count = 0;
     }
 
-    pub const fn has_overflow(&mut self) -> Result<(), ExiError> {
+    pub fn has_overflow(&mut self) -> Result<(), ExiError> {
         if self.bit_count == 8 {
             if self.byte_pos < self.data.len() {
                 self.byte_pos = self.byte_pos.wrapping_add(1);

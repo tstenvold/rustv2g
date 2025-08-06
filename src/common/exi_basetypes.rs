@@ -139,7 +139,7 @@ impl ExiUnsigned {
             tmp >>= 1;
         }
         let total_relevant_input_bits = ((data.len() - bytenum - 1) * 8) + bits_in_byte;
-        let exi_expected_octets_count = total_relevant_input_bits.div_ceil(7);
+        let exi_expected_octets_count = (total_relevant_input_bits + 6) / 7;
         let mut dummy: u16 = 0;
         let mut dummy_count: u8 = 0;
         let mut incount: usize = 0;
