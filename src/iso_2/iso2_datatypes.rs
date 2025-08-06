@@ -156,93 +156,79 @@ impl Default for Iso2CostType {
     }
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2TransformType {
-    pub algorithm: Iso2u8FixedBufType<65>,
-    pub any: Option<Iso2u8FixedBufType<4>>,
-    pub xpath: Option<Iso2u8FixedBufType<65>>,
+    pub algorithm: Vec<u8, 65>,
+    pub any: Option<Vec<u8, 4>>,
+    pub xpath: Option<Vec<u8, 65>>,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub struct Iso2u8FixedBufType<const N: usize> {
-    pub data: [u8; N],
-    pub len: usize,
-}
-
-impl<const N: usize> Default for Iso2u8FixedBufType<N> {
-    fn default() -> Self {
-        Self {
-            data: [0; N],
-            len: 0,
-        }
-    }
-}
-
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2IntervalType {
     _unused: i32,
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2TransformsType {
     pub transform: Iso2TransformType,
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2DSAKeyValueType {
-    pub p: Option<Iso2u8FixedBufType<350>>,
-    pub q: Option<Iso2u8FixedBufType<350>>,
-    pub g: Option<Iso2u8FixedBufType<350>>,
-    pub y: Iso2u8FixedBufType<350>,
-    pub j: Option<Iso2u8FixedBufType<350>>,
-    pub seed: Option<Iso2u8FixedBufType<350>>,
-    pub pgen_counter: Option<Iso2u8FixedBufType<350>>,
+    pub p: Option<Vec<u8, 350>>,
+    pub q: Option<Vec<u8, 350>>,
+    pub g: Option<Vec<u8, 350>>,
+    pub y: Vec<u8, 350>,
+    pub j: Option<Vec<u8, 350>>,
+    pub seed: Option<Vec<u8, 350>>,
+    pub pgen_counter: Option<Vec<u8, 350>>,
 }
 
 #[derive(Default)]
 pub struct Iso2X509IssuerSerialType {
-    pub x509_issuer_name: Iso2u8FixedBufType<65>,
+    pub x509_issuer_name: Vec<u8, 65>,
     pub x509_serial_number: ExiSigned,
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2RelativeTimeIntervalType {
     pub start: u32,
     pub duration: Option<u32>,
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2DigestMethodType {
-    pub algorithm: Iso2u8FixedBufType<65>,
-    pub any: Option<Iso2u8FixedBufType<4>>,
+    pub algorithm: Vec<u8, 65>,
+    pub any: Option<Vec<u8, 4>>,
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2RSAKeyValueType {
-    pub modulus: Iso2u8FixedBufType<350>,
-    pub exponent: Iso2u8FixedBufType<350>,
+    pub modulus: Vec<u8, 350>,
+    pub exponent: Vec<u8, 350>,
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2CanonicalizationMethodType {
-    pub algorithm: Iso2u8FixedBufType<65>,
-    pub any: Option<Iso2u8FixedBufType<4>>,
+    pub algorithm: Vec<u8, 65>,
+    pub any: Option<Vec<u8, 4>>,
 }
 
 #[derive(Default)]
 pub struct Iso2SignatureMethodType {
-    pub algorithm: Iso2u8FixedBufType<65>,
+    pub algorithm: Vec<u8, 65>,
     pub hmac_output_length: Option<ExiSigned>,
-    pub any: Option<Iso2u8FixedBufType<4>>,
+    pub any: Option<Vec<u8, 4>>,
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2KeyValueType {
     pub dsa_key_value: Option<Iso2DSAKeyValueType>,
     pub rsa_key_value: Option<Iso2RSAKeyValueType>,
-    pub any: Option<Iso2u8FixedBufType<4>>,
+    pub any: Option<Vec<u8, 4>>,
 }
 
+#[derive(Clone)]
 pub struct Iso2PhysicalValueType {
     pub multiplier: i8,
     pub unit: Iso2UnitSymbolType,
@@ -259,6 +245,7 @@ impl Default for Iso2PhysicalValueType {
     }
 }
 
+#[derive(Clone)]
 pub struct Iso2ConsumptionCostType {
     pub start_value: Iso2PhysicalValueType,
     pub cost: Vec<Iso2CostType, 3>,
@@ -273,12 +260,13 @@ impl Default for Iso2ConsumptionCostType {
     }
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2PMaxScheduleEntryType {
     pub relative_time_interval: Option<Iso2RelativeTimeIntervalType>,
     pub time_interval: Option<Iso2IntervalType>,
     pub p_max: Iso2PhysicalValueType,
 }
+#[derive(Clone)]
 pub struct Iso2SalesTariffEntryType {
     pub relative_time_interval: Option<Iso2RelativeTimeIntervalType>,
     pub time_interval: Option<Iso2IntervalType>,
@@ -297,17 +285,18 @@ impl Default for Iso2SalesTariffEntryType {
     }
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2ParameterType {
-    pub name: Iso2u8FixedBufType<65>,
+    pub name: Vec<u8, 65>,
     pub bool_value: Option<i32>,
     pub byte_value: Option<i8>,
     pub short_value: Option<i16>,
     pub int_value: Option<i32>,
     pub physical_value: Option<Iso2PhysicalValueType>,
-    pub string_value: Option<Iso2u8FixedBufType<65>>,
+    pub string_value: Option<Vec<u8, 65>>,
 }
 
+#[derive(Clone)]
 pub struct Iso2PMaxScheduleType {
     pub p_max_schedule_entry: Vec<Iso2PMaxScheduleEntryType, 12>,
 }
@@ -320,27 +309,28 @@ impl Default for Iso2PMaxScheduleType {
     }
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2ReferenceType {
-    pub id: Option<Iso2u8FixedBufType<65>>,
-    pub ref_type: Option<Iso2u8FixedBufType<65>>,
-    pub uri: Option<Iso2u8FixedBufType<65>>,
+    pub id: Option<Vec<u8, 65>>,
+    pub ref_type: Option<Vec<u8, 65>>,
+    pub uri: Option<Vec<u8, 65>>,
     pub transforms: Option<Iso2TransformsType>,
     pub digest_method: Iso2DigestMethodType,
-    pub digest_value: Option<Iso2u8FixedBufType<350>>,
+    pub digest_value: Option<Vec<u8, 350>>,
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2RetrievalMethodType {
-    pub ref_type: Option<Iso2u8FixedBufType<65>>,
-    pub uri: Option<Iso2u8FixedBufType<65>>,
+    pub ref_type: Option<Vec<u8, 65>>,
+    pub uri: Option<Vec<u8, 65>>,
     pub transforms: Option<Iso2TransformsType>,
 }
 
+#[derive(Clone)]
 pub struct Iso2SalesTariffType {
-    pub id: Option<Iso2u8FixedBufType<65>>,
+    pub id: Option<Vec<u8, 65>>,
     pub sales_tariff_id: u8,
-    pub sales_tariff_description: Option<Iso2u8FixedBufType<33>>,
+    pub sales_tariff_description: Option<Vec<u8, 33>>,
     pub num_e_price_levels: Option<u8>,
     pub sales_tariff_entry: Vec<Iso2SalesTariffEntryType, 12>,
 }
@@ -360,11 +350,11 @@ impl Default for Iso2SalesTariffType {
 #[derive(Default)]
 pub struct Iso2X509DataType {
     pub x509_issuer_serial: Option<Iso2X509IssuerSerialType>,
-    pub x509_ski: Option<Iso2u8FixedBufType<350>>,
-    pub x509_subject_name: Option<Iso2u8FixedBufType<65>>,
-    pub x509_certificate: Option<Iso2u8FixedBufType<350>>,
-    pub x509_crl: Option<Iso2u8FixedBufType<350>>,
-    pub any: Option<Iso2u8FixedBufType<4>>,
+    pub x509_ski: Option<Vec<u8, 350>>,
+    pub x509_subject_name: Option<Vec<u8, 65>>,
+    pub x509_certificate: Option<Vec<u8, 350>>,
+    pub x509_crl: Option<Vec<u8, 350>>,
+    pub any: Option<Vec<u8, 4>>,
 }
 
 pub struct Iso2PGPDataType {
@@ -377,41 +367,42 @@ pub enum Iso2PGPComponentType {
     Choice2(PGPChoice2Type),
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct PGPChoice2Type {
-    pub pgpkey_packet: Iso2u8FixedBufType<350>,
-    pub any: Option<Iso2u8FixedBufType<4>>,
+    pub pgpkey_packet: Vec<u8, 350>,
+    pub any: Option<Vec<u8, 4>>,
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct PGPChoice1Type {
-    pub pgpkey_id: Iso2u8FixedBufType<350>,
-    pub pgpkey_packet: Option<Iso2u8FixedBufType<350>>,
-    pub any: Option<Iso2u8FixedBufType<4>>,
+    pub pgpkey_id: Vec<u8, 350>,
+    pub pgpkey_packet: Option<Vec<u8, 350>>,
+    pub any: Option<Vec<u8, 4>>,
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2SPKIDataType {
-    pub spkisexp: Iso2u8FixedBufType<350>,
-    pub any: Option<Iso2u8FixedBufType<4>>,
+    pub spkisexp: Vec<u8, 350>,
+    pub any: Option<Vec<u8, 4>>,
 }
 
 #[derive(Default)]
 pub struct Iso2SignedInfoType {
-    pub id: Option<Iso2u8FixedBufType<65>>,
+    pub id: Option<Vec<u8, 65>>,
     pub canonicalization_method: Iso2CanonicalizationMethodType,
     pub signature_method: Iso2SignatureMethodType,
     pub reference: [Iso2ReferenceType; 4],
     pub reference_len: usize,
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2ProfileEntryType {
     pub charging_profile_entry_start: u32,
     pub charging_profile_entry_max_power: Iso2PhysicalValueType,
     pub charging_profile_entry_max_number_of_phases_in_use: Option<i8>,
 }
 
+#[derive(Clone)]
 pub struct Iso2DCEVStatusType {
     pub ev_ready: i32,
     pub ev_error_code: Iso2DcEvErrorCodeType,
@@ -428,6 +419,7 @@ impl Default for Iso2DCEVStatusType {
     }
 }
 
+#[derive(Clone)]
 pub struct Iso2ParameterSetType {
     pub parameter_set_id: i16,
     pub parameter: Vec<Iso2ParameterType, 16>,
@@ -442,24 +434,25 @@ impl Default for Iso2ParameterSetType {
     }
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2SAScheduleTupleType {
     pub saschedule_tuple_id: u8,
     pub pmax_schedule: Iso2PMaxScheduleType,
     pub sales_tariff: Option<Iso2SalesTariffType>,
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2SelectedServiceType {
     pub service_id: u16,
     pub parameter_set_id: Option<i16>,
 }
 
+#[derive(Clone)]
 pub struct Iso2ServiceType {
     pub service_id: u16,
-    pub service_name: Option<Iso2u8FixedBufType<33>>,
+    pub service_name: Option<Vec<u8, 33>>,
     pub service_category: Iso2ServiceCategoryType,
-    pub service_scope: Option<Iso2u8FixedBufType<65>>,
+    pub service_scope: Option<Vec<u8, 65>>,
     pub free_service: i32,
 }
 
@@ -475,14 +468,15 @@ impl Default for Iso2ServiceType {
     }
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2SignatureValueType {
-    pub id: Option<Iso2u8FixedBufType<65>>,
-    pub content: Iso2u8FixedBufType<65>,
+    pub id: Option<Vec<u8, 65>>,
+    pub content: Vec<u8, 65>,
 }
 
+#[derive(Clone)]
 pub struct Iso2SubCertificatesType {
-    pub certificate: Vec<Iso2u8FixedBufType<800>, 4>,
+    pub certificate: Vec<Vec<u8, 800>, 4>,
 }
 
 impl Default for Iso2SubCertificatesType {
@@ -495,25 +489,26 @@ impl Default for Iso2SubCertificatesType {
 
 #[derive(Default)]
 pub struct Iso2KeyInfoType {
-    pub id: Option<Iso2u8FixedBufType<65>>,
-    pub key_name: Option<Iso2u8FixedBufType<65>>,
+    pub id: Option<Vec<u8, 65>>,
+    pub key_name: Option<Vec<u8, 65>>,
     pub key_value: Option<Iso2KeyValueType>,
     pub retrieval_method: Option<Iso2RetrievalMethodType>,
     pub x509_data: Option<Iso2X509DataType>,
     pub pgp_data: Option<Iso2PGPDataType>,
     pub spki_data: Option<Iso2SPKIDataType>,
-    pub mgmt_data: Option<Iso2u8FixedBufType<65>>,
-    pub any: Option<Iso2u8FixedBufType<4>>,
+    pub mgmt_data: Option<Vec<u8, 65>>,
+    pub any: Option<Vec<u8, 4>>,
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2ObjectType {
-    pub encoding: Option<Iso2u8FixedBufType<65>>,
-    pub id: Option<Iso2u8FixedBufType<65>>,
-    pub mime_type: Option<Iso2u8FixedBufType<65>>,
-    pub any: Option<Iso2u8FixedBufType<4>>,
+    pub encoding: Option<Vec<u8, 65>>,
+    pub id: Option<Vec<u8, 65>>,
+    pub mime_type: Option<Vec<u8, 65>>,
+    pub any: Option<Vec<u8, 4>>,
 }
 
+#[derive(Clone)]
 pub struct Iso2SupportedEnergyTransferModeType {
     pub energy_transfer_mode: Vec<Iso2EnergyTransferModeType, 6>,
 }
@@ -526,21 +521,22 @@ impl Default for Iso2SupportedEnergyTransferModeType {
     }
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2CertificateChainType {
-    pub id: Option<Iso2u8FixedBufType<65>>,
-    pub certificate: Iso2u8FixedBufType<800>,
+    pub id: Option<Vec<u8, 65>>,
+    pub certificate: Vec<u8, 800>,
     pub sub_certificates: Option<Iso2SubCertificatesType>,
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2BodyBaseType {
     _unused: i32,
 }
 
+#[derive(Clone)]
 pub struct Iso2NotificationType {
     pub fault_code: Iso2FaultCodeType,
-    pub fault_msg: Option<Iso2u8FixedBufType<65>>,
+    pub fault_msg: Option<Vec<u8, 65>>,
 }
 
 impl Default for Iso2NotificationType {
@@ -552,6 +548,7 @@ impl Default for Iso2NotificationType {
     }
 }
 
+#[derive(Clone)]
 pub struct Iso2DCEVSEStatusType {
     pub notification_max_delay: u16,
     pub evse_notification: Iso2EvseNotificationType,
@@ -570,6 +567,7 @@ impl Default for Iso2DCEVSEStatusType {
     }
 }
 
+#[derive(Clone)]
 pub struct Iso2SelectedServiceListType {
     pub selected_service: Vec<Iso2SelectedServiceType, 16>,
 }
@@ -582,6 +580,7 @@ impl Default for Iso2SelectedServiceListType {
     }
 }
 
+#[derive(Clone)]
 pub struct Iso2PaymentOptionListType {
     pub payment_option: Vec<Iso2PaymentOptionType, 2>,
 }
@@ -596,13 +595,14 @@ impl Default for Iso2PaymentOptionListType {
 
 #[derive(Default)]
 pub struct Iso2SignatureType {
-    pub id: Option<Iso2u8FixedBufType<65>>,
+    pub id: Option<Vec<u8, 65>>,
     pub signed_info: Iso2SignedInfoType,
     pub signature_value: Iso2SignatureValueType,
     pub key_info: Option<Iso2KeyInfoType>,
     pub object: Option<Iso2ObjectType>,
 }
 
+#[derive(Clone)]
 pub struct Iso2ChargingProfileType {
     pub profile_entry: Vec<Iso2ProfileEntryType, 24>,
 }
@@ -615,6 +615,7 @@ impl Default for Iso2ChargingProfileType {
     }
 }
 
+#[derive(Clone)]
 pub struct Iso2ServiceParameterListType {
     pub parameter_set: Vec<Iso2ParameterSetType, 5>,
 }
@@ -639,7 +640,7 @@ impl Default for Iso2ListOfRootCertificateIDsType {
     }
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2ACEVChargeParameterType {
     pub departure_time: Option<u32>,
     pub e_amount: Iso2PhysicalValueType,
@@ -648,7 +649,7 @@ pub struct Iso2ACEVChargeParameterType {
     pub ev_min_current: Iso2PhysicalValueType,
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2DCEVChargeParameterType {
     pub departure_time: Option<u32>,
     pub dc_ev_status: Iso2DCEVStatusType,
@@ -661,17 +662,19 @@ pub struct Iso2DCEVChargeParameterType {
     pub bulk_soc: Option<i8>,
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2EVChargeParameterType {
     pub departure_time: Option<u32>,
     pub ac_ev_charge_parameter: Iso2ACEVChargeParameterType,
     pub dc_ev_charge_parameter: Iso2DCEVChargeParameterType,
 }
 
+#[derive(Clone)]
 pub struct Iso2SASchedulesType {
     _unused: i32,
 }
 
+#[derive(Clone)]
 pub struct Iso2SAScheduleListType {
     pub sa_schedule_tuple: Vec<Iso2SAScheduleTupleType, 3>,
 }
@@ -684,11 +687,12 @@ impl Default for Iso2SAScheduleListType {
     }
 }
 
+#[derive(Clone)]
 pub struct Iso2ChargeServiceType {
     pub service_id: u16,
-    pub service_name: Option<Iso2u8FixedBufType<33>>,
+    pub service_name: Option<Vec<u8, 33>>,
     pub service_category: Iso2ServiceCategoryType,
-    pub service_scope: Option<Iso2u8FixedBufType<65>>,
+    pub service_scope: Option<Vec<u8, 65>>,
     pub free_service: i32,
     pub supported_energy_transfer_mode: Iso2SupportedEnergyTransferModeType,
 }
@@ -706,28 +710,30 @@ impl Default for Iso2ChargeServiceType {
     }
 }
 
+#[derive(Clone)]
 pub struct Iso2EVPowerDeliveryParameterType {
     _unused: i32,
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2DCEVPowerDeliveryParameterType {
     pub dc_ev_status: Iso2DCEVStatusType,
     pub bulk_charging_complete: Option<i32>,
     pub charging_complete: i32,
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2ContractSignatureEncryptedPrivateKeyType {
-    pub id: Iso2u8FixedBufType<65>,
-    pub content: Iso2u8FixedBufType<65>,
+    pub id: Vec<u8, 65>,
+    pub content: Vec<u8, 65>,
 }
 
+#[derive(Clone)]
 pub struct Iso2EVSEChargeParameterType {
     _unused: i32,
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2DCEVSEChargeParameterType {
     pub dc_evse_status: Iso2DCEVSEStatusType,
     pub evse_maximum_current_limit: Iso2PhysicalValueType,
@@ -740,6 +746,7 @@ pub struct Iso2DCEVSEChargeParameterType {
     pub evse_energy_to_be_delivered: Option<Iso2PhysicalValueType>,
 }
 
+#[derive(Clone)]
 pub struct Iso2ServiceListType {
     pub service: Vec<Iso2ServiceType, 8>,
 }
@@ -752,18 +759,19 @@ impl Default for Iso2ServiceListType {
     }
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2DiffieHellmanPublickeyType {
-    pub id: Iso2u8FixedBufType<65>,
-    pub content: Iso2u8FixedBufType<65>,
+    pub id: Vec<u8, 65>,
+    pub content: Vec<u8, 65>,
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2EMAIDType {
-    pub id: Iso2u8FixedBufType<65>,
-    pub content: Iso2u8FixedBufType<65>,
+    pub id: Vec<u8, 65>,
+    pub content: Vec<u8, 65>,
 }
 
+#[derive(Clone)]
 pub struct Iso2ACEVSEStatusType {
     pub notification_max_delay: u16,
     pub evse_notification: Iso2EvseNotificationType,
@@ -780,6 +788,7 @@ impl Default for Iso2ACEVSEStatusType {
     }
 }
 
+#[derive(Clone)]
 pub struct Iso2EVSEStatusType {
     pub notification_max_delay: u16,
     pub evse_notification: Iso2EvseNotificationType,
@@ -798,29 +807,30 @@ impl Default for Iso2EVSEStatusType {
     }
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2ACEVSEChargeParameterType {
     pub ac_evse_status: Iso2ACEVSEStatusType,
     pub evse_nominal_voltage: Iso2PhysicalValueType,
     pub evse_max_current: Iso2PhysicalValueType,
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2MeterInfoType {
-    pub meter_id: Iso2u8FixedBufType<33>,
+    pub meter_id: Vec<u8, 33>,
     pub meter_reading: Option<u64>,
-    pub sig_meter_reading: Option<Iso2u8FixedBufType<64>>,
+    pub sig_meter_reading: Option<Vec<u8, 64>>,
     pub meter_status: Option<i16>,
     pub t_meter: Option<i64>,
 }
 
 #[derive(Default)]
 pub struct Iso2MessageHeaderType {
-    pub session_id: Iso2u8FixedBufType<8>,
+    pub session_id: Vec<u8, 8>,
     pub notification: Option<Iso2NotificationType>,
     pub signature: Option<Iso2SignatureType>,
 }
 
+#[derive(Clone)]
 pub struct Iso2PowerDeliveryReqType {
     pub charge_progress: Iso2ChargeProgressType,
     pub sa_schedule_tuple_id: u8,
@@ -841,6 +851,7 @@ impl Default for Iso2PowerDeliveryReqType {
     }
 }
 
+#[derive(Clone)]
 pub struct Iso2CurrentDemandResType {
     pub response_code: Iso2ResponseCodeType,
     pub dc_evse_status: Iso2DCEVSEStatusType,
@@ -852,7 +863,7 @@ pub struct Iso2CurrentDemandResType {
     pub evse_maximum_voltage_limit: Option<Iso2PhysicalValueType>,
     pub evse_maximum_current_limit: Option<Iso2PhysicalValueType>,
     pub evse_maximum_power_limit: Option<Iso2PhysicalValueType>,
-    pub evse_id: Iso2u8FixedBufType<38>,
+    pub evse_id: Vec<u8, 38>,
     pub sa_schedule_tuple_id: u8,
     pub meter_info: Option<Iso2MeterInfoType>,
     pub receipt_required: Option<i32>,
@@ -871,7 +882,7 @@ impl Default for Iso2CurrentDemandResType {
             evse_maximum_voltage_limit: None,
             evse_maximum_current_limit: None,
             evse_maximum_power_limit: None,
-            evse_id: Iso2u8FixedBufType::<38>::default(),
+            evse_id: Vec::new(),
             sa_schedule_tuple_id: 0,
             meter_info: None,
             receipt_required: None,
@@ -879,9 +890,10 @@ impl Default for Iso2CurrentDemandResType {
     }
 }
 
+#[derive(Clone)]
 pub struct Iso2ChargingStatusResType {
     pub response_code: Iso2ResponseCodeType,
-    pub evse_id: Iso2u8FixedBufType<38>,
+    pub evse_id: Vec<u8, 38>,
     pub sa_schedule_tuple_id: u8,
     pub evse_max_current: Option<Iso2PhysicalValueType>,
     pub meter_info: Option<Iso2MeterInfoType>,
@@ -893,7 +905,7 @@ impl Default for Iso2ChargingStatusResType {
     fn default() -> Self {
         Self {
             response_code: ISO2_RESPONSE_CODE_TYPE_UNKNOWN,
-            evse_id: Iso2u8FixedBufType::<38>::default(),
+            evse_id: Vec::new(),
             sa_schedule_tuple_id: 0,
             evse_max_current: None,
             meter_info: None,
@@ -903,19 +915,20 @@ impl Default for Iso2ChargingStatusResType {
     }
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2AuthorizationReqType {
-    pub id: Option<Iso2u8FixedBufType<65>>,
-    pub gen_challenge: Option<Iso2u8FixedBufType<16>>,
+    pub id: Option<Vec<u8, 65>>,
+    pub gen_challenge: Option<Vec<u8, 16>>,
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2PreChargeReqType {
     pub dc_ev_status: Option<Iso2DCEVStatusType>,
     pub ev_target_voltage: Option<Iso2PhysicalValueType>,
     pub ev_target_current: Option<Iso2PhysicalValueType>,
 }
 
+#[derive(Clone)]
 pub struct Iso2ServiceDetailResType {
     pub response_code: Iso2ResponseCodeType,
     pub service_id: u16,
@@ -932,6 +945,7 @@ impl Default for Iso2ServiceDetailResType {
     }
 }
 
+#[derive(Clone)]
 pub struct Iso2PaymentServiceSelectionResType {
     pub response_code: Iso2ResponseCodeType,
 }
@@ -946,15 +960,16 @@ impl Default for Iso2PaymentServiceSelectionResType {
 
 #[derive(Default)]
 pub struct Iso2CertificateUpdateReqType {
-    pub id: Iso2u8FixedBufType<65>,
+    pub id: Vec<u8, 65>,
     pub contract_signature_cert_chain: Iso2CertificateChainType,
-    pub e_maid: Iso2u8FixedBufType<16>,
+    pub e_maid: Vec<u8, 16>,
     pub list_of_root_certificate_ids: Iso2ListOfRootCertificateIDsType,
 }
 
+#[derive(Clone)]
 pub struct Iso2SessionSetupResType {
     pub response_code: Iso2ResponseCodeType,
-    pub evse_id: Iso2u8FixedBufType<38>,
+    pub evse_id: Vec<u8, 38>,
     pub evse_time_stamp: Option<i64>,
 }
 
@@ -962,7 +977,7 @@ impl Default for Iso2SessionSetupResType {
     fn default() -> Self {
         Self {
             response_code: ISO2_RESPONSE_CODE_TYPE_UNKNOWN,
-            evse_id: Iso2u8FixedBufType::<38>::default(),
+            evse_id: Vec::new(),
             evse_time_stamp: None,
         }
     }
@@ -970,11 +985,12 @@ impl Default for Iso2SessionSetupResType {
 
 #[derive(Default)]
 pub struct Iso2CertificateInstallationReqType {
-    pub id: Iso2u8FixedBufType<65>,
-    pub oem_provisioning_cert: Iso2u8FixedBufType<800>,
+    pub id: Vec<u8, 65>,
+    pub oem_provisioning_cert: Vec<u8, 800>,
     pub list_of_root_certificate_ids: Iso2ListOfRootCertificateIDsType,
 }
 
+#[derive(Clone)]
 pub struct Iso2CertificateInstallationResType {
     pub response_code: Iso2ResponseCodeType,
     pub sa_provisioning_certificate_chain: Iso2CertificateChainType,
@@ -998,6 +1014,7 @@ impl Default for Iso2CertificateInstallationResType {
     }
 }
 
+#[derive(Clone)]
 pub struct Iso2WeldingDetectionResType {
     pub response_code: Iso2ResponseCodeType,
     pub dc_evse_status: Iso2DCEVSEStatusType,
@@ -1014,7 +1031,7 @@ impl Default for Iso2WeldingDetectionResType {
     }
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2CurrentDemandReqType {
     pub dc_ev_status: Iso2DCEVStatusType,
     pub ev_target_current: Iso2PhysicalValueType,
@@ -1028,6 +1045,7 @@ pub struct Iso2CurrentDemandReqType {
     pub ev_target_voltage: Iso2PhysicalValueType,
 }
 
+#[derive(Clone)]
 pub struct Iso2PreChargeResType {
     pub response_code: Iso2ResponseCodeType,
     pub dc_evse_status: Iso2DCEVSEStatusType,
@@ -1044,6 +1062,7 @@ impl Default for Iso2PreChargeResType {
     }
 }
 
+#[derive(Clone)]
 pub struct Iso2CertificateUpdateResType {
     pub response_code: Iso2ResponseCodeType,
     pub sa_provisioning_certificate_chain: Iso2CertificateChainType,
@@ -1069,19 +1088,20 @@ impl Default for Iso2CertificateUpdateResType {
     }
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2MeteringReceiptReqType {
-    pub id: Option<Iso2u8FixedBufType<65>>,
-    pub session_id: Iso2u8FixedBufType<8>,
+    pub id: Option<Vec<u8, 65>>,
+    pub session_id: Vec<u8, 8>,
     pub sa_schedule_tuple_id: Option<u8>,
     pub meter_info: Iso2MeterInfoType,
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2ChargingStatusReqType {
     _unused: i32,
 }
 
+#[derive(Clone)]
 pub struct Iso2SessionStopResType {
     pub response_code: Iso2ResponseCodeType,
 }
@@ -1094,6 +1114,7 @@ impl Default for Iso2SessionStopResType {
     }
 }
 
+#[derive(Clone)]
 pub struct Iso2ChargeParameterDiscoveryReqType {
     pub max_entries_sa_schedule_tuple: Option<u16>,
     pub requested_energy_transfer_mode: Iso2EnergyTransferModeType,
@@ -1114,16 +1135,17 @@ impl Default for Iso2ChargeParameterDiscoveryReqType {
     }
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2CableCheckReqType {
     pub dc_ev_status: Iso2DCEVStatusType,
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2WeldingDetectionReqType {
     pub dc_ev_status: Iso2DCEVStatusType,
 }
 
+#[derive(Clone)]
 pub struct Iso2PowerDeliveryResType {
     pub response_code: Iso2ResponseCodeType,
     pub ac_evse_status: Option<Iso2ACEVSEStatusType>,
@@ -1142,6 +1164,7 @@ impl Default for Iso2PowerDeliveryResType {
     }
 }
 
+#[derive(Clone)]
 pub struct Iso2ChargeParameterDiscoveryResType {
     pub response_code: Iso2ResponseCodeType,
     pub evse_processing: Iso2EvseProcessingType,
@@ -1166,6 +1189,7 @@ impl Default for Iso2ChargeParameterDiscoveryResType {
     }
 }
 
+#[derive(Clone)]
 pub struct Iso2PaymentServiceSelectionReqType {
     pub selected_payment_option: Iso2PaymentOptionType,
     pub selected_service_list: Iso2SelectedServiceListType,
@@ -1180,6 +1204,7 @@ impl Default for Iso2PaymentServiceSelectionReqType {
     }
 }
 
+#[derive(Clone)]
 pub struct Iso2MeteringReceiptResType {
     pub response_code: Iso2ResponseCodeType,
     pub ac_evse_status: Option<Iso2ACEVSEStatusType>,
@@ -1198,6 +1223,7 @@ impl Default for Iso2MeteringReceiptResType {
     }
 }
 
+#[derive(Clone)]
 pub struct Iso2CableCheckResType {
     pub response_code: Iso2ResponseCodeType,
     pub dc_evse_status: Option<Iso2DCEVSEStatusType>,
@@ -1214,6 +1240,7 @@ impl Default for Iso2CableCheckResType {
     }
 }
 
+#[derive(Clone)]
 pub struct Iso2ServiceDiscoveryResType {
     pub response_code: Iso2ResponseCodeType,
     pub payment_option_list: Iso2PaymentOptionListType,
@@ -1232,16 +1259,17 @@ impl Default for Iso2ServiceDiscoveryResType {
     }
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2ServiceDetailReqType {
     pub service_id: u16,
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2SessionSetupReqType {
-    pub evcc_id: Iso2u8FixedBufType<6>,
+    pub evcc_id: Vec<u8, 6>,
 }
 
+#[derive(Clone)]
 pub struct Iso2SessionStopReqType {
     pub charging_session: Iso2ChargingSessionType,
 }
@@ -1254,12 +1282,13 @@ impl Default for Iso2SessionStopReqType {
     }
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2ServiceDiscoveryReqType {
-    pub service_scope: Option<Iso2u8FixedBufType<65>>,
+    pub service_scope: Option<Vec<u8, 65>>,
     pub service_category: Option<Iso2ServiceCategoryType>,
 }
 
+#[derive(Clone)]
 pub struct Iso2AuthorizationResType {
     pub response_code: Iso2ResponseCodeType,
     pub evse_processing: Iso2EvseProcessingType,
@@ -1274,15 +1303,16 @@ impl Default for Iso2AuthorizationResType {
     }
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Iso2PaymentDetailsReqType {
-    pub e_maid: Iso2u8FixedBufType<16>,
+    pub e_maid: Vec<u8, 16>,
     pub contract_signature_cert_chain: Iso2CertificateChainType,
 }
 
+#[derive(Clone)]
 pub struct Iso2PaymentDetailsResType {
     pub response_code: Iso2ResponseCodeType,
-    pub gen_challenge: Iso2u8FixedBufType<16>,
+    pub gen_challenge: Vec<u8, 16>,
     pub evse_time_stamp: i64,
 }
 
@@ -1290,7 +1320,7 @@ impl Default for Iso2PaymentDetailsResType {
     fn default() -> Self {
         Self {
             response_code: ISO2_RESPONSE_CODE_TYPE_UNKNOWN,
-            gen_challenge: Iso2u8FixedBufType::<16>::default(),
+            gen_challenge: Vec::new(),
             evse_time_stamp: 0,
         }
     }

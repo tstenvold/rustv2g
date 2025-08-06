@@ -177,11 +177,7 @@ impl ExiSigned {
         Self::default()
     }
 
-    pub fn convert_to_signed(
-        &mut self,
-        value: i32,
-        max_octets: usize,
-    ) -> Result<(), ExiError> {
+    pub fn convert_to_signed(&mut self, value: i32, max_octets: usize) -> Result<(), ExiError> {
         if value < 0 {
             self.is_negative = 1;
             self.data.convert_to_unsigned(
@@ -224,10 +220,7 @@ impl ExiSigned {
         res
     }
 
-    pub fn convert_64_from_signed(
-        &mut self,
-        value: &mut i64,
-    ) -> Result<(), ExiError> {
+    pub fn convert_64_from_signed(&mut self, value: &mut i64) -> Result<(), ExiError> {
         let mut u_value: u64 = 0;
         let res = self.data.convert_64_from_unsigned(&mut u_value);
         *value = if self.is_negative == 0 {

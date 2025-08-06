@@ -27,12 +27,12 @@ pub struct AppHandAppProtocolType {
 
 #[derive(Default)]
 pub struct AppHandProtocolNamespaceType {
-    pub characters: String<100>,
+    pub characters: Vec<u8, 100>,
 }
 
 impl AppHandProtocolNamespaceType {
     #[must_use]
-    pub const fn new(characters: String<100>) -> Self {
+    pub const fn new(characters: Vec<u8, 100>) -> Self {
         Self { characters }
     }
 }

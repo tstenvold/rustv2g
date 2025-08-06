@@ -1,5 +1,5 @@
 use core::result::Result;
-use heapless::String;
+use heapless::Vec;
 
 use crate::common::exi_basetypes::{ExiSigned, ExiUnsigned};
 use crate::common::exi_bitstream::ExiBitstream;
@@ -148,12 +148,12 @@ pub fn exi_basetypes_encoder_signed(
     exi_basetypes_encoder_unsigned(stream, &value.data)
 }
 
-pub fn exi_basetypes_encoder_characters(
+pub fn exi_basetypes_encoder_characters<const N: usize>(
     stream: &mut ExiBitstream,
-    characters: &String<100>,
+    characters: &Vec<u8, N>,
 ) -> Result<(), ExiError> {
     const ASCII_MAX_VALUE: u8 = 127;
-    for &ch in characters.as_bytes() {
+    for &ch in characters.iter() {
         let byte = ch;
         if byte > ASCII_MAX_VALUE {
             return Err(ExiError::UnsupportedCharacterValue);

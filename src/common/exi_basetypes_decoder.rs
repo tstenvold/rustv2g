@@ -4,6 +4,7 @@ use heapless::String;
 use crate::common::exi_basetypes::{ExiSigned, ExiUnsigned, EXI_UNSIGNED_MAX_OCTETS};
 use crate::common::exi_bitstream::ExiBitstream;
 use crate::common::exi_error_codes::ExiError;
+use heapless::Vec;
 
 fn exi_basetypes_decoder_read_unsigned(
     stream: &mut ExiBitstream,
@@ -184,14 +185,13 @@ pub fn exi_basetypes_decoder_signed(
     Ok(())
 }
 
-pub fn exi_basetypes_decoder_characters(
+pub fn exi_basetypes_decoder_characters<const N: usize>(
     stream: &mut ExiBitstream,
     characters_len: usize,
-    characters: &mut String<100>,
-    characters_size: usize,
+    characters: &mut Vec<u8, N>,
 ) -> Result<(), ExiError> {
     let ascii_max_value: u8 = 127;
-    if characters_len + 1 > characters_size {
+    if characters_len > characters.capacity() {
         return Err(ExiError::CharacterBufferTooSmall);
     }
     for _ in 0..characters_len {
@@ -200,8 +200,8 @@ pub fn exi_basetypes_decoder_characters(
             return Err(ExiError::UnsupportedCharacterValue);
         }
         characters
-            .push(n as char)
-            .map_err(|()| ExiError::CharacterBufferTooSmall)?;
+            .push(n)
+            .map_err(|_| ExiError::CharacterBufferTooSmall)?;
     }
     Ok(())
 }

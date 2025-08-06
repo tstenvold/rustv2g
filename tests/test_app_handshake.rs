@@ -1,6 +1,5 @@
 #[cfg(test)]
 mod tests {
-    use heapless::String;
     use heapless::Vec;
     use rustv2g::app_handshake::app_handshake_datatypes::*;
 
@@ -15,7 +14,7 @@ mod tests {
     }
 
     fn make_protocol_type() -> AppHandAppProtocolType {
-        let namespace: String<100> = String::try_from("urn:iso:15118:2:2016:MsgDef").unwrap();
+        let namespace: Vec<u8, 100> = Vec::from_slice(b"urn:din:70121:2012:MsgDef").unwrap();
         let ns = AppHandProtocolNamespaceType::new(namespace);
 
         AppHandAppProtocolType {
@@ -82,8 +81,13 @@ mod tests {
                     !app_req.app_protocols.is_empty(),
                     "App protocol array should not be empty"
                 );
+                let ns0: &str = match str::from_utf8(&app_req.app_protocols[0].protocol_namespace.characters) {
+                    Ok(ns) => ns,
+                    Err(_) => panic!("Failed to convert protocol namespace to string"),
+                };
+
                 assert_eq!(
-                    app_req.app_protocols[0].protocol_namespace.characters,
+                    ns0,
                     "urn:din:70121:2012:MsgDef",
                     "Protocol namespace should match"
                 );
@@ -104,8 +108,13 @@ mod tests {
                     "Priority should match"
                 );
 
+                let ns1: &str = match str::from_utf8(&app_req.app_protocols[1].protocol_namespace.characters) {
+                    Ok(ns) => ns,
+                    Err(_) => panic!("Failed to convert protocol namespace to string"),
+                };
+
                 assert_eq!(
-                    app_req.app_protocols[1].protocol_namespace.characters,
+                    ns1,
                     "urn:iso:15118:2:2013:MsgDef",
                     "Protocol namespace should match"
                 );

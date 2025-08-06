@@ -1,5 +1,7 @@
 use core::result::Result;
 
+use heapless::Vec;
+
 use crate::common::exi_basetypes_decoder::{
     exi_basetypes_decoder_bytes, exi_basetypes_decoder_integer_16,
     exi_basetypes_decoder_integer_32, exi_basetypes_decoder_integer_64,
@@ -10,18 +12,17 @@ use crate::common::exi_basetypes_decoder::{
 use crate::common::exi_bitstream::ExiBitstream;
 use crate::common::exi_error_codes::ExiError;
 
-pub fn decode_exi_type_hex_binary(
+pub fn decode_exi_type_hex_binary<const N: usize>(
     stream: &mut ExiBitstream,
     value_len: &mut usize,
-    value_buffer: &mut [u8],
-    value_max_len: usize,
+    value_buffer: &mut Vec<u8, N>,
 ) -> Result<(), ExiError> {
     let mut event_code: u32 = 0;
     exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
     let mut val_len: u16 = 0;
     if event_code == 0 {
         exi_basetypes_decoder_uint_16(stream, &mut val_len)?;
-        if val_len as usize > value_max_len {
+        if val_len as usize > value_buffer.capacity() {
             return Err(ExiError::ByteBufferTooSmall);
         }
         *value_len = val_len as usize;

@@ -37,7 +37,6 @@ pub fn decode_app_hand_app_protocol_type(
                                     stream,
                                     char_len as usize,
                                     &mut app_protocol_type.protocol_namespace.characters,
-                                    100,
                                 )?;
                             } else {
                                 return Err(ExiError::InvalidCharactersLength);
