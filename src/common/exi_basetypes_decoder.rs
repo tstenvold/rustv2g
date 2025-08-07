@@ -11,14 +11,19 @@ fn exi_basetypes_decoder_read_unsigned(
     exi_unsigned: &mut ExiUnsigned,
 ) -> Result<(), ExiError> {
     let msb: u8 = 1 << 7;
-    exi_unsigned
-        .octets
-        .resize(EXI_UNSIGNED_MAX_OCTETS, 0)
-        .map_err(|()| ExiError::OctetCountLargerThanTypeSupports)?;
+    exi_unsigned.octets.clear();
 
-    for octet in &mut exi_unsigned.octets {
-        *octet = stream.read_octet()?;
-        if *octet & msb == 0 {
+    for _ in 0..EXI_UNSIGNED_MAX_OCTETS {
+        let octet = stream.read_octet()?;
+        exi_unsigned
+            .octets
+            .push(octet)
+            .map_err(|_| ExiError::OctetCountLargerThanTypeSupports)?;
+        if octet & msb == 0 {
+            // Remove the MSB octet
+            if exi_unsigned.octets.len() > 1 {
+                exi_unsigned.octets.pop();
+            }
             return Ok(());
         }
     }
@@ -43,8 +48,8 @@ pub fn exi_basetypes_decoder_bytes(
     if bytes_len > bytes.len() {
         return Err(ExiError::ByteBufferTooSmall);
     }
-    for b in bytes.iter_mut().take(bytes_len) {
-        *b = stream.read_octet()?;
+    for b in 0..bytes_len {
+        bytes[b] = stream.read_octet()?;
     }
     Ok(())
 }

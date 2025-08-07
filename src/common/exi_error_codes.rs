@@ -22,6 +22,7 @@ pub enum ExiError {
     UnknownEventForDecoding = -50,
     DecoderNotImplemented = -69,
 
+
     // encoder -70 to -89
     UnknownEventForEncoding = -70,
     EncoderNotImplemented = -89,
@@ -35,6 +36,7 @@ pub enum ExiError {
     EncodedIntegerSizeLargerThanDestination = -113,
     InvalidCharactersLength = -114,
     InvalidValue = -115,
+    NotEnoughData = -116,
 
     // grammar errors -130 to -149
     UnknownGrammarId = -130,

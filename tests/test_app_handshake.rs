@@ -2,6 +2,7 @@
 mod tests {
     use heapless::Vec;
     use rustv2g::app_handshake::app_handshake_datatypes::*;
+    use std::str;
 
     fn hexstr_to_bytes(s: &str) -> Vec<u8, 2048> {
         s.as_bytes()

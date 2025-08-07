@@ -61,6 +61,7 @@ impl ExiUnsigned {
         max_octets: usize,
     ) -> Result<(), ExiError> {
         *value = 0;
+        //TODO: Fix this uses the wrong length
         for (n, &octet) in self
             .octets
             .iter()

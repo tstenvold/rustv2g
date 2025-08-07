@@ -1,6 +1,6 @@
 <V2G_Message>
   <Header>
-    <SessionID>0000000000000000</SessionID>
+    <SessionID>00</SessionID>
   </Header>
   <Body>
     <SessionSetupReq>

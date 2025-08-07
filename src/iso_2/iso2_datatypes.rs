@@ -1,6 +1,8 @@
+use super::iso2_decoder::decode_iso2_v2g_message;
+use crate::common::{
+    exi_basetypes::ExiSigned, exi_basetypes_decoder::exi_basetypes_decoder_nbit_uint, exi_bitstream::ExiBitstream, exi_error_codes::ExiError
+};
 use heapless::Vec;
-
-use crate::common::exi_basetypes::ExiSigned;
 
 pub type Iso2CostKindType = u32;
 pub const ISO2_COST_KIND_TYPE_CARBON_DIOXIDE_EMISSION: Iso2CostKindType = 2;
@@ -358,7 +360,7 @@ pub struct Iso2X509DataType {
 }
 
 pub struct Iso2PGPDataType {
-    pub pgpcomponent: Iso2PGPComponentType,
+    pub pgp_component: Iso2PGPComponentType,
 }
 
 #[allow(clippy::large_enum_variant)]
@@ -369,14 +371,14 @@ pub enum Iso2PGPComponentType {
 
 #[derive(Clone, Default)]
 pub struct PGPChoice2Type {
-    pub pgpkey_packet: Vec<u8, 350>,
+    pub pgp_key_packet: Vec<u8, 350>,
     pub any: Option<Vec<u8, 4>>,
 }
 
 #[derive(Clone, Default)]
 pub struct PGPChoice1Type {
-    pub pgpkey_id: Vec<u8, 350>,
-    pub pgpkey_packet: Option<Vec<u8, 350>>,
+    pub pgp_key_id: Vec<u8, 350>,
+    pub pgp_key_packet: Option<Vec<u8, 350>>,
     pub any: Option<Vec<u8, 4>>,
 }
 
@@ -1267,6 +1269,48 @@ pub struct Iso2ServiceDetailReqType {
 #[derive(Clone, Default)]
 pub struct Iso2SessionSetupReqType {
     pub evcc_id: Vec<u8, 6>,
+}
+
+impl Iso2SessionSetupReqType {
+    pub fn new() -> Self {
+        Self {
+            evcc_id: Vec::new(),
+        }
+    }
+
+    pub fn try_from_bytes(bytes: &mut [u8], len: usize) -> Result<Self, ExiError> {
+        let mut buf = [0u8; 2048];
+        if len > buf.len() {
+            return Err(ExiError::ByteBufferTooSmall);
+        }
+        buf[..len].copy_from_slice(&bytes[..len]);
+
+        let mut stream = ExiBitstream {
+            data: buf.as_mut(),
+            ..Default::default()
+        };
+
+        let mut req = Iso2v2gMessage{
+            header: Iso2MessageHeaderType::default(),
+            body: Iso2BodyType {
+                body_type_component: Iso2BodyTypeEnum::SessionSetupReq(Iso2SessionSetupReqType::default()),
+            },
+        };
+
+        let mut event_code = 0;
+        stream.read_and_check_header()?;
+        exi_basetypes_decoder_nbit_uint(&mut stream, 7, &mut event_code)?;
+        match event_code {
+            0 | 76 => {
+                decode_iso2_v2g_message(&mut stream, &mut req)?;
+                if let Iso2BodyTypeEnum::SessionSetupReq(session_setup_req) = req.body.body_type_component {
+                    Ok(session_setup_req)
+                } else {
+                    Err(ExiError::InvalidValue)
+                }
+            } _ => Err(ExiError::InvalidValue),
+        }
+    }
 }
 
 #[derive(Clone)]

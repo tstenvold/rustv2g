@@ -12,6 +12,16 @@ pub struct ExiBitstream<'a> {
 }
 
 impl ExiBitstream<'_> {
+    pub fn new(data: &mut [u8]) -> ExiBitstream {
+        ExiBitstream {
+            data,
+            bit_count: 0,
+            byte_pos: 0,
+            flag_byte_pos: 0,
+            status_callback: None,
+        }
+    }
+
     pub fn reset(&mut self) {
         if self.flag_byte_pos == 0 {
             self.byte_pos = 0;
