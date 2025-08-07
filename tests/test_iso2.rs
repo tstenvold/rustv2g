@@ -16,7 +16,7 @@ mod tests {
     // Integration tests for the ISO 2 data types
     #[test]
     fn test_iso2_session_setup_req() {
-        let hex_data = "80a0218ac648ebe9acae6e6c2cecb083a432b0b232b94214a6cae6e6d2dedc928989181818181818181818181818181818181082a137b23cc220a6cae6e6d2dedca6cae8eae0a4cae3083a2ab21a1a4a261c60646060606060606060606210";
+        let hex_data = "8098004011d018048d159e26ac00";
         let mut bytes = hexstr_to_bytes(hex_data);
         let len = bytes.len();
 
