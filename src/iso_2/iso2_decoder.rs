@@ -5302,14 +5302,14 @@ pub fn decode_iso2_notification(
                             )?;
                             if error == 0 as i32 {
                                 if event_code == 0 as i32 as u32 {
-                                    let mut value: u32 = 0;
+                                    let value: Iso2FaultCodeType = Iso2FaultCodeType::Unknown;
                                     exi_basetypes_decoder_nbit_uint(
                                         stream,
                                         2 as i32 as usize,
-                                        &mut value,
+                                        &mut (value as u32),
                                     )?;
                                     if error == 0 as i32 {
-                                        (*message).fault_code = value as Iso2FaultCodeType;
+                                        (*message).fault_code = value;
                                     }
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
@@ -9099,7 +9099,7 @@ pub fn decode_iso2_message_header(
 //                                         &mut value,
 //                                     )?;
 //                                     if error == 0 as i32 {
-//                                         (*message).response_code = value as Iso2ResponseCodeType;
+//                                         (*message).response_code = value as u32;
 //                                     }
 //                                 } else {
 //                                     return Err(ExiError::UnsupportedSubEvent);
@@ -9776,7 +9776,7 @@ pub fn decode_iso2_message_header(
 //                                         &mut value,
 //                                     )?;
 //                                     if error == 0 as i32 {
-//                                         (*message).response_code = value as Iso2ResponseCodeType;
+//                                         (*message).response_code = value as u32;
 //                                     }
 //                                 } else {
 //                                     return Err(ExiError::UnsupportedSubEvent);
@@ -10328,7 +10328,7 @@ pub fn decode_iso2_message_header(
 //                                         &mut value,
 //                                     )?;
 //                                     if error == 0 as i32 {
-//                                         (*message).response_code = value as Iso2ResponseCodeType;
+//                                         (*message).response_code = value as u32;
 //                                     }
 //                                 } else {
 //                                     return Err(ExiError::UnsupportedSubEvent);
@@ -10441,7 +10441,7 @@ pub fn decode_iso2_message_header(
 //                                         &mut value,
 //                                     )?;
 //                                     if error == 0 as i32 {
-//                                         (*message).response_code = value as Iso2ResponseCodeType;
+//                                         (*message).response_code = value as u32;
 //                                     }
 //                                 } else {
 //                                     return Err(ExiError::UnsupportedSubEvent);
@@ -10656,14 +10656,14 @@ pub fn decode_iso2_session_setup_res(
                             )?;
                             if error == 0 as i32 {
                                 if event_code == 0 as i32 as u32 {
-                                    let mut value: u32 = 0;
+                                    let value: Iso2ResponseCodeType = Iso2ResponseCodeType::Unknown;
                                     exi_basetypes_decoder_nbit_uint(
                                         stream,
                                         5 as i32 as usize,
-                                        &mut value,
+                                        &mut (value as u32),
                                     )?;
                                     if error == 0 as i32 {
-                                        (*message).response_code = value as Iso2ResponseCodeType;
+                                        (*message).response_code = value;
                                     }
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
@@ -10909,7 +10909,7 @@ pub fn decode_iso2_session_setup_res(
 //                                         &mut value,
 //                                     )?;
 //                                     if error == 0 as i32 {
-//                                         (*message).response_code = value as Iso2ResponseCodeType;
+//                                         (*message).response_code = value as u32;
 //                                     }
 //                                 } else {
 //                                     return Err(ExiError::UnsupportedSubEvent);
@@ -11076,7 +11076,7 @@ pub fn decode_iso2_session_setup_res(
 //                                         &mut value,
 //                                     )?;
 //                                     if error == 0 as i32 {
-//                                         (*message).response_code = value as Iso2ResponseCodeType;
+//                                         (*message).response_code = value as u32;
 //                                     }
 //                                 } else {
 //                                     return Err(ExiError::UnsupportedSubEvent);
@@ -11747,7 +11747,7 @@ pub fn decode_iso2_session_setup_res(
 //                                         &mut value,
 //                                     )?;
 //                                     if error == 0 as i32 {
-//                                         (*message).response_code = value as Iso2ResponseCodeType;
+//                                         (*message).response_code = value as u32;
 //                                     }
 //                                 } else {
 //                                     return Err(ExiError::UnsupportedSubEvent);
@@ -11857,7 +11857,7 @@ pub fn decode_iso2_session_setup_res(
 //                                         &mut value,
 //                                     )?;
 //                                     if error == 0 as i32 {
-//                                         (*message).response_code = value as Iso2ResponseCodeType;
+//                                         (*message).response_code = value as u32;
 //                                     }
 //                                 } else {
 //                                     return Err(ExiError::UnsupportedSubEvent);
@@ -12214,7 +12214,7 @@ pub fn decode_iso2_session_setup_res(
 //                                         &mut value,
 //                                     )?;
 //                                     if error == 0 as i32 {
-//                                         (*message).response_code = value as Iso2ResponseCodeType;
+//                                         (*message).response_code = value as u32;
 //                                     }
 //                                 } else {
 //                                     return Err(ExiError::UnsupportedSubEvent);
@@ -12547,7 +12547,7 @@ pub fn decode_iso2_session_setup_res(
 //                                         &mut value,
 //                                     )?;
 //                                     if error == 0 as i32 {
-//                                         (*message).response_code = value as Iso2ResponseCodeType;
+//                                         (*message).response_code = value as u32;
 //                                     }
 //                                 } else {
 //                                     return Err(ExiError::UnsupportedSubEvent);
@@ -12659,7 +12659,7 @@ pub fn decode_iso2_session_setup_res(
 //                                         &mut value,
 //                                     )?;
 //                                     if error == 0 as i32 {
-//                                         (*message).response_code = value as Iso2ResponseCodeType;
+//                                         (*message).response_code = value as u32;
 //                                     }
 //                                 } else {
 //                                     return Err(ExiError::UnsupportedSubEvent);
@@ -12968,7 +12968,7 @@ pub fn decode_iso2_session_setup_res(
 //                                         &mut value,
 //                                     )?;
 //                                     if error == 0 as i32 {
-//                                         (*message).response_code = value as Iso2ResponseCodeType;
+//                                         (*message).response_code = value as u32;
 //                                     }
 //                                 } else {
 //                                     return Err(ExiError::UnsupportedSubEvent);
@@ -13080,7 +13080,7 @@ pub fn decode_iso2_session_setup_res(
 //                                         &mut value,
 //                                     )?;
 //                                     if error == 0 as i32 {
-//                                         (*message).response_code = value as Iso2ResponseCodeType;
+//                                         (*message).response_code = value as u32;
 //                                     }
 //                                 } else {
 //                                     return Err(ExiError::UnsupportedSubEvent);
@@ -13221,7 +13221,7 @@ pub fn decode_iso2_session_setup_res(
 //                                         &mut value,
 //                                     )?;
 //                                     if error == 0 as i32 {
-//                                         (*message).response_code = value as Iso2ResponseCodeType;
+//                                         (*message).response_code = value as u32;
 //                                     }
 //                                 } else {
 //                                     return Err(ExiError::UnsupportedSubEvent);
@@ -13374,48 +13374,24 @@ pub fn decode_iso2_session_setup_req(
     stream: &mut ExiBitstream,
     message: &mut Iso2SessionSetupReqType,
 ) -> Result<(), ExiError> {
-    let mut grammar_id: i32 = 298 as i32;
-
     let mut event_code: u32 = 0;
-    let error: i32 = 0;
-    loop {
-        match grammar_id {
-            298 => {
-                exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
-                if error == 0 as i32 {
-                    match event_code {
-                        0 => {
-                            decode_exi_type_hex_binary(
-                                stream,
-                                &mut (*message).evcc_id.len(),
-                                &mut (*message).evcc_id,
-                            )?;
-                            if error == 0 as i32 {
-                                grammar_id = 3 as i32;
-                            }
-                        }
-                        _ => {
-                            return Err(ExiError::UnknownEventCode);
-                        }
-                    }
+    exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
+    match event_code {
+        0 => {
+            let mut len: usize = 6;
+            decode_exi_type_hex_binary(stream, &mut len, &mut (*message).evcc_id)?;
+            exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
+            match event_code {
+                0 => {
+                    return Ok(());
+                }
+                _ => {
+                    return Err(ExiError::UnknownEventCode);
                 }
             }
-            3 => {
-                exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
-                if error == 0 as i32 {
-                    match event_code {
-                        0 => {
-                            return Ok(());
-                        }
-                        _ => {
-                            return Err(ExiError::UnknownEventCode);
-                        }
-                    }
-                }
-            }
-            _ => {
-                return Err(ExiError::UnknownGrammarId);
-            }
+        }
+        _ => {
+            return Err(ExiError::UnknownEventCode);
         }
     }
 }
@@ -13699,7 +13675,7 @@ pub fn decode_iso2_session_setup_req(
 //                                         &mut value,
 //                                     )?;
 //                                     if error == 0 as i32 {
-//                                         (*message).response_code = value as Iso2ResponseCodeType;
+//                                         (*message).response_code = value as u32;
 //                                     }
 //                                 } else {
 //                                     return Err(ExiError::UnsupportedSubEvent);
@@ -13920,7 +13896,7 @@ pub fn decode_iso2_session_setup_req(
 //                                         &mut value,
 //                                     )?;
 //                                     if error == 0 as i32 {
-//                                         (*message).response_code = value as Iso2ResponseCodeType;
+//                                         (*message).response_code = value as u32;
 //                                     }
 //                                 } else {
 //                                     return Err(ExiError::UnsupportedSubEvent);

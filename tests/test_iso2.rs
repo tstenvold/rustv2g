@@ -23,6 +23,8 @@ mod tests {
         let session_setup_req = Iso2SessionSetupReqType::try_from_bytes(&mut bytes, len)
             .expect("Failed to decode Iso2SessionSetupReq");
 
-        println!("{:?}", session_setup_req.evcc_id);
+        let evcc_str = hex::encode(&session_setup_req.evcc_id);
+
+        assert_eq!(evcc_str, "0123456789ab");
     }
 }

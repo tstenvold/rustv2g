@@ -1,145 +1,267 @@
-use super::iso2_decoder::decode_iso2_v2g_message;
+use super::iso2_decoder::decode_iso2_exi_document;
 use crate::common::{
     exi_basetypes::ExiSigned, exi_basetypes_decoder::exi_basetypes_decoder_nbit_uint, exi_bitstream::ExiBitstream, exi_error_codes::ExiError
 };
 use heapless::Vec;
 
-pub type Iso2CostKindType = u32;
-pub const ISO2_COST_KIND_TYPE_CARBON_DIOXIDE_EMISSION: Iso2CostKindType = 2;
-pub const ISO2_COST_KIND_TYPE_RENEWABLE_GENERATION_PERCENTAGE: Iso2CostKindType = 1;
-pub const ISO2_COST_KIND_TYPE_RELATIVE_PRICE_PERCENTAGE: Iso2CostKindType = 0;
-pub const ISO2_COST_KIND_TYPE_UNKNOWN: Iso2CostKindType = 255;
+#[repr(u32)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Iso2CostKindType {
+    RelativePricePercentage = 0,
+    RenewableGenerationPercentage = 1,
+    CarbonDioxideEmission = 2,
+    Unknown = 255,
+}
 
-pub type Iso2UnitSymbolType = u32;
-pub const ISO2_UNIT_SYMBOL_TYPE_WH: Iso2UnitSymbolType = 6;
-pub const ISO2_UNIT_SYMBOL_TYPE_W: Iso2UnitSymbolType = 5;
-pub const ISO2_UNIT_SYMBOL_TYPE_V: Iso2UnitSymbolType = 4;
-pub const ISO2_UNIT_SYMBOL_TYPE_A: Iso2UnitSymbolType = 3;
-pub const ISO2_UNIT_SYMBOL_TYPE_S: Iso2UnitSymbolType = 2;
-pub const ISO2_UNIT_SYMBOL_TYPE_M: Iso2UnitSymbolType = 1;
-pub const ISO2_UNIT_SYMBOL_TYPE_H: Iso2UnitSymbolType = 0;
-pub const ISO2_UNIT_SYMBOL_TYPE_UNKNOWN: Iso2UnitSymbolType = 255;
+impl Default for Iso2CostKindType {
+    fn default() -> Self {
+        Iso2CostKindType::Unknown
+    }
+}
 
-pub type Iso2DcEvErrorCodeType = u32;
-pub const ISO2_DC_EVERROR_CODE_TYPE_NO_DATA: Iso2DcEvErrorCodeType = 11;
-pub const ISO2_DC_EVERROR_CODE_TYPE_FAILED_CHARGING_SYSTEM_INCOMPATIBILITY: Iso2DcEvErrorCodeType =
-    10;
-pub const ISO2_DC_EVERROR_CODE_TYPE_RESERVED_C: Iso2DcEvErrorCodeType = 9;
-pub const ISO2_DC_EVERROR_CODE_TYPE_RESERVED_B: Iso2DcEvErrorCodeType = 8;
-pub const ISO2_DC_EVERROR_CODE_TYPE_RESERVED_A: Iso2DcEvErrorCodeType = 7;
-pub const ISO2_DC_EVERROR_CODE_TYPE_FAILED_CHARGING_VOLTAGE_OUT_OF_RANGE: Iso2DcEvErrorCodeType = 6;
-pub const ISO2_DC_EVERROR_CODE_TYPE_FAILED_CHARGING_CURRENTDIFFERENTIAL: Iso2DcEvErrorCodeType = 5;
-pub const ISO2_DC_EVERROR_CODE_TYPE_FAILED_EVRESSMALFUNCTION: Iso2DcEvErrorCodeType = 4;
-pub const ISO2_DC_EVERROR_CODE_TYPE_FAILED_CHARGER_CONNECTOR_LOCK_FAULT: Iso2DcEvErrorCodeType = 3;
-pub const ISO2_DC_EVERROR_CODE_TYPE_FAILED_EVSHIFT_POSITION: Iso2DcEvErrorCodeType = 2;
-pub const ISO2_DC_EVERROR_CODE_TYPE_FAILED_RESSTEMPERATURE_INHIBIT: Iso2DcEvErrorCodeType = 1;
-pub const ISO2_DC_EVERROR_CODE_TYPE_NO_ERROR: Iso2DcEvErrorCodeType = 0;
-pub const ISO2_DC_EVERROR_CODE_TYPE_UNKNOWN: Iso2DcEvErrorCodeType = 255;
+#[repr(u32)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Iso2UnitSymbolType {
+    H = 0,
+    M = 1,
+    S = 2,
+    A = 3,
+    V = 4,
+    W = 5,
+    Wh = 6,
+    Unknown = 255,
+}
 
-pub type Iso2FaultCodeType = u32;
-pub const ISO2_FAULT_CODE_TYPE_UNKNOWN_ERROR: Iso2FaultCodeType = 2;
-pub const ISO2_FAULT_CODE_TYPE_NO_TLSROOT_CERTIFICAT_AVAILABLE: Iso2FaultCodeType = 1;
-pub const ISO2_FAULT_CODE_TYPE_PARSING_ERROR: Iso2FaultCodeType = 0;
-pub const ISO2_FAULT_CODE_TYPE_UNKNOWN: Iso2FaultCodeType = 255;
+impl Default for Iso2UnitSymbolType {
+    fn default() -> Self {
+        Iso2UnitSymbolType::Unknown
+    }
+}
 
-pub type Iso2EvseNotificationType = u32;
-pub const ISO2_EVSENOTIFICATION_TYPE_RE_NEGOTIATION: Iso2EvseNotificationType = 2;
-pub const ISO2_EVSENOTIFICATION_TYPE_STOP_CHARGING: Iso2EvseNotificationType = 1;
-pub const ISO2_EVSENOTIFICATION_TYPE_NONE: Iso2EvseNotificationType = 0;
-pub const ISO2_EVSENOTIFICATION_TYPE_UNKNOWN: Iso2EvseNotificationType = 255;
+#[repr(u32)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Iso2DcEvErrorCodeType {
+    NoError = 0,
+    FailedResstemperatureInhibit = 1,
+    FailedEvshiftPosition = 2,
+    FailedChargerConnectorLockFault = 3,
+    FailedEvressmalfunction = 4,
+    FailedChargingCurrentdifferential = 5,
+    FailedChargingVoltageOutOfRange = 6,
+    ReservedA = 7,
+    ReservedB = 8,
+    ReservedC = 9,
+    FailedChargingSystemIncompatibility = 10,
+    NoData = 11,
+    Unknown = 255,
+}
 
-pub type Iso2IsolationLevelType = u32;
-pub const ISO2_ISOLATION_LEVEL_TYPE_NO_IMD: Iso2IsolationLevelType = 4;
-pub const ISO2_ISOLATION_LEVEL_TYPE_FAULT: Iso2IsolationLevelType = 3;
-pub const ISO2_ISOLATION_LEVEL_TYPE_WARNING: Iso2IsolationLevelType = 2;
-pub const ISO2_ISOLATION_LEVEL_TYPE_VALID: Iso2IsolationLevelType = 1;
-pub const ISO2_ISOLATION_LEVEL_TYPE_INVALID: Iso2IsolationLevelType = 0;
-pub const ISO2_ISOLATION_LEVEL_TYPE_UNKNOWN: Iso2IsolationLevelType = 255;
+impl Default for Iso2DcEvErrorCodeType {
+    fn default() -> Self {
+        Iso2DcEvErrorCodeType::Unknown
+    }
+}
 
-pub type Iso2ServiceCategoryType = u32;
-pub const ISO2_SERVICE_CATEGORY_TYPE_OTHER_CUSTOM: Iso2ServiceCategoryType = 3;
-pub const ISO2_SERVICE_CATEGORY_TYPE_CONTRACT_CERTIFICATE: Iso2ServiceCategoryType = 2;
-pub const ISO2_SERVICE_CATEGORY_TYPE_INTERNET: Iso2ServiceCategoryType = 1;
-pub const ISO2_SERVICE_CATEGORY_TYPE_EVCHARGING: Iso2ServiceCategoryType = 0;
-pub const ISO2_SERVICE_CATEGORY_TYPE_UNKNOWN: Iso2ServiceCategoryType = 255;
+#[repr(u32)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Iso2FaultCodeType {
+    ParsingError = 0,
+    NoTlsrootCertificatAvailable = 1,
+    UnknownError = 2,
+    Unknown = 255,
+}
 
-pub type Iso2DcEvseStatusCodeType = u32;
-pub const ISO2_DC_EVSESTATUS_CODE_TYPE_RESERVED_C: Iso2DcEvseStatusCodeType = 11;
-pub const ISO2_DC_EVSESTATUS_CODE_TYPE_RESERVED_B: Iso2DcEvseStatusCodeType = 10;
-pub const ISO2_DC_EVSESTATUS_CODE_TYPE_RESERVED_A: Iso2DcEvseStatusCodeType = 9;
-pub const ISO2_DC_EVSESTATUS_CODE_TYPE_RESERVED_9: Iso2DcEvseStatusCodeType = 8;
-pub const ISO2_DC_EVSESTATUS_CODE_TYPE_RESERVED_8: Iso2DcEvseStatusCodeType = 7;
-pub const ISO2_DC_EVSESTATUS_CODE_TYPE_EVSE_MALFUNCTION: Iso2DcEvseStatusCodeType = 6;
-pub const ISO2_DC_EVSESTATUS_CODE_TYPE_EVSE_EMERGENCY_SHUTDOWN: Iso2DcEvseStatusCodeType = 5;
-pub const ISO2_DC_EVSESTATUS_CODE_TYPE_EVSE_ISOLATION_MONITORING_ACTIVE: Iso2DcEvseStatusCodeType =
-    4;
-pub const ISO2_DC_EVSESTATUS_CODE_TYPE_EVSE_UTILITY_INTERRUPT_EVENT: Iso2DcEvseStatusCodeType = 3;
-pub const ISO2_DC_EVSESTATUS_CODE_TYPE_EVSE_SHUTDOWN: Iso2DcEvseStatusCodeType = 2;
-pub const ISO2_DC_EVSESTATUS_CODE_TYPE_EVSE_READY: Iso2DcEvseStatusCodeType = 1;
-pub const ISO2_DC_EVSESTATUS_CODE_TYPE_EVSE_NOT_READY: Iso2DcEvseStatusCodeType = 0;
-pub const ISO2_DC_EVSESTATUS_CODE_TYPE_UNKNOWN: Iso2DcEvseStatusCodeType = 255;
+impl Default for Iso2FaultCodeType {
+    fn default() -> Self {
+        Iso2FaultCodeType::Unknown
+    }
+}
 
-pub type Iso2ChargeProgressType = u32;
-pub const ISO2_CHARGE_PROGRESS_TYPE_RENEGOTIATE: Iso2ChargeProgressType = 2;
-pub const ISO2_CHARGE_PROGRESS_TYPE_STOP: Iso2ChargeProgressType = 1;
-pub const ISO2_CHARGE_PROGRESS_TYPE_START: Iso2ChargeProgressType = 0;
-pub const ISO2_CHARGE_PROGRESS_TYPE_UNKNOWN: Iso2ChargeProgressType = 255;
+#[repr(u32)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Iso2EvseNotificationType {
+    None = 0,
+    StopCharging = 1,
+    ReNegotiation = 2,
+    Unknown = 255,
+}
 
-pub type Iso2ResponseCodeType = u32;
-pub const ISO2_RESPONSE_CODE_TYPE_FAILED_CERTIFICATE_REVOKED: Iso2ResponseCodeType = 25;
-pub const ISO2_RESPONSE_CODE_TYPE_FAILED_CERTIFICATE_NOT_ALLOWED_AT_THIS_EVSE:
-    Iso2ResponseCodeType = 24;
-pub const ISO2_RESPONSE_CODE_TYPE_FAILED_CONTACTOR_ERROR: Iso2ResponseCodeType = 23;
-pub const ISO2_RESPONSE_CODE_TYPE_FAILED_WRONG_ENERGY_TRANSFER_MODE: Iso2ResponseCodeType = 22;
-pub const ISO2_RESPONSE_CODE_TYPE_FAILED_NO_CHARGE_SERVICE_SELECTED: Iso2ResponseCodeType = 21;
-pub const ISO2_RESPONSE_CODE_TYPE_FAILED_METERING_SIGNATURE_NOT_VALID: Iso2ResponseCodeType = 20;
-pub const ISO2_RESPONSE_CODE_TYPE_FAILED_CHARGING_PROFILE_INVALID: Iso2ResponseCodeType = 19;
-pub const ISO2_RESPONSE_CODE_TYPE_FAILED_TARIFF_SELECTION_INVALID: Iso2ResponseCodeType = 18;
-pub const ISO2_RESPONSE_CODE_TYPE_FAILED_POWER_DELIVERY_NOT_APPLIED: Iso2ResponseCodeType = 17;
-pub const ISO2_RESPONSE_CODE_TYPE_FAILED_WRONG_CHARGE_PARAMETER: Iso2ResponseCodeType = 16;
-pub const ISO2_RESPONSE_CODE_TYPE_FAILED_CONTRACT_CANCELED: Iso2ResponseCodeType = 15;
-pub const ISO2_RESPONSE_CODE_TYPE_FAILED_CHALLENGE_INVALID: Iso2ResponseCodeType = 14;
-pub const ISO2_RESPONSE_CODE_TYPE_FAILED_CERT_CHAIN_ERROR: Iso2ResponseCodeType = 13;
-pub const ISO2_RESPONSE_CODE_TYPE_FAILED_NO_CERTIFICATE_AVAILABLE: Iso2ResponseCodeType = 12;
-pub const ISO2_RESPONSE_CODE_TYPE_FAILED_SIGNATURE_ERROR: Iso2ResponseCodeType = 11;
-pub const ISO2_RESPONSE_CODE_TYPE_FAILED_CERTIFICATE_EXPIRED: Iso2ResponseCodeType = 10;
-pub const ISO2_RESPONSE_CODE_TYPE_FAILED_PAYMENT_SELECTION_INVALID: Iso2ResponseCodeType = 9;
-pub const ISO2_RESPONSE_CODE_TYPE_FAILED_SERVICE_SELECTION_INVALID: Iso2ResponseCodeType = 8;
-pub const ISO2_RESPONSE_CODE_TYPE_FAILED_UNKNOWN_SESSION: Iso2ResponseCodeType = 7;
-pub const ISO2_RESPONSE_CODE_TYPE_FAILED_SERVICE_IDINVALID: Iso2ResponseCodeType = 6;
-pub const ISO2_RESPONSE_CODE_TYPE_FAILED_SEQUENCE_ERROR: Iso2ResponseCodeType = 5;
-pub const ISO2_RESPONSE_CODE_TYPE_FAILED: Iso2ResponseCodeType = 4;
-pub const ISO2_RESPONSE_CODE_TYPE_OK_CERTIFICATE_EXPIRES_SOON: Iso2ResponseCodeType = 3;
-pub const ISO2_RESPONSE_CODE_TYPE_OK_OLD_SESSION_JOINED: Iso2ResponseCodeType = 2;
-pub const ISO2_RESPONSE_CODE_TYPE_OK_NEW_SESSION_ESTABLISHED: Iso2ResponseCodeType = 1;
-pub const ISO2_RESPONSE_CODE_TYPE_OK: Iso2ResponseCodeType = 0;
-pub const ISO2_RESPONSE_CODE_TYPE_UNKNOWN: Iso2ResponseCodeType = 255;
+impl Default for Iso2EvseNotificationType {
+    fn default() -> Self {
+        Iso2EvseNotificationType::Unknown
+    }
+}
 
-pub type Iso2PaymentOptionType = u32;
-pub const ISO2_PAYMENT_OPTION_TYPE_EXTERNAL_PAYMENT: Iso2PaymentOptionType = 1;
-pub const ISO2_PAYMENT_OPTION_TYPE_CONTRACT: Iso2PaymentOptionType = 0;
-pub const ISO2_PAYMENT_OPTION_TYPE_UNKNOWN: Iso2PaymentOptionType = 255;
+#[repr(u32)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Iso2IsolationLevelType {
+    Invalid = 0,
+    Valid = 1,
+    Warning = 2,
+    Fault = 3,
+    NoImd = 4,
+    Unknown = 255,
+}
 
-pub type Iso2ChargingSessionType = u32;
-pub const ISO2_CHARGING_SESSION_TYPE_PAUSE: Iso2ChargingSessionType = 1;
-pub const ISO2_CHARGING_SESSION_TYPE_TERMINATE: Iso2ChargingSessionType = 0;
-pub const ISO2_CHARGING_SESSION_TYPE_UNKNOWN: Iso2ChargingSessionType = 255;
+impl Default for Iso2IsolationLevelType {
+    fn default() -> Self {
+        Iso2IsolationLevelType::Unknown
+    }
+}
 
-pub type Iso2EnergyTransferModeType = u32;
-pub const ISO2_ENERGY_TRANSFER_MODE_TYPE_DC_UNIQUE: Iso2EnergyTransferModeType = 5;
-pub const ISO2_ENERGY_TRANSFER_MODE_TYPE_DC_COMBO_CORE: Iso2EnergyTransferModeType = 4;
-pub const ISO2_ENERGY_TRANSFER_MODE_TYPE_DC_EXTENDED: Iso2EnergyTransferModeType = 3;
-pub const ISO2_ENERGY_TRANSFER_MODE_TYPE_DC_CORE: Iso2EnergyTransferModeType = 2;
-pub const ISO2_ENERGY_TRANSFER_MODE_TYPE_AC_THREE_PHASE_CORE: Iso2EnergyTransferModeType = 1;
-pub const ISO2_ENERGY_TRANSFER_MODE_TYPE_AC_SINGLE_PHASE_CORE: Iso2EnergyTransferModeType = 0;
-pub const ISO2_ENERGY_TRANSFER_MODE_TYPE_UNKNOWN: Iso2EnergyTransferModeType = 255;
+#[repr(u32)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Iso2ServiceCategoryType {
+    EvCharging = 0,
+    Internet = 1,
+    ContractCertificate = 2,
+    OtherCustom = 3,
+    Unknown = 255,
+}
 
-pub type Iso2EvseProcessingType = u32;
-pub const ISO2_EVSEPROCESSING_TYPE_ONGOING_WAITING_FOR_CUSTOMER_INTERACTION:
-    Iso2EvseProcessingType = 2;
-pub const ISO2_EVSEPROCESSING_TYPE_ONGOING: Iso2EvseProcessingType = 1;
-pub const ISO2_EVSEPROCESSING_TYPE_FINISHED: Iso2EvseProcessingType = 0;
-pub const ISO2_EVSEPROCESSING_TYPE_UNKNOWN: Iso2EvseProcessingType = 255;
+impl Default for Iso2ServiceCategoryType {
+    fn default() -> Self {
+        Iso2ServiceCategoryType::Unknown
+    }
+}
+
+#[repr(u32)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Iso2DcEvseStatusCodeType {
+    EvseNotReady = 0,
+    EvseReady = 1,
+    EvseShutdown = 2,
+    EvseUtilityInterruptEvent = 3,
+    EvseIsolationMonitoringActive = 4,
+    EvseEmergencyShutdown = 5,
+    EvseMalfunction = 6,
+    Reserved8 = 7,
+    Reserved9 = 8,
+    ReservedA = 9,
+    ReservedB = 10,
+    ReservedC = 11,
+    Unknown = 255,
+}
+
+impl Default for Iso2DcEvseStatusCodeType {
+    fn default() -> Self {
+        Iso2DcEvseStatusCodeType::Unknown
+    }
+}
+
+#[repr(u32)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Iso2ChargeProgressType {
+    Start = 0,
+    Stop = 1,
+    Renegotiate = 2,
+    Unknown = 255,
+}
+
+impl Default for Iso2ChargeProgressType {
+    fn default() -> Self {
+        Iso2ChargeProgressType::Unknown
+    }
+}
+
+#[repr(u32)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Iso2ResponseCodeType {
+    Ok = 0,
+    OkNewSessionEstablished = 1,
+    OkOldSessionJoined = 2,
+    OkCertificateExpiresSoon = 3,
+    Failed = 4,
+    FailedSequenceError = 5,
+    FailedServiceIdInvalid = 6,
+    FailedUnknownSession = 7,
+    FailedServiceSelectionInvalid = 8,
+    FailedPaymentSelectionInvalid = 9,
+    FailedCertificateExpired = 10,
+    FailedSignatureError = 11,
+    FailedNoCertificateAvailable = 12,
+    FailedCertChainError = 13,
+    FailedChallengeInvalid = 14,
+    FailedContractCanceled = 15,
+    FailedWrongChargeParameter = 16,
+    FailedPowerDeliveryNotApplied = 17,
+    FailedTariffSelectionInvalid = 18,
+    FailedChargingProfileInvalid = 19,
+    FailedMeteringSignatureNotValid = 20,
+    FailedNoChargeServiceSelected = 21,
+    FailedWrongEnergyTransferMode = 22,
+    FailedContactorError = 23,
+    FailedCertificateNotAllowedAtThisEvse = 24,
+    FailedCertificateRevoked = 25,
+    Unknown = 255,
+}
+
+impl Default for Iso2ResponseCodeType {
+    fn default() -> Self {
+        Iso2ResponseCodeType::Unknown
+    }
+}
+
+#[repr(u32)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Iso2PaymentOptionType {
+    Contract = 0,
+    ExternalPayment = 1,
+    Unknown = 255,
+}
+
+impl Default for Iso2PaymentOptionType {
+    fn default() -> Self {
+        Iso2PaymentOptionType::Unknown
+    }
+}
+
+#[repr(u32)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Iso2ChargingSessionType {
+    Terminate = 0,
+    Pause = 1,
+    Unknown = 255,
+}
+
+impl Default for Iso2ChargingSessionType {
+    fn default() -> Self {
+        Iso2ChargingSessionType::Unknown
+    }
+}
+
+#[repr(u32)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Iso2EnergyTransferModeType {
+    AcSinglePhaseCore = 0,
+    AcThreePhaseCore = 1,
+    DcCore = 2,
+    DcExtended = 3,
+    DcComboCore = 4,
+    DcUnique = 5,
+    Unknown = 255,
+}
+
+impl Default for Iso2EnergyTransferModeType {
+    fn default() -> Self {
+        Iso2EnergyTransferModeType::Unknown
+    }
+}
+
+#[repr(u32)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Iso2EvseProcessingType {
+    Finished = 0,
+    Ongoing = 1,
+    OngoingWaitingForCustomerInteraction = 2,
+    Unknown = 255,
+}
+
+impl Default for Iso2EvseProcessingType {
+    fn default() -> Self {
+        Iso2EvseProcessingType::Unknown
+    }
+}
 
 #[derive(Clone, Copy)]
 pub struct Iso2CostType {
@@ -151,7 +273,7 @@ pub struct Iso2CostType {
 impl Default for Iso2CostType {
     fn default() -> Self {
         Self {
-            cost_kind: ISO2_COST_KIND_TYPE_UNKNOWN,
+            cost_kind: Iso2CostKindType::Unknown,
             amount: 0,
             amount_multiplier: None,
         }
@@ -241,7 +363,7 @@ impl Default for Iso2PhysicalValueType {
     fn default() -> Self {
         Self {
             multiplier: 0,
-            unit: ISO2_UNIT_SYMBOL_TYPE_UNKNOWN,
+            unit: Iso2UnitSymbolType::Unknown,
             value: 0,
         }
     }
@@ -415,7 +537,7 @@ impl Default for Iso2DCEVStatusType {
     fn default() -> Self {
         Self {
             ev_ready: 0,
-            ev_error_code: ISO2_DC_EVERROR_CODE_TYPE_UNKNOWN,
+            ev_error_code: Iso2DcEvErrorCodeType::Unknown,
             ev_res_soc: 0,
         }
     }
@@ -463,7 +585,7 @@ impl Default for Iso2ServiceType {
         Self {
             service_id: 0,
             service_name: None,
-            service_category: ISO2_SERVICE_CATEGORY_TYPE_UNKNOWN,
+            service_category: Iso2ServiceCategoryType::Unknown,
             service_scope: None,
             free_service: 0,
         }
@@ -544,7 +666,7 @@ pub struct Iso2NotificationType {
 impl Default for Iso2NotificationType {
     fn default() -> Self {
         Self {
-            fault_code: ISO2_FAULT_CODE_TYPE_UNKNOWN,
+            fault_code: Iso2FaultCodeType::Unknown,
             fault_msg: None,
         }
     }
@@ -562,9 +684,9 @@ impl Default for Iso2DCEVSEStatusType {
     fn default() -> Self {
         Self {
             notification_max_delay: 0,
-            evse_notification: ISO2_EVSENOTIFICATION_TYPE_UNKNOWN,
+            evse_notification: Iso2EvseNotificationType::Unknown,
             evse_isolation_status: None,
-            evse_status_code: ISO2_DC_EVSESTATUS_CODE_TYPE_UNKNOWN,
+            evse_status_code: Iso2DcEvseStatusCodeType::Unknown,
         }
     }
 }
@@ -704,7 +826,7 @@ impl Default for Iso2ChargeServiceType {
         Self {
             service_id: 0,
             service_name: None,
-            service_category: ISO2_SERVICE_CATEGORY_TYPE_UNKNOWN,
+            service_category: Iso2ServiceCategoryType::Unknown,
             service_scope: None,
             free_service: 0,
             supported_energy_transfer_mode: Iso2SupportedEnergyTransferModeType::default(),
@@ -784,7 +906,7 @@ impl Default for Iso2ACEVSEStatusType {
     fn default() -> Self {
         Self {
             notification_max_delay: 0,
-            evse_notification: ISO2_EVSENOTIFICATION_TYPE_UNKNOWN,
+            evse_notification: Iso2EvseNotificationType::Unknown,
             rcd: 0,
         }
     }
@@ -802,7 +924,7 @@ impl Default for Iso2EVSEStatusType {
     fn default() -> Self {
         Self {
             notification_max_delay: 0,
-            evse_notification: ISO2_EVSENOTIFICATION_TYPE_UNKNOWN,
+            evse_notification: Iso2EvseNotificationType::Unknown,
             ac_evse_status: Iso2ACEVSEStatusType::default(),
             dc_evse_status: Iso2DCEVSEStatusType::default(),
         }
@@ -844,7 +966,7 @@ pub struct Iso2PowerDeliveryReqType {
 impl Default for Iso2PowerDeliveryReqType {
     fn default() -> Self {
         Self {
-            charge_progress: ISO2_CHARGE_PROGRESS_TYPE_UNKNOWN,
+            charge_progress: Iso2ChargeProgressType::Unknown,
             sa_schedule_tuple_id: 0,
             charging_profile: None,
             dc_ev_power_delivery_parameter: None,
@@ -874,7 +996,7 @@ pub struct Iso2CurrentDemandResType {
 impl Default for Iso2CurrentDemandResType {
     fn default() -> Self {
         Self {
-            response_code: ISO2_RESPONSE_CODE_TYPE_UNKNOWN,
+            response_code: Iso2ResponseCodeType::Unknown,
             dc_evse_status: Iso2DCEVSEStatusType::default(),
             evse_present_voltage: Iso2PhysicalValueType::default(),
             evse_present_current: Iso2PhysicalValueType::default(),
@@ -906,7 +1028,7 @@ pub struct Iso2ChargingStatusResType {
 impl Default for Iso2ChargingStatusResType {
     fn default() -> Self {
         Self {
-            response_code: ISO2_RESPONSE_CODE_TYPE_UNKNOWN,
+            response_code: Iso2ResponseCodeType::Unknown,
             evse_id: Vec::new(),
             sa_schedule_tuple_id: 0,
             evse_max_current: None,
@@ -940,7 +1062,7 @@ pub struct Iso2ServiceDetailResType {
 impl Default for Iso2ServiceDetailResType {
     fn default() -> Self {
         Self {
-            response_code: ISO2_RESPONSE_CODE_TYPE_UNKNOWN,
+            response_code: Iso2ResponseCodeType::Unknown,
             service_id: 0,
             service_parameter_list: None,
         }
@@ -955,7 +1077,7 @@ pub struct Iso2PaymentServiceSelectionResType {
 impl Default for Iso2PaymentServiceSelectionResType {
     fn default() -> Self {
         Self {
-            response_code: ISO2_RESPONSE_CODE_TYPE_UNKNOWN,
+            response_code: Iso2ResponseCodeType::Unknown,
         }
     }
 }
@@ -978,7 +1100,7 @@ pub struct Iso2SessionSetupResType {
 impl Default for Iso2SessionSetupResType {
     fn default() -> Self {
         Self {
-            response_code: ISO2_RESPONSE_CODE_TYPE_UNKNOWN,
+            response_code: Iso2ResponseCodeType::Unknown,
             evse_id: Vec::new(),
             evse_time_stamp: None,
         }
@@ -1005,7 +1127,7 @@ pub struct Iso2CertificateInstallationResType {
 impl Default for Iso2CertificateInstallationResType {
     fn default() -> Self {
         Self {
-            response_code: ISO2_RESPONSE_CODE_TYPE_UNKNOWN,
+            response_code: Iso2ResponseCodeType::Unknown,
             sa_provisioning_certificate_chain: Iso2CertificateChainType::default(),
             contract_signature_cert_chain: Iso2CertificateChainType::default(),
             contract_signature_encrypted_private_key:
@@ -1026,7 +1148,7 @@ pub struct Iso2WeldingDetectionResType {
 impl Default for Iso2WeldingDetectionResType {
     fn default() -> Self {
         Self {
-            response_code: ISO2_RESPONSE_CODE_TYPE_UNKNOWN,
+            response_code: Iso2ResponseCodeType::Unknown,
             dc_evse_status: Iso2DCEVSEStatusType::default(),
             evse_present_voltage: Iso2PhysicalValueType::default(),
         }
@@ -1057,7 +1179,7 @@ pub struct Iso2PreChargeResType {
 impl Default for Iso2PreChargeResType {
     fn default() -> Self {
         Self {
-            response_code: ISO2_RESPONSE_CODE_TYPE_UNKNOWN,
+            response_code: Iso2ResponseCodeType::Unknown,
             dc_evse_status: Iso2DCEVSEStatusType::default(),
             evse_present_voltage: Iso2PhysicalValueType::default(),
         }
@@ -1078,7 +1200,7 @@ pub struct Iso2CertificateUpdateResType {
 impl Default for Iso2CertificateUpdateResType {
     fn default() -> Self {
         Self {
-            response_code: ISO2_RESPONSE_CODE_TYPE_UNKNOWN,
+            response_code: Iso2ResponseCodeType::Unknown,
             sa_provisioning_certificate_chain: Iso2CertificateChainType::default(),
             contract_signature_cert_chain: Iso2CertificateChainType::default(),
             contract_signature_encrypted_private_key:
@@ -1111,7 +1233,7 @@ pub struct Iso2SessionStopResType {
 impl Default for Iso2SessionStopResType {
     fn default() -> Self {
         Self {
-            response_code: ISO2_RESPONSE_CODE_TYPE_UNKNOWN,
+            response_code: Iso2ResponseCodeType::Unknown,
         }
     }
 }
@@ -1129,7 +1251,7 @@ impl Default for Iso2ChargeParameterDiscoveryReqType {
     fn default() -> Self {
         Self {
             max_entries_sa_schedule_tuple: None,
-            requested_energy_transfer_mode: ISO2_ENERGY_TRANSFER_MODE_TYPE_UNKNOWN,
+            requested_energy_transfer_mode: Iso2EnergyTransferModeType::Unknown,
             ac_ev_charge_parameter: None,
             dc_ev_charge_parameter: None,
             ev_charge_parameter: None,
@@ -1158,7 +1280,7 @@ pub struct Iso2PowerDeliveryResType {
 impl Default for Iso2PowerDeliveryResType {
     fn default() -> Self {
         Self {
-            response_code: ISO2_RESPONSE_CODE_TYPE_UNKNOWN,
+            response_code: Iso2ResponseCodeType::Unknown,
             ac_evse_status: None,
             dc_evse_status: None,
             evse_status: None,
@@ -1180,8 +1302,8 @@ pub struct Iso2ChargeParameterDiscoveryResType {
 impl Default for Iso2ChargeParameterDiscoveryResType {
     fn default() -> Self {
         Self {
-            response_code: ISO2_RESPONSE_CODE_TYPE_UNKNOWN,
-            evse_processing: ISO2_EVSEPROCESSING_TYPE_UNKNOWN,
+            response_code: Iso2ResponseCodeType::Unknown,
+            evse_processing: Iso2EvseProcessingType::Unknown,
             sa_schedule_list: None,
             sa_schedules: None,
             ac_evse_charge_parameter: None,
@@ -1200,7 +1322,7 @@ pub struct Iso2PaymentServiceSelectionReqType {
 impl Default for Iso2PaymentServiceSelectionReqType {
     fn default() -> Self {
         Self {
-            selected_payment_option: ISO2_PAYMENT_OPTION_TYPE_UNKNOWN,
+            selected_payment_option: Iso2PaymentOptionType::Unknown,
             selected_service_list: Iso2SelectedServiceListType::default(),
         }
     }
@@ -1217,7 +1339,7 @@ pub struct Iso2MeteringReceiptResType {
 impl Default for Iso2MeteringReceiptResType {
     fn default() -> Self {
         Self {
-            response_code: ISO2_RESPONSE_CODE_TYPE_UNKNOWN,
+            response_code: Iso2ResponseCodeType::Unknown,
             ac_evse_status: None,
             dc_evse_status: None,
             evse_status: None,
@@ -1235,9 +1357,9 @@ pub struct Iso2CableCheckResType {
 impl Default for Iso2CableCheckResType {
     fn default() -> Self {
         Self {
-            response_code: ISO2_RESPONSE_CODE_TYPE_UNKNOWN,
+            response_code: Iso2ResponseCodeType::Unknown,
             dc_evse_status: None,
-            evse_processing: ISO2_EVSEPROCESSING_TYPE_UNKNOWN,
+            evse_processing: Iso2EvseProcessingType::Unknown,
         }
     }
 }
@@ -1253,7 +1375,7 @@ pub struct Iso2ServiceDiscoveryResType {
 impl Default for Iso2ServiceDiscoveryResType {
     fn default() -> Self {
         Self {
-            response_code: ISO2_RESPONSE_CODE_TYPE_UNKNOWN,
+            response_code: Iso2ResponseCodeType::Unknown,
             payment_option_list: Iso2PaymentOptionListType::default(),
             charge_service: Iso2ChargeServiceType::default(),
             service_list: None,
@@ -1290,25 +1412,21 @@ impl Iso2SessionSetupReqType {
             ..Default::default()
         };
 
-        let mut req = Iso2v2gMessage{
-            header: Iso2MessageHeaderType::default(),
-            body: Iso2BodyType {
-                body_type_component: Iso2BodyTypeEnum::SessionSetupReq(Iso2SessionSetupReqType::default()),
+        let mut exi_doc: Iso2ExiDocument = Iso2ExiDocument {
+            v2g_message: Iso2v2gMessage {
+                header: Iso2MessageHeaderType::default(),
+                body: Iso2BodyType {
+                    body_type_component: Iso2BodyTypeEnum::SessionSetupReq(Iso2SessionSetupReqType::default()),
+                },
             },
         };
 
-        let mut event_code = 0;
-        stream.read_and_check_header()?;
-        exi_basetypes_decoder_nbit_uint(&mut stream, 7, &mut event_code)?;
-        match event_code {
-            0 | 76 => {
-                decode_iso2_v2g_message(&mut stream, &mut req)?;
-                if let Iso2BodyTypeEnum::SessionSetupReq(session_setup_req) = req.body.body_type_component {
-                    Ok(session_setup_req)
-                } else {
-                    Err(ExiError::InvalidValue)
-                }
-            } _ => Err(ExiError::InvalidValue),
+        decode_iso2_exi_document(&mut stream, &mut exi_doc)?;
+        // Unpack the session_setup_req
+        if let Iso2BodyTypeEnum::SessionSetupReq(session_setup_req) = exi_doc.v2g_message.body.body_type_component {
+            Ok(session_setup_req)
+        } else {
+            Err(ExiError::InvalidValue)
         }
     }
 }
@@ -1321,7 +1439,7 @@ pub struct Iso2SessionStopReqType {
 impl Default for Iso2SessionStopReqType {
     fn default() -> Self {
         Self {
-            charging_session: ISO2_CHARGING_SESSION_TYPE_UNKNOWN,
+            charging_session: Iso2ChargingSessionType::Unknown,
         }
     }
 }
@@ -1341,8 +1459,8 @@ pub struct Iso2AuthorizationResType {
 impl Default for Iso2AuthorizationResType {
     fn default() -> Self {
         Self {
-            response_code: ISO2_RESPONSE_CODE_TYPE_UNKNOWN,
-            evse_processing: ISO2_EVSEPROCESSING_TYPE_UNKNOWN,
+            response_code: Iso2ResponseCodeType::Unknown,
+            evse_processing: Iso2EvseProcessingType::Unknown,
         }
     }
 }
@@ -1363,7 +1481,7 @@ pub struct Iso2PaymentDetailsResType {
 impl Default for Iso2PaymentDetailsResType {
     fn default() -> Self {
         Self {
-            response_code: ISO2_RESPONSE_CODE_TYPE_UNKNOWN,
+            response_code: Iso2ResponseCodeType::Unknown,
             gen_challenge: Vec::new(),
             evse_time_stamp: 0,
         }
