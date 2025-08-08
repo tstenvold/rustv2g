@@ -1325,7 +1325,7 @@ pub struct Iso2SessionSetupReqType {
 
 impl Iso2SessionSetupReqType {
     #[must_use]
-    pub fn new() -> Self {
+    pub const fn new() -> Self {
         Self {
             evcc_id: Vec::new(),
         }
@@ -1347,9 +1347,7 @@ impl Iso2SessionSetupReqType {
             v2g_message: Iso2v2gMessage {
                 header: Iso2MessageHeaderType::default(),
                 body: Iso2BodyType {
-                    body_type_component: Iso2BodyTypeEnum::SessionSetupReq(
-                        Iso2SessionSetupReqType::default(),
-                    ),
+                    body_type_component: Iso2BodyTypeEnum::SessionSetupReq(Self::default()),
                 },
             },
         };

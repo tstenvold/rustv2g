@@ -1,8 +1,9 @@
 #![no_std]
 #![warn(clippy::pedantic)]
 #![deny(clippy::cargo)]
-// #![warn(clippy::nursery)]
+#![warn(clippy::nursery)]
 #![allow(clippy::missing_errors_doc)] // TODO: Document errors and remove this allowance
+#![allow(clippy::too_many_lines)] // TODO: ideally should be removed but not likely
 
 pub mod exi_v2gtp;
 

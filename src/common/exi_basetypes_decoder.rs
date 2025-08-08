@@ -39,18 +39,18 @@ pub fn exi_basetypes_decoder_bool(
     Ok(())
 }
 
-pub fn exi_basetypes_decoder_bytes(
+pub fn exi_basetypes_decoder_bytes<const N: usize>(
     stream: &mut ExiBitstream,
     bytes_len: usize,
-    bytes: &mut [u8],
-) -> Result<(), ExiError> {
-    if bytes_len > bytes.len() {
+) -> Result<Vec<u8, N>, ExiError> {
+    let mut buf: Vec<u8, N> = Vec::new();
+    if bytes_len > buf.capacity() {
         return Err(ExiError::ByteBufferTooSmall);
     }
-    for b in bytes.iter_mut().take(bytes_len) {
+    for b in buf.iter_mut().take(bytes_len) {
         *b = stream.read_octet()?;
     }
-    Ok(())
+    Ok(buf)
 }
 
 pub fn exi_basetypes_decoder_nbit_uint(
@@ -189,11 +189,7 @@ pub fn exi_basetypes_decoder_characters<const N: usize>(
     stream: &mut ExiBitstream,
     characters_len: usize,
 ) -> Result<Vec<u8, N>, ExiError> {
-    let len = if characters_len > 2 {
-        characters_len - 2
-    } else {
-        0
-    };
+    let len = characters_len.saturating_sub(2);
 
     let ascii_max_value: u8 = 127;
     let mut characters: Vec<u8, N> = Vec::new();

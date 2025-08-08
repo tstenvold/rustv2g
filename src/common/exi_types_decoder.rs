@@ -14,30 +14,24 @@ use crate::common::exi_error_codes::ExiError;
 
 pub fn decode_exi_type_hex_binary<const N: usize>(
     stream: &mut ExiBitstream,
-    value_len: &mut usize,
-    value_buffer: &mut Vec<u8, N>,
-) -> Result<(), ExiError> {
+) -> Result<Vec<u8, N>, ExiError> {
     let mut event_code: u32 = 0;
+
     exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
     if event_code == 0 {
         let val_len = exi_basetypes_decoder_uint_16(stream)? as usize;
-        if val_len > value_buffer.capacity() {
+        if val_len > N {
             return Err(ExiError::ByteBufferTooSmall);
         }
-        *value_len = val_len;
-        match value_buffer.resize(*value_len, 0) {
-            Ok(()) => {}
-            Err(()) => return Err(ExiError::ByteBufferTooSmall),
+        let buf = exi_basetypes_decoder_bytes::<N>(stream, val_len)?;
+        exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
+        if event_code != 0 {
+            return Err(ExiError::DeviantsNotSupported);
         }
-        exi_basetypes_decoder_bytes(stream, *value_len, &mut value_buffer[..*value_len])?;
-    } else {
-        return Err(ExiError::UnsupportedSubEvent);
+        return Ok(buf);
     }
-    exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
-    if event_code != 0 {
-        return Err(ExiError::DeviantsNotSupported);
-    }
-    Ok(())
+
+    Err(ExiError::UnsupportedSubEvent)
 }
 
 pub fn decode_exi_type_integer8(stream: &mut ExiBitstream, value: &mut i8) -> Result<(), ExiError> {
@@ -154,11 +148,6 @@ pub fn decode_exi_type_uint32(stream: &mut ExiBitstream, value: &mut u32) -> Res
     Ok(())
 }
 
-/// #Errors
-///
-/// This function can return the following errors:
-/// - `ExiError::UnsupportedSubEvent` if the event code is not supported
-/// - `ExiError::DeviantsNotSupported` if the event code is not valid
 pub fn decode_exi_type_uint64(stream: &mut ExiBitstream, value: &mut u64) -> Result<(), ExiError> {
     let mut event_code: u32 = 0;
     exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
