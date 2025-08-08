@@ -7,8 +7,8 @@ use crate::common::exi_bitstream::ExiBitstream;
 use crate::common::exi_error_codes::ExiError;
 use crate::common::exi_types_decoder::{decode_exi_type_hex_binary, decode_exi_type_integer64};
 use crate::iso_2::iso2_datatypes::{
-    Iso2BodyType, Iso2BodyTypeEnum, Iso2CanonicalizationMethodType, Iso2DSAKeyValueType,
-    Iso2DigestMethodType, Iso2ExiDocument, Iso2FaultCodeType, Iso2KeyInfoType, Iso2KeyValueType,
+    Iso2BodyTypeEnum, Iso2CanonicalizationMethodType, Iso2DSAKeyValueType,
+    Iso2DigestMethodType, Iso2FaultCodeType, Iso2KeyInfoType, Iso2KeyValueType,
     Iso2MessageHeaderType, Iso2NotificationType, Iso2ObjectType, Iso2PGPComponentType,
     Iso2PGPDataType, Iso2RSAKeyValueType, Iso2ReferenceType, Iso2ResponseCodeType,
     Iso2RetrievalMethodType, Iso2SPKIDataType, Iso2SessionSetupReqType, Iso2SessionSetupResType,
@@ -13455,7 +13455,7 @@ pub fn decode_iso2_session_setup_req(
 
 pub fn decode_iso2_body(
     stream: &mut ExiBitstream,
-    message: &mut Iso2BodyType,
+    message: &mut Iso2v2gMessage,
 ) -> Result<(), ExiError> {
     let mut event_code: u32 = 0;
     exi_basetypes_decoder_nbit_uint(stream, 6_i32 as usize, &mut event_code)?;
@@ -13632,12 +13632,12 @@ pub fn decode_iso2_body(
         29 => {
             let mut session_setup_req: Iso2SessionSetupReqType = Iso2SessionSetupReqType::default();
             decode_iso2_session_setup_req(stream, &mut session_setup_req)?;
-            message.body_type_component = Iso2BodyTypeEnum::SessionSetupReq(session_setup_req);
+            message.body = Iso2BodyTypeEnum::SessionSetupReq(session_setup_req);
         }
         30 => {
             let mut session_setup_res: Iso2SessionSetupResType = Iso2SessionSetupResType::default();
             decode_iso2_session_setup_res(stream, &mut session_setup_res)?;
-            message.body_type_component = Iso2BodyTypeEnum::SessionSetupRes(session_setup_res);
+            message.body = Iso2BodyTypeEnum::SessionSetupRes(session_setup_res);
         }
         // 31 => {
         //     let mut session_stop_req: Iso2SessionStopReqType = Default::default();
@@ -13675,7 +13675,7 @@ pub fn decode_iso2_body(
 
 pub fn decode_iso2_v2g_message(
     stream: &mut ExiBitstream,
-    message: &mut Iso2v2gMessage,
+    mut message: &mut Iso2v2gMessage,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 310_i32;
     let mut event_code: u32 = 0;
@@ -13703,7 +13703,7 @@ pub fn decode_iso2_v2g_message(
                 if error == 0_i32 {
                     match event_code {
                         0 => {
-                            decode_iso2_body(stream, &mut message.body)?;
+                            decode_iso2_body(stream, &mut message)?;
                             if error == 0_i32 {
                                 grammar_id = 3_i32;
                             }
@@ -13734,16 +13734,16 @@ pub fn decode_iso2_v2g_message(
     }
 }
 
-pub fn decode_iso2_exi_document(
+pub fn decode_iso2_exi(
     stream: &mut ExiBitstream,
-    message: &mut Iso2ExiDocument,
+    mut message: &mut Iso2v2gMessage,
 ) -> Result<(), ExiError> {
     let mut event_code: u32 = 0;
     stream.read_and_check_header()?;
     exi_basetypes_decoder_nbit_uint(stream, 7_i32 as usize, &mut event_code)?;
     match event_code {
         0 | 76 => {
-            decode_iso2_v2g_message(stream, &mut message.v2g_message)?;
+            decode_iso2_v2g_message(stream, &mut message)?;
             Ok(())
         }
         _ => Err(ExiError::UnsupportedSubEvent),

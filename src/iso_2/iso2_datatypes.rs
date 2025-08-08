@@ -1,7 +1,6 @@
-use super::iso2_decoder::decode_iso2_exi_document;
-use crate::common::{
+use crate::{common::{
     exi_basetypes::ExiSigned, exi_bitstream::ExiBitstream, exi_error_codes::ExiError,
-};
+}, iso_2::iso2_decoder::decode_iso2_exi};
 use heapless::Vec;
 
 #[repr(u32)]
@@ -1323,47 +1322,6 @@ pub struct Iso2SessionSetupReqType {
     pub evcc_id: Vec<u8, 6>,
 }
 
-impl Iso2SessionSetupReqType {
-    #[must_use]
-    pub const fn new() -> Self {
-        Self {
-            evcc_id: Vec::new(),
-        }
-    }
-
-    pub fn try_from_bytes(bytes: &mut [u8], len: usize) -> Result<Self, ExiError> {
-        let mut buf = [0u8; 2048];
-        if len > buf.len() {
-            return Err(ExiError::ByteBufferTooSmall);
-        }
-        buf[..len].copy_from_slice(&bytes[..len]);
-
-        let mut stream = ExiBitstream {
-            data: buf.as_mut(),
-            ..Default::default()
-        };
-
-        let mut exi_doc: Iso2ExiDocument = Iso2ExiDocument {
-            v2g_message: Iso2v2gMessage {
-                header: Iso2MessageHeaderType::default(),
-                body: Iso2BodyType {
-                    body_type_component: Iso2BodyTypeEnum::SessionSetupReq(Self::default()),
-                },
-            },
-        };
-
-        decode_iso2_exi_document(&mut stream, &mut exi_doc)?;
-        // Unpack the session_setup_req
-        if let Iso2BodyTypeEnum::SessionSetupReq(session_setup_req) =
-            exi_doc.v2g_message.body.body_type_component
-        {
-            Ok(session_setup_req)
-        } else {
-            Err(ExiError::InvalidValue)
-        }
-    }
-}
-
 #[derive(Clone)]
 pub struct Iso2SessionStopReqType {
     pub charging_session: Iso2ChargingSessionType,
@@ -1421,10 +1379,6 @@ impl Default for Iso2PaymentDetailsResType {
     }
 }
 
-pub struct Iso2BodyType {
-    pub body_type_component: Iso2BodyTypeEnum,
-}
-
 #[allow(clippy::large_enum_variant)]
 pub enum Iso2BodyTypeEnum {
     AuthorizationReq(Iso2AuthorizationReqType),
@@ -1466,11 +1420,24 @@ pub enum Iso2BodyTypeEnum {
 
 pub struct Iso2v2gMessage {
     pub header: Iso2MessageHeaderType,
-    pub body: Iso2BodyType,
+    pub body: Iso2BodyTypeEnum,
 }
 
-pub struct Iso2ExiDocument {
-    pub v2g_message: Iso2v2gMessage,
+impl Iso2v2gMessage {
+    pub fn try_from_bytes<const N: usize>(bytes: &mut [u8; N]) -> Result<Self, ExiError> {
+
+        let mut this = Self {
+            header: Iso2MessageHeaderType::default(),
+            body: Iso2BodyTypeEnum::BodyElement(Iso2BodyBaseType::default()),
+        };
+        let mut stream = ExiBitstream{
+            data: bytes,
+            ..Default::default()
+        };
+
+        decode_iso2_exi(&mut stream, &mut this)?;
+        Ok(this)
+    }
 }
 
 pub struct Iso2ExiFragment {

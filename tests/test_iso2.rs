@@ -17,14 +17,17 @@ mod tests {
     #[test]
     fn test_iso2_session_setup_req() {
         let hex_data = "8098004011d018048d159e26ac00";
-        let mut bytes = hexstr_to_bytes(hex_data);
-        let len = bytes.len();
-
-        let session_setup_req = Iso2SessionSetupReqType::try_from_bytes(&mut bytes, len)
+        let bytes: Vec<u8, 2048> = hexstr_to_bytes(hex_data);
+        let mut bytes_array = [0u8; 2048];
+        bytes_array[..bytes.len()].copy_from_slice(&bytes);
+        let v2g_msg = Iso2v2gMessage::try_from_bytes::<2048>(&mut bytes_array)
             .expect("Failed to decode Iso2SessionSetupReq");
 
-        let evcc_str = hex::encode(&session_setup_req.evcc_id);
-
-        assert_eq!(evcc_str, "0123456789ab");
+        match v2g_msg.body {
+            Iso2BodyTypeEnum::SessionSetupReq(ref req) => {
+                assert_eq!(req.evcc_id, hexstr_to_bytes("0123456789ab"));
+            }
+            _ => panic!("Expected SessionSetupReq body type"),
+        }
     }
 }
