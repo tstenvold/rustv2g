@@ -1,5 +1,5 @@
 #![no_std]
-// #![warn(clippy::pedantic)]
+#![warn(clippy::pedantic)]
 #![deny(clippy::cargo)]
 // #![warn(clippy::nursery)]
 // #![allow(clippy::missing_errors_doc)] // TODO: Document errors and remove this allowance

@@ -1,4 +1,3 @@
-use heapless::String;
 use heapless::Vec;
 
 use crate::app_handshake::app_handshake_decoder::decode_app_hand_supported_app_protocol_req;

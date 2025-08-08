@@ -35,7 +35,7 @@ mod tests {
 
         let result = match app_req.to_bytes() {
             Ok((data, len)) => data[..len].to_vec(),
-            Err(e) => panic!("Failed to encode AppHandSupportedAppProtocolReq: {:?}", e),
+            Err(e) => panic!("Failed to encode AppHandSupportedAppProtocolReq: {e:?}"),
         };
 
         assert!(!result.is_empty(), "Encoded data should not be empty");
@@ -67,7 +67,7 @@ mod tests {
                     "Decoded schema ID should match original"
                 );
             }
-            Err(e) => panic!("Failed to decode AppHandSupportedAppProtocolReq: {:?}", e),
+            Err(e) => panic!("Failed to decode AppHandSupportedAppProtocolReq: {e:?}"),
         }
     }
 
@@ -137,7 +137,7 @@ mod tests {
                 );
                 app_req
             }
-            Err(e) => panic!("Failed to decode AppHandSupportedAppProtocolReq: {:?}", e),
+            Err(e) => panic!("Failed to decode AppHandSupportedAppProtocolReq: {e:?}"),
         };
 
         // Encode the request back to EXI and check if it matches the original

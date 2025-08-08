@@ -1,5 +1,4 @@
 use core::result::Result;
-use heapless::String;
 
 use crate::common::exi_basetypes::{ExiSigned, ExiUnsigned, EXI_UNSIGNED_MAX_OCTETS};
 use crate::common::exi_bitstream::ExiBitstream;
@@ -48,8 +47,8 @@ pub fn exi_basetypes_decoder_bytes(
     if bytes_len > bytes.len() {
         return Err(ExiError::ByteBufferTooSmall);
     }
-    for b in 0..bytes_len {
-        bytes[b] = stream.read_octet()?;
+    for b in bytes.iter_mut().take(bytes_len) {
+        *b = stream.read_octet()?;
     }
     Ok(())
 }

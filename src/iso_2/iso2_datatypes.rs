@@ -1,26 +1,24 @@
 use super::iso2_decoder::decode_iso2_exi_document;
 use crate::common::{
-    exi_basetypes::ExiSigned, exi_basetypes_decoder::exi_basetypes_decoder_nbit_uint, exi_bitstream::ExiBitstream, exi_error_codes::ExiError
+    exi_basetypes::ExiSigned, exi_bitstream::ExiBitstream, exi_error_codes::ExiError
 };
 use heapless::Vec;
 
 #[repr(u32)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Default)]
 pub enum Iso2CostKindType {
     RelativePricePercentage = 0,
     RenewableGenerationPercentage = 1,
     CarbonDioxideEmission = 2,
+    #[default]
     Unknown = 255,
 }
 
-impl Default for Iso2CostKindType {
-    fn default() -> Self {
-        Iso2CostKindType::Unknown
-    }
-}
 
 #[repr(u32)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Default)]
 pub enum Iso2UnitSymbolType {
     H = 0,
     M = 1,
@@ -29,17 +27,14 @@ pub enum Iso2UnitSymbolType {
     V = 4,
     W = 5,
     Wh = 6,
+    #[default]
     Unknown = 255,
 }
 
-impl Default for Iso2UnitSymbolType {
-    fn default() -> Self {
-        Iso2UnitSymbolType::Unknown
-    }
-}
 
 #[repr(u32)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Default)]
 pub enum Iso2DcEvErrorCodeType {
     NoError = 0,
     FailedResstemperatureInhibit = 1,
@@ -53,80 +48,65 @@ pub enum Iso2DcEvErrorCodeType {
     ReservedC = 9,
     FailedChargingSystemIncompatibility = 10,
     NoData = 11,
+    #[default]
     Unknown = 255,
 }
 
-impl Default for Iso2DcEvErrorCodeType {
-    fn default() -> Self {
-        Iso2DcEvErrorCodeType::Unknown
-    }
-}
 
 #[repr(u32)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Default)]
 pub enum Iso2FaultCodeType {
     ParsingError = 0,
     NoTlsrootCertificatAvailable = 1,
     UnknownError = 2,
+    #[default]
     Unknown = 255,
 }
 
-impl Default for Iso2FaultCodeType {
-    fn default() -> Self {
-        Iso2FaultCodeType::Unknown
-    }
-}
 
 #[repr(u32)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Default)]
 pub enum Iso2EvseNotificationType {
     None = 0,
     StopCharging = 1,
     ReNegotiation = 2,
+    #[default]
     Unknown = 255,
 }
 
-impl Default for Iso2EvseNotificationType {
-    fn default() -> Self {
-        Iso2EvseNotificationType::Unknown
-    }
-}
 
 #[repr(u32)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Default)]
 pub enum Iso2IsolationLevelType {
     Invalid = 0,
     Valid = 1,
     Warning = 2,
     Fault = 3,
     NoImd = 4,
+    #[default]
     Unknown = 255,
 }
 
-impl Default for Iso2IsolationLevelType {
-    fn default() -> Self {
-        Iso2IsolationLevelType::Unknown
-    }
-}
 
 #[repr(u32)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Default)]
 pub enum Iso2ServiceCategoryType {
     EvCharging = 0,
     Internet = 1,
     ContractCertificate = 2,
     OtherCustom = 3,
+    #[default]
     Unknown = 255,
 }
 
-impl Default for Iso2ServiceCategoryType {
-    fn default() -> Self {
-        Iso2ServiceCategoryType::Unknown
-    }
-}
 
 #[repr(u32)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Default)]
 pub enum Iso2DcEvseStatusCodeType {
     EvseNotReady = 0,
     EvseReady = 1,
@@ -140,32 +120,26 @@ pub enum Iso2DcEvseStatusCodeType {
     ReservedA = 9,
     ReservedB = 10,
     ReservedC = 11,
+    #[default]
     Unknown = 255,
 }
 
-impl Default for Iso2DcEvseStatusCodeType {
-    fn default() -> Self {
-        Iso2DcEvseStatusCodeType::Unknown
-    }
-}
 
 #[repr(u32)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Default)]
 pub enum Iso2ChargeProgressType {
     Start = 0,
     Stop = 1,
     Renegotiate = 2,
+    #[default]
     Unknown = 255,
 }
 
-impl Default for Iso2ChargeProgressType {
-    fn default() -> Self {
-        Iso2ChargeProgressType::Unknown
-    }
-}
 
 #[repr(u32)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Default)]
 pub enum Iso2ResponseCodeType {
     Ok = 0,
     OkNewSessionEstablished = 1,
@@ -193,45 +167,36 @@ pub enum Iso2ResponseCodeType {
     FailedContactorError = 23,
     FailedCertificateNotAllowedAtThisEvse = 24,
     FailedCertificateRevoked = 25,
+    #[default]
     Unknown = 255,
 }
 
-impl Default for Iso2ResponseCodeType {
-    fn default() -> Self {
-        Iso2ResponseCodeType::Unknown
-    }
-}
 
 #[repr(u32)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Default)]
 pub enum Iso2PaymentOptionType {
     Contract = 0,
     ExternalPayment = 1,
+    #[default]
     Unknown = 255,
 }
 
-impl Default for Iso2PaymentOptionType {
-    fn default() -> Self {
-        Iso2PaymentOptionType::Unknown
-    }
-}
 
 #[repr(u32)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Default)]
 pub enum Iso2ChargingSessionType {
     Terminate = 0,
     Pause = 1,
+    #[default]
     Unknown = 255,
 }
 
-impl Default for Iso2ChargingSessionType {
-    fn default() -> Self {
-        Iso2ChargingSessionType::Unknown
-    }
-}
 
 #[repr(u32)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Default)]
 pub enum Iso2EnergyTransferModeType {
     AcSinglePhaseCore = 0,
     AcThreePhaseCore = 1,
@@ -239,29 +204,22 @@ pub enum Iso2EnergyTransferModeType {
     DcExtended = 3,
     DcComboCore = 4,
     DcUnique = 5,
+    #[default]
     Unknown = 255,
 }
 
-impl Default for Iso2EnergyTransferModeType {
-    fn default() -> Self {
-        Iso2EnergyTransferModeType::Unknown
-    }
-}
 
 #[repr(u32)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Default)]
 pub enum Iso2EvseProcessingType {
     Finished = 0,
     Ongoing = 1,
     OngoingWaitingForCustomerInteraction = 2,
+    #[default]
     Unknown = 255,
 }
 
-impl Default for Iso2EvseProcessingType {
-    fn default() -> Self {
-        Iso2EvseProcessingType::Unknown
-    }
-}
 
 #[derive(Clone, Copy)]
 pub struct Iso2CostType {

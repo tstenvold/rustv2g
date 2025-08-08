@@ -26,7 +26,10 @@ pub fn decode_exi_type_hex_binary<const N: usize>(
             return Err(ExiError::ByteBufferTooSmall);
         }
         *value_len = val_len as usize;
-        value_buffer.resize(*value_len, 0);
+        match value_buffer.resize(*value_len, 0) {
+            Ok(()) => {}
+            Err(_) => return Err(ExiError::ByteBufferTooSmall),
+        }
         exi_basetypes_decoder_bytes(stream, *value_len, &mut value_buffer[..*value_len])?;
     } else {
         return Err(ExiError::UnsupportedSubEvent);
