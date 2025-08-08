@@ -47,6 +47,12 @@ pub fn exi_basetypes_decoder_bytes<const N: usize>(
     if bytes_len > buf.capacity() {
         return Err(ExiError::ByteBufferTooSmall);
     }
+    // Not entirely sure why we require a resize here
+    match buf.resize(bytes_len, 0) {
+        Ok(()) => {}
+        Err(_) => return Err(ExiError::ByteBufferTooSmall),
+    }
+
     for b in buf.iter_mut().take(bytes_len) {
         *b = stream.read_octet()?;
     }
