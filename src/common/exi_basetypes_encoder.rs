@@ -153,7 +153,7 @@ pub fn exi_basetypes_encoder_characters<const N: usize>(
     characters: &Vec<u8, N>,
 ) -> Result<(), ExiError> {
     const ASCII_MAX_VALUE: u8 = 127;
-    for &ch in characters.iter() {
+    for &ch in characters {
         let byte = ch;
         if byte > ASCII_MAX_VALUE {
             return Err(ExiError::UnsupportedCharacterValue);

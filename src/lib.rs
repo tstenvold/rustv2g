@@ -2,7 +2,7 @@
 #![warn(clippy::pedantic)]
 #![deny(clippy::cargo)]
 // #![warn(clippy::nursery)]
-// #![allow(clippy::missing_errors_doc)] // TODO: Document errors and remove this allowance
+#![allow(clippy::missing_errors_doc)] // TODO: Document errors and remove this allowance
 
 pub mod exi_v2gtp;
 

@@ -22,7 +22,6 @@ pub enum ExiError {
     UnknownEventForDecoding = -50,
     DecoderNotImplemented = -69,
 
-
     // encoder -70 to -89
     UnknownEventForEncoding = -70,
     EncoderNotImplemented = -89,

@@ -28,19 +28,9 @@ pub fn decode_app_hand_app_protocol_type(
                         exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
 
                         if event_code == 0 {
-                            let mut char_len: u16 = 0;
-                            exi_basetypes_decoder_uint_16(stream, &mut char_len)?;
-
-                            if char_len >= 2 {
-                                char_len -= 2;
-                                exi_basetypes_decoder_characters(
-                                    stream,
-                                    char_len as usize,
-                                    &mut app_protocol_type.protocol_namespace.characters,
-                                )?;
-                            } else {
-                                return Err(ExiError::InvalidCharactersLength);
-                            }
+                            let char_len = exi_basetypes_decoder_uint_16(stream)? as usize;
+                            app_protocol_type.protocol_namespace.characters =
+                                exi_basetypes_decoder_characters(stream, char_len)?;
                         } else {
                             return Err(ExiError::UnsupportedSubEvent);
                         }

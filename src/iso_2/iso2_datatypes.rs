@@ -1,12 +1,11 @@
 use super::iso2_decoder::decode_iso2_exi_document;
 use crate::common::{
-    exi_basetypes::ExiSigned, exi_bitstream::ExiBitstream, exi_error_codes::ExiError
+    exi_basetypes::ExiSigned, exi_bitstream::ExiBitstream, exi_error_codes::ExiError,
 };
 use heapless::Vec;
 
 #[repr(u32)]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-#[derive(Default)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
 pub enum Iso2CostKindType {
     RelativePricePercentage = 0,
     RenewableGenerationPercentage = 1,
@@ -15,10 +14,8 @@ pub enum Iso2CostKindType {
     Unknown = 255,
 }
 
-
 #[repr(u32)]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-#[derive(Default)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
 pub enum Iso2UnitSymbolType {
     H = 0,
     M = 1,
@@ -31,10 +28,8 @@ pub enum Iso2UnitSymbolType {
     Unknown = 255,
 }
 
-
 #[repr(u32)]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-#[derive(Default)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
 pub enum Iso2DcEvErrorCodeType {
     NoError = 0,
     FailedResstemperatureInhibit = 1,
@@ -52,10 +47,8 @@ pub enum Iso2DcEvErrorCodeType {
     Unknown = 255,
 }
 
-
 #[repr(u32)]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-#[derive(Default)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
 pub enum Iso2FaultCodeType {
     ParsingError = 0,
     NoTlsrootCertificatAvailable = 1,
@@ -64,10 +57,8 @@ pub enum Iso2FaultCodeType {
     Unknown = 255,
 }
 
-
 #[repr(u32)]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-#[derive(Default)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
 pub enum Iso2EvseNotificationType {
     None = 0,
     StopCharging = 1,
@@ -76,10 +67,8 @@ pub enum Iso2EvseNotificationType {
     Unknown = 255,
 }
 
-
 #[repr(u32)]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-#[derive(Default)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
 pub enum Iso2IsolationLevelType {
     Invalid = 0,
     Valid = 1,
@@ -90,10 +79,8 @@ pub enum Iso2IsolationLevelType {
     Unknown = 255,
 }
 
-
 #[repr(u32)]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-#[derive(Default)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
 pub enum Iso2ServiceCategoryType {
     EvCharging = 0,
     Internet = 1,
@@ -103,10 +90,8 @@ pub enum Iso2ServiceCategoryType {
     Unknown = 255,
 }
 
-
 #[repr(u32)]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-#[derive(Default)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
 pub enum Iso2DcEvseStatusCodeType {
     EvseNotReady = 0,
     EvseReady = 1,
@@ -124,10 +109,8 @@ pub enum Iso2DcEvseStatusCodeType {
     Unknown = 255,
 }
 
-
 #[repr(u32)]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-#[derive(Default)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
 pub enum Iso2ChargeProgressType {
     Start = 0,
     Stop = 1,
@@ -136,10 +119,8 @@ pub enum Iso2ChargeProgressType {
     Unknown = 255,
 }
 
-
 #[repr(u32)]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-#[derive(Default)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
 pub enum Iso2ResponseCodeType {
     Ok = 0,
     OkNewSessionEstablished = 1,
@@ -171,10 +152,8 @@ pub enum Iso2ResponseCodeType {
     Unknown = 255,
 }
 
-
 #[repr(u32)]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-#[derive(Default)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
 pub enum Iso2PaymentOptionType {
     Contract = 0,
     ExternalPayment = 1,
@@ -182,10 +161,8 @@ pub enum Iso2PaymentOptionType {
     Unknown = 255,
 }
 
-
 #[repr(u32)]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-#[derive(Default)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
 pub enum Iso2ChargingSessionType {
     Terminate = 0,
     Pause = 1,
@@ -193,10 +170,8 @@ pub enum Iso2ChargingSessionType {
     Unknown = 255,
 }
 
-
 #[repr(u32)]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-#[derive(Default)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
 pub enum Iso2EnergyTransferModeType {
     AcSinglePhaseCore = 0,
     AcThreePhaseCore = 1,
@@ -208,10 +183,8 @@ pub enum Iso2EnergyTransferModeType {
     Unknown = 255,
 }
 
-
 #[repr(u32)]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-#[derive(Default)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
 pub enum Iso2EvseProcessingType {
     Finished = 0,
     Ongoing = 1,
@@ -219,7 +192,6 @@ pub enum Iso2EvseProcessingType {
     #[default]
     Unknown = 255,
 }
-
 
 #[derive(Clone, Copy)]
 pub struct Iso2CostType {
@@ -1352,6 +1324,7 @@ pub struct Iso2SessionSetupReqType {
 }
 
 impl Iso2SessionSetupReqType {
+    #[must_use]
     pub fn new() -> Self {
         Self {
             evcc_id: Vec::new(),
@@ -1374,14 +1347,18 @@ impl Iso2SessionSetupReqType {
             v2g_message: Iso2v2gMessage {
                 header: Iso2MessageHeaderType::default(),
                 body: Iso2BodyType {
-                    body_type_component: Iso2BodyTypeEnum::SessionSetupReq(Iso2SessionSetupReqType::default()),
+                    body_type_component: Iso2BodyTypeEnum::SessionSetupReq(
+                        Iso2SessionSetupReqType::default(),
+                    ),
                 },
             },
         };
 
         decode_iso2_exi_document(&mut stream, &mut exi_doc)?;
         // Unpack the session_setup_req
-        if let Iso2BodyTypeEnum::SessionSetupReq(session_setup_req) = exi_doc.v2g_message.body.body_type_component {
+        if let Iso2BodyTypeEnum::SessionSetupReq(session_setup_req) =
+            exi_doc.v2g_message.body.body_type_component
+        {
             Ok(session_setup_req)
         } else {
             Err(ExiError::InvalidValue)

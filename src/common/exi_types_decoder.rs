@@ -19,16 +19,15 @@ pub fn decode_exi_type_hex_binary<const N: usize>(
 ) -> Result<(), ExiError> {
     let mut event_code: u32 = 0;
     exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
-    let mut val_len: u16 = 0;
     if event_code == 0 {
-        exi_basetypes_decoder_uint_16(stream, &mut val_len)?;
-        if val_len as usize > value_buffer.capacity() {
+        let val_len = exi_basetypes_decoder_uint_16(stream)? as usize;
+        if val_len > value_buffer.capacity() {
             return Err(ExiError::ByteBufferTooSmall);
         }
-        *value_len = val_len as usize;
+        *value_len = val_len;
         match value_buffer.resize(*value_len, 0) {
             Ok(()) => {}
-            Err(_) => return Err(ExiError::ByteBufferTooSmall),
+            Err(()) => return Err(ExiError::ByteBufferTooSmall),
         }
         exi_basetypes_decoder_bytes(stream, *value_len, &mut value_buffer[..*value_len])?;
     } else {
@@ -129,7 +128,7 @@ pub fn decode_exi_type_uint16(stream: &mut ExiBitstream, value: &mut u16) -> Res
     let mut event_code: u32 = 0;
     exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
     if event_code == 0 {
-        exi_basetypes_decoder_uint_16(stream, value)?;
+        *value = exi_basetypes_decoder_uint_16(stream)?;
     } else {
         return Err(ExiError::UnsupportedSubEvent);
     }

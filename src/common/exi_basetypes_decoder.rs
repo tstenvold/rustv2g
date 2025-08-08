@@ -74,16 +74,13 @@ pub fn exi_basetypes_decoder_uint_8(
     Ok(())
 }
 
-pub fn exi_basetypes_decoder_uint_16(
-    stream: &mut ExiBitstream,
-    value: &mut u16,
-) -> Result<(), ExiError> {
+pub fn exi_basetypes_decoder_uint_16(stream: &mut ExiBitstream) -> Result<u16, ExiError> {
     let mut exi_unsigned = ExiUnsigned::default();
     let mut result: u32 = 0;
     exi_basetypes_decoder_read_unsigned(stream, &mut exi_unsigned)?;
     exi_unsigned.convert_from_unsigned(&mut result, 3)?;
-    *value = u16::try_from(result).map_err(|_| ExiError::InvalidValue)?;
-    Ok(())
+    let val = u16::try_from(result).map_err(|_| ExiError::InvalidValue)?;
+    Ok(val)
 }
 
 pub fn exi_basetypes_decoder_uint_32(
@@ -134,8 +131,7 @@ pub fn exi_basetypes_decoder_integer_16(
 ) -> Result<(), ExiError> {
     let mut sign: i32 = 0;
     exi_basetypes_decoder_bool(stream, &mut sign)?;
-    let mut tmp: u16 = 0;
-    exi_basetypes_decoder_uint_16(stream, &mut tmp)?;
+    let tmp: u16 = exi_basetypes_decoder_uint_16(stream)?;
     *value = i16::try_from(tmp).map_err(|_| ExiError::InvalidValue)?;
     if sign != 0 {
         *value = -(*value + 1);
@@ -192,13 +188,20 @@ pub fn exi_basetypes_decoder_signed(
 pub fn exi_basetypes_decoder_characters<const N: usize>(
     stream: &mut ExiBitstream,
     characters_len: usize,
-    characters: &mut Vec<u8, N>,
-) -> Result<(), ExiError> {
+) -> Result<Vec<u8, N>, ExiError> {
+    let len = if characters_len > 2 {
+        characters_len - 2
+    } else {
+        0
+    };
+
     let ascii_max_value: u8 = 127;
-    if characters_len > characters.capacity() {
+    let mut characters: Vec<u8, N> = Vec::new();
+
+    if len > characters.capacity() {
         return Err(ExiError::CharacterBufferTooSmall);
     }
-    for _ in 0..characters_len {
+    for _ in 0..len {
         let n: u8 = stream.read_octet()?;
         if n > ascii_max_value {
             return Err(ExiError::UnsupportedCharacterValue);
@@ -207,5 +210,5 @@ pub fn exi_basetypes_decoder_characters<const N: usize>(
             .push(n)
             .map_err(|_| ExiError::CharacterBufferTooSmall)?;
     }
-    Ok(())
+    Ok(characters)
 }

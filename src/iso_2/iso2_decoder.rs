@@ -1,9 +1,21 @@
 use crate::common::exi_basetypes::ExiSigned;
-use crate::common::exi_basetypes_decoder::*;
-use crate::common::exi_bitstream::*;
+use crate::common::exi_basetypes_decoder::{
+    exi_basetypes_decoder_bytes, exi_basetypes_decoder_characters, exi_basetypes_decoder_nbit_uint,
+    exi_basetypes_decoder_signed, exi_basetypes_decoder_uint_16,
+};
+use crate::common::exi_bitstream::ExiBitstream;
 use crate::common::exi_error_codes::ExiError;
-use crate::common::exi_types_decoder::*;
-use crate::iso_2::iso2_datatypes::*;
+use crate::common::exi_types_decoder::{decode_exi_type_hex_binary, decode_exi_type_integer64};
+use crate::iso_2::iso2_datatypes::{
+    Iso2BodyType, Iso2BodyTypeEnum, Iso2CanonicalizationMethodType, Iso2DSAKeyValueType,
+    Iso2DigestMethodType, Iso2ExiDocument, Iso2FaultCodeType, Iso2KeyInfoType, Iso2KeyValueType,
+    Iso2MessageHeaderType, Iso2NotificationType, Iso2ObjectType, Iso2PGPComponentType,
+    Iso2PGPDataType, Iso2RSAKeyValueType, Iso2ReferenceType, Iso2ResponseCodeType,
+    Iso2RetrievalMethodType, Iso2SPKIDataType, Iso2SessionSetupReqType, Iso2SessionSetupResType,
+    Iso2SignatureMethodType, Iso2SignatureType, Iso2SignatureValueType, Iso2SignedInfoType,
+    Iso2TransformType, Iso2TransformsType, Iso2X509DataType, Iso2X509IssuerSerialType,
+    Iso2v2gMessage,
+};
 
 // pub fn decode_iso2_cost(
 //     stream: &mut ExiBitstream,
@@ -160,17 +172,9 @@ pub fn decode_iso2_transform(
                 if error == 0_i32 {
                     match event_code {
                         0 => {
-                            exi_basetypes_decoder_uint_16(
-                                stream,
-                                &mut (message.algorithm.len() as u16),
-                            )?;
-                            if error == 0_i32 {
-                                exi_basetypes_decoder_characters(
-                                    stream,
-                                    message.algorithm.len(),
-                                    &mut message.algorithm,
-                                )?;
-                            }
+                            let len = exi_basetypes_decoder_uint_16(stream)? as usize;
+                            message.algorithm =
+                                exi_basetypes_decoder_characters::<65>(stream, len)?;
                             grammar_id = 6_i32;
                         }
                         _ => {
@@ -191,18 +195,8 @@ pub fn decode_iso2_transform(
                             )?;
                             if error == 0_i32 {
                                 if event_code == 0_i32 as u32 {
-                                    exi_basetypes_decoder_uint_16(
-                                        stream,
-                                        &mut (message.xpath.clone().clone().unwrap().len()
-                                            as u16),
-                                    )?;
-                                    if error == 0_i32 {
-                                        exi_basetypes_decoder_characters(
-                                            stream,
-                                            message.xpath.clone().clone().unwrap().len(),
-                                            &mut message.xpath.clone().unwrap(),
-                                        )?;
-                                    }
+                        let len = exi_basetypes_decoder_uint_16(stream)? as usize;
+                        (*message).xpath = Some(exi_basetypes_decoder_characters::<65>(stream, len)?);
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
                                 }
@@ -553,7 +547,7 @@ pub fn decode_iso2_dsa_key_value(
 }
 pub fn decode_iso2_x509_issuer_serial(
     stream: &mut ExiBitstream,
-    x509_issuer_serial: &mut Iso2X509IssuerSerialType,
+    message: &mut Iso2X509IssuerSerialType,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 16_i32;
     let mut event_code: u32 = 0;
@@ -572,17 +566,8 @@ pub fn decode_iso2_x509_issuer_serial(
                             )?;
                             if error == 0_i32 {
                                 if event_code == 0_i32 as u32 {
-                                    exi_basetypes_decoder_uint_16(
-                                        stream,
-                                        &mut (x509_issuer_serial.x509_issuer_name.len() as u16),
-                                    )?;
-                                    if error == 0_i32 {
-                                        exi_basetypes_decoder_characters(
-                                            stream,
-                                            x509_issuer_serial.x509_issuer_name.len(),
-                                            &mut x509_issuer_serial.x509_issuer_name,
-                                        )?;
-                                    }
+                        let len = exi_basetypes_decoder_uint_16(stream)? as usize;
+                        (*message).x509_issuer_name = exi_basetypes_decoder_characters::<65>(stream, len)?;
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
                                 }
@@ -621,7 +606,7 @@ pub fn decode_iso2_x509_issuer_serial(
                             if error == 0_i32 {
                                 exi_basetypes_decoder_signed(
                                     stream,
-                                    &mut x509_issuer_serial.x509_serial_number,
+                                    &mut message.x509_serial_number,
                                 )?;
                                 if error == 0_i32 {
                                     grammar_id = 3_i32;
@@ -739,17 +724,8 @@ pub fn decode_iso2_digest_method(
                 if error == 0_i32 {
                     match event_code {
                         0 => {
-                            exi_basetypes_decoder_uint_16(
-                                stream,
-                                &mut (message.algorithm.len() as u16),
-                            )?;
-                            if error == 0_i32 {
-                                exi_basetypes_decoder_characters(
-                                    stream,
-                                    message.algorithm.len(),
-                                    &mut message.algorithm,
-                                )?;
-                            }
+                        let len = exi_basetypes_decoder_uint_16(stream)? as usize;
+                        (*message).algorithm = exi_basetypes_decoder_characters::<65>(stream, len)?;
                             grammar_id = 21_i32;
                         }
                         _ => {
@@ -885,21 +861,8 @@ pub fn decode_iso2_canonicalization_method(
                 if error == 0_i32 {
                     match event_code {
                         0 => {
-                            exi_basetypes_decoder_uint_16(
-                                stream,
-                                &mut (message.algorithm.len() as u16),
-                            )?;
-                            if error == 0_i32 {
-                                if message.algorithm.len() >= 2 {
-                                    exi_basetypes_decoder_characters(
-                                        stream,
-                                        message.algorithm.len(),
-                                        &mut message.algorithm,
-                                    )?;
-                                } else {
-                                    return Err(ExiError::StringValuesNotSupported);
-                                }
-                            }
+                        let len = exi_basetypes_decoder_uint_16(stream)? as usize;
+                        (*message).algorithm = exi_basetypes_decoder_characters::<65>(stream, len)?;
                             grammar_id = 25_i32;
                         }
                         _ => {
@@ -968,17 +931,8 @@ pub fn decode_iso2_signature_method(
                 if error == 0_i32 {
                     match event_code {
                         0 => {
-                            exi_basetypes_decoder_uint_16(
-                                stream,
-                                &mut (message.algorithm.len() as u16),
-                            )?;
-                            if error == 0_i32 {
-                                exi_basetypes_decoder_characters(
-                                    stream,
-                                    message.algorithm.len(),
-                                    &mut message.algorithm,
-                                )?;
-                            }
+                        let len = exi_basetypes_decoder_uint_16(stream)? as usize;
+                        (*message).algorithm = exi_basetypes_decoder_characters::<65>(stream, len)?;
                             grammar_id = 27_i32;
                         }
                         _ => {
@@ -1982,45 +1936,18 @@ pub fn decode_iso2_reference(
                 if error == 0_i32 {
                     match event_code {
                         0 => {
-                            exi_basetypes_decoder_uint_16(
-                                stream,
-                                &mut (message.id.clone().unwrap().len() as u16),
-                            )?;
-                            if error == 0_i32 {
-                                exi_basetypes_decoder_characters(
-                                    stream,
-                                    message.id.clone().unwrap().len(),
-                                    message.id.as_mut().unwrap(),
-                                )?;
-                            }
+                        let len = exi_basetypes_decoder_uint_16(stream)? as usize;
+                        (*message).id = Some(exi_basetypes_decoder_characters::<65>(stream, len)?);
                             grammar_id = 48_i32;
                         }
                         1 => {
-                            exi_basetypes_decoder_uint_16(
-                                stream,
-                                &mut (message.ref_type.clone().unwrap().len() as u16),
-                            )?;
-                            if error == 0_i32 {
-                                exi_basetypes_decoder_characters(
-                                    stream,
-                                    message.ref_type.clone().unwrap().len(),
-                                    message.ref_type.as_mut().unwrap(),
-                                )?;
-                            }
+                        let len = exi_basetypes_decoder_uint_16(stream)? as usize;
+                        (*message).ref_type = Some(exi_basetypes_decoder_characters::<65>(stream, len)?);
                             grammar_id = 49_i32;
                         }
                         2 => {
-                            exi_basetypes_decoder_uint_16(
-                                stream,
-                                &mut (message.uri.clone().unwrap().len() as u16),
-                            )?;
-                            if error == 0_i32 {
-                                exi_basetypes_decoder_characters(
-                                    stream,
-                                    message.uri.clone().unwrap().len(),
-                                    message.uri.as_mut().unwrap(),
-                                )?;
-                            }
+                        let len = exi_basetypes_decoder_uint_16(stream)? as usize;
+                        (*message).uri = Some(exi_basetypes_decoder_characters::<65>(stream, len)?);
                             grammar_id = 50_i32;
                         }
                         3 => {
@@ -2049,31 +1976,13 @@ pub fn decode_iso2_reference(
                 if error == 0_i32 {
                     match event_code {
                         0 => {
-                            exi_basetypes_decoder_uint_16(
-                                stream,
-                                &mut (message.ref_type.clone().unwrap().len() as u16),
-                            )?;
-                            if error == 0_i32 {
-                                exi_basetypes_decoder_characters(
-                                    stream,
-                                    message.ref_type.clone().unwrap().len(),
-                                    message.ref_type.as_mut().unwrap(),
-                                )?;
-                            }
+                        let len = exi_basetypes_decoder_uint_16(stream)? as usize;
+                        (*message).ref_type = Some(exi_basetypes_decoder_characters::<65>(stream, len)?);
                             grammar_id = 49_i32;
                         }
                         1 => {
-                            exi_basetypes_decoder_uint_16(
-                                stream,
-                                &mut (message.uri.clone().unwrap().len() as u16),
-                            )?;
-                            if error == 0_i32 {
-                                exi_basetypes_decoder_characters(
-                                    stream,
-                                    message.uri.clone().unwrap().len(),
-                                    message.uri.as_mut().unwrap(),
-                                )?;
-                            }
+                        let len = exi_basetypes_decoder_uint_16(stream)? as usize;
+                        (*message).uri = Some(exi_basetypes_decoder_characters::<65>(stream, len)?);
                             grammar_id = 50_i32;
                         }
                         2 => {
@@ -2102,17 +2011,8 @@ pub fn decode_iso2_reference(
                 if error == 0_i32 {
                     match event_code {
                         0 => {
-                            exi_basetypes_decoder_uint_16(
-                                stream,
-                                &mut (message.uri.clone().unwrap().len() as u16),
-                            )?;
-                            if error == 0_i32 {
-                                exi_basetypes_decoder_characters(
-                                    stream,
-                                    message.uri.clone().unwrap().len(),
-                                    message.uri.as_mut().unwrap(),
-                                )?;
-                            }
+                        let len = exi_basetypes_decoder_uint_16(stream)? as usize;
+                        (*message).uri = Some(exi_basetypes_decoder_characters::<65>(stream, len)?);
                             grammar_id = 50_i32;
                         }
                         1 => {
@@ -2232,31 +2132,13 @@ pub fn decode_iso2_retrieval_method(
                 if error == 0_i32 {
                     match event_code {
                         0 => {
-                            exi_basetypes_decoder_uint_16(
-                                stream,
-                                &mut (message.ref_type.clone().unwrap().len() as u16),
-                            )?;
-                            if error == 0_i32 {
-                                exi_basetypes_decoder_characters(
-                                    stream,
-                                    message.ref_type.clone().unwrap().len(),
-                                    message.ref_type.as_mut().unwrap(),
-                                )?;
-                            }
+                        let len = exi_basetypes_decoder_uint_16(stream)? as usize;
+                        (*message).ref_type = Some(exi_basetypes_decoder_characters::<65>(stream, len)?);
                             grammar_id = 54_i32;
                         }
                         1 => {
-                            exi_basetypes_decoder_uint_16(
-                                stream,
-                                &mut (message.uri.clone().unwrap().len() as u16),
-                            )?;
-                            if error == 0_i32 {
-                                exi_basetypes_decoder_characters(
-                                    stream,
-                                    message.uri.clone().unwrap().len(),
-                                    message.uri.as_mut().unwrap(),
-                                )?;
-                            }
+                        let len = exi_basetypes_decoder_uint_16(stream)? as usize;
+                        (*message).uri = Some(exi_basetypes_decoder_characters::<65>(stream, len)?);
                             grammar_id = 55_i32;
                         }
                         2 => {
@@ -2282,17 +2164,8 @@ pub fn decode_iso2_retrieval_method(
                 if error == 0_i32 {
                     match event_code {
                         0 => {
-                            exi_basetypes_decoder_uint_16(
-                                stream,
-                                &mut (message.uri.clone().unwrap().len() as u16),
-                            )?;
-                            if error == 0_i32 {
-                                exi_basetypes_decoder_characters(
-                                    stream,
-                                    message.uri.clone().unwrap().len(),
-                                    message.uri.as_mut().unwrap(),
-                                )?;
-                            }
+                        let len = exi_basetypes_decoder_uint_16(stream)? as usize;
+                        (*message).uri = Some(exi_basetypes_decoder_characters::<65>(stream, len)?);
                             grammar_id = 55_i32;
                         }
                         1 => {
@@ -2842,25 +2715,8 @@ pub fn decode_iso2_x509_data(
                             )?;
                             if error == 0_i32 {
                                 if event_code == 0_i32 as u32 {
-                                    exi_basetypes_decoder_uint_16(
-                                        stream,
-                                        &mut (message.x509_subject_name.clone().unwrap().len()
-                                            as u16),
-                                    )?;
-                                    if error == 0_i32 {
-                                        if message.x509_subject_name.clone().unwrap().len()
-                                            as i32
-                                            >= 2_i32
-                                        {
-                                            exi_basetypes_decoder_characters(
-                                                stream,
-                                                message.x509_subject_name.clone().unwrap().len(),
-                                                message.x509_subject_name.as_mut().unwrap(),
-                                            )?;
-                                        } else {
-                                            return Err(ExiError::StringValuesNotSupported);
-                                        }
-                                    }
+                        let len = exi_basetypes_decoder_uint_16(stream)? as usize;
+                        (*message).x509_subject_name = Some(exi_basetypes_decoder_characters::<65>(stream, len)?);
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
                                 }
@@ -3220,17 +3076,8 @@ pub fn decode_iso2_signed_info(
                 if error == 0_i32 {
                     match event_code {
                         0 => {
-                            exi_basetypes_decoder_uint_16(
-                                stream,
-                                &mut (message.id.clone().unwrap().len() as u16),
-                            )?;
-                            if error == 0_i32 {
-                                exi_basetypes_decoder_characters(
-                                    stream,
-                                    message.id.clone().unwrap().len(),
-                                    message.id.as_mut().unwrap(),
-                                )?;
-                            }
+                        let len = exi_basetypes_decoder_uint_16(stream)? as usize;
+                        (*message).id = Some(exi_basetypes_decoder_characters::<65>(stream, len)?);
                             grammar_id = 73_i32;
                         }
                         1 => {
@@ -3290,9 +3137,7 @@ pub fn decode_iso2_signed_info(
                         0 => {
                             if message.reference_len < 4 {
                                 let fresh14 = message.reference_len;
-                                if let Some(reference) =
-                                    message.reference.get_mut(fresh14)
-                                {
+                                if let Some(reference) = message.reference.get_mut(fresh14) {
                                     decode_iso2_reference(stream, reference)?;
                                     message.reference_len += 1;
                                 } else {
@@ -3316,9 +3161,7 @@ pub fn decode_iso2_signed_info(
                         0 => {
                             if (message.reference_len as i32) < 4_i32 {
                                 let fresh15 = message.reference_len;
-                                if let Some(reference) =
-                                    message.reference.get_mut(fresh15)
-                                {
+                                if let Some(reference) = message.reference.get_mut(fresh15) {
                                     decode_iso2_reference(stream, reference)?;
                                 } else {
                                     return Err(ExiError::ArrayOutOfBounds);
@@ -4262,33 +4105,19 @@ pub fn decode_iso2_signature_value(
                 if error == 0_i32 {
                     match event_code {
                         0 => {
-                            exi_basetypes_decoder_uint_16(
-                                stream,
-                                &mut (message.id.clone().unwrap().len() as u16),
-                            )?;
-                            if error == 0_i32 {
-                                exi_basetypes_decoder_characters(
-                                    stream,
-                                    message.id.clone().unwrap().len(),
-                                    message.id.as_mut().unwrap(),
-                                )?;
-                            }
+                            let len = exi_basetypes_decoder_uint_16(stream)? as usize;
+                            (*message).id = Some(exi_basetypes_decoder_characters::<65>(stream, len)?);
                             grammar_id = 97_i32;
                         }
                         1 => {
-                            exi_basetypes_decoder_uint_16(
-                                stream,
-                                &mut (message.content.len() as u16),
-                            )?;
+                            let len = exi_basetypes_decoder_uint_16(stream)? as usize;
                             if error == 0_i32 {
                                 exi_basetypes_decoder_bytes(
                                     stream,
-                                    message.content.len(),
+                                    len,
                                     &mut message.content,
                                 )?;
-                                if error == 0_i32 {
-                                    grammar_id = 3_i32;
-                                }
+                                grammar_id = 3_i32;
                             }
                         }
                         _ => {
@@ -4302,14 +4131,11 @@ pub fn decode_iso2_signature_value(
                 if error == 0_i32 {
                     match event_code {
                         0 => {
-                            exi_basetypes_decoder_uint_16(
-                                stream,
-                                &mut (message.content.len() as u16),
-                            )?;
+                            let len = exi_basetypes_decoder_uint_16(stream)? as usize;
                             if error == 0_i32 {
                                 exi_basetypes_decoder_bytes(
                                     stream,
-                                    message.content.len(),
+                                    len,
                                     &mut message.content,
                                 )?;
                                 if error == 0_i32 {
@@ -4443,17 +4269,8 @@ pub fn decode_iso2_key_info(
                 if error == 0_i32 {
                     match event_code {
                         0 => {
-                            exi_basetypes_decoder_uint_16(
-                                stream,
-                                &mut (message.id.clone().unwrap().len() as u16),
-                            )?;
-                            if error == 0_i32 {
-                                exi_basetypes_decoder_characters(
-                                    stream,
-                                    message.id.clone().unwrap().len(),
-                                    message.id.as_mut().unwrap(),
-                                )?;
-                            }
+                            let len = exi_basetypes_decoder_uint_16(stream)? as usize;
+                            (*message).id = Some(exi_basetypes_decoder_characters::<65>(stream, len)?);
                             grammar_id = 101_i32;
                         }
                         1 => {
@@ -4464,17 +4281,8 @@ pub fn decode_iso2_key_info(
                             )?;
                             if error == 0_i32 {
                                 if event_code == 0_i32 as u32 {
-                                    exi_basetypes_decoder_uint_16(
-                                        stream,
-                                        &mut (message.key_name.clone().unwrap().len() as u16),
-                                    )?;
-                                    if error == 0_i32 {
-                                        exi_basetypes_decoder_characters(
-                                            stream,
-                                            message.key_name.clone().unwrap().len(),
-                                            message.key_name.as_mut().unwrap(),
-                                        )?;
-                                    }
+                            let len = exi_basetypes_decoder_uint_16(stream)? as usize;
+                            (*message).key_name = Some(exi_basetypes_decoder_characters::<65>(stream, len)?);
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
                                 }
@@ -4495,10 +4303,7 @@ pub fn decode_iso2_key_info(
                             }
                         }
                         2 => {
-                            decode_iso2_key_value(
-                                stream,
-                                &mut message.key_value.clone().unwrap(),
-                            )?;
+                            decode_iso2_key_value(stream, &mut message.key_value.clone().unwrap())?;
                             if error == 0_i32 {
                                 grammar_id = 3_i32;
                             }
@@ -4513,10 +4318,7 @@ pub fn decode_iso2_key_info(
                             }
                         }
                         4 => {
-                            decode_iso2_x509_data(
-                                stream,
-                                message.x509_data.as_mut().unwrap(),
-                            )?;
+                            decode_iso2_x509_data(stream, message.x509_data.as_mut().unwrap())?;
                             if error == 0_i32 {
                                 grammar_id = 3_i32;
                             }
@@ -4528,10 +4330,7 @@ pub fn decode_iso2_key_info(
                             }
                         }
                         6 => {
-                            decode_iso2_spki_data(
-                                stream,
-                                &mut message.spki_data.clone().unwrap(),
-                            )?;
+                            decode_iso2_spki_data(stream, &mut message.spki_data.clone().unwrap())?;
                             if error == 0_i32 {
                                 grammar_id = 3_i32;
                             }
@@ -4544,18 +4343,8 @@ pub fn decode_iso2_key_info(
                             )?;
                             if error == 0_i32 {
                                 if event_code == 0_i32 as u32 {
-                                    let mgmt_data = message.mgmt_data.as_mut().unwrap();
-                                    exi_basetypes_decoder_uint_16(
-                                        stream,
-                                        &mut (mgmt_data.len() as u16),
-                                    )?;
-                                    if error == 0_i32 {
-                                        exi_basetypes_decoder_characters(
-                                            stream,
-                                            mgmt_data.len(),
-                                            mgmt_data,
-                                        )?;
-                                    }
+                            let len = exi_basetypes_decoder_uint_16(stream)? as usize;
+                            (*message).mgmt_data = Some(exi_basetypes_decoder_characters::<65>(stream, len)?);
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
                                 }
@@ -4603,17 +4392,8 @@ pub fn decode_iso2_key_info(
                             )?;
                             if error == 0_i32 {
                                 if event_code == 0_i32 as u32 {
-                                    exi_basetypes_decoder_uint_16(
-                                        stream,
-                                        &mut (message.key_name.clone().unwrap().len() as u16),
-                                    )?;
-                                    if error == 0_i32 {
-                                        exi_basetypes_decoder_characters(
-                                            stream,
-                                            message.key_name.clone().unwrap().len(),
-                                            message.key_name.as_mut().unwrap(),
-                                        )?;
-                                    }
+                            let len = exi_basetypes_decoder_uint_16(stream)? as usize;
+                            (*message).key_name = Some(exi_basetypes_decoder_characters::<65>(stream, len)?);
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
                                 }
@@ -4634,10 +4414,7 @@ pub fn decode_iso2_key_info(
                             }
                         }
                         1 => {
-                            decode_iso2_key_value(
-                                stream,
-                                &mut message.key_value.clone().unwrap(),
-                            )?;
+                            decode_iso2_key_value(stream, &mut message.key_value.clone().unwrap())?;
                             if error == 0_i32 {
                                 grammar_id = 3_i32;
                             }
@@ -4652,10 +4429,7 @@ pub fn decode_iso2_key_info(
                             }
                         }
                         3 => {
-                            decode_iso2_x509_data(
-                                stream,
-                                message.x509_data.as_mut().unwrap(),
-                            )?;
+                            decode_iso2_x509_data(stream, message.x509_data.as_mut().unwrap())?;
                             if error == 0_i32 {
                                 grammar_id = 3_i32;
                             }
@@ -4667,10 +4441,7 @@ pub fn decode_iso2_key_info(
                             }
                         }
                         5 => {
-                            decode_iso2_spki_data(
-                                stream,
-                                &mut message.spki_data.clone().unwrap(),
-                            )?;
+                            decode_iso2_spki_data(stream, &mut message.spki_data.clone().unwrap())?;
                             if error == 0_i32 {
                                 grammar_id = 3_i32;
                             }
@@ -4683,21 +4454,9 @@ pub fn decode_iso2_key_info(
                             )?;
                             if error == 0_i32 {
                                 if event_code == 0_i32 as u32 {
-                                    exi_basetypes_decoder_uint_16(
-                                        stream,
-                                        &mut (message.mgmt_data.clone().unwrap().len() as u16),
-                                    )?;
-                                    if error == 0_i32 {
-                                        if message.mgmt_data.clone().unwrap().len() >= 2 {
-                                            exi_basetypes_decoder_characters(
-                                                stream,
-                                                message.mgmt_data.clone().unwrap().len(),
-                                                message.mgmt_data.as_mut().unwrap(),
-                                            )?;
-                                        } else {
-                                            return Err(ExiError::StringValuesNotSupported);
-                                        }
-                                    }
+                                    let len = exi_basetypes_decoder_uint_16(stream)? as usize;
+                                    (*message).mgmt_data =
+                                        Some(exi_basetypes_decoder_characters::<65>(stream, len)?);
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
                                 }
@@ -4767,57 +4526,21 @@ pub fn decode_iso2_object(
                 if error == 0_i32 {
                     match event_code {
                         0 => {
-                            exi_basetypes_decoder_uint_16(
-                                stream,
-                                &mut (message.encoding.clone().unwrap().len() as u16),
-                            )?;
-                            if error == 0_i32 {
-                                if message.encoding.clone().unwrap().len() >= 2 {
-                                    exi_basetypes_decoder_characters(
-                                        stream,
-                                        message.encoding.clone().unwrap().len(),
-                                        message.encoding.as_mut().unwrap(),
-                                    )?;
-                                } else {
-                                    return Err(ExiError::StringValuesNotSupported);
-                                }
-                            }
+                            let len = exi_basetypes_decoder_uint_16(stream)? as usize;
+                            (*message).encoding =
+                                Some(exi_basetypes_decoder_characters::<65>(stream, len)?);
                             grammar_id = 103_i32;
                         }
                         1 => {
-                            exi_basetypes_decoder_uint_16(
-                                stream,
-                                &mut (message.id.clone().unwrap().len() as u16),
-                            )?;
-                            if error == 0_i32 {
-                                if message.id.clone().unwrap().len() >= 2 {
-                                    exi_basetypes_decoder_characters(
-                                        stream,
-                                        message.id.clone().unwrap().len(),
-                                        message.id.as_mut().unwrap(),
-                                    )?;
-                                } else {
-                                    return Err(ExiError::StringValuesNotSupported);
-                                }
-                            }
+                            let len = exi_basetypes_decoder_uint_16(stream)? as usize;
+                            (*message).id =
+                                Some(exi_basetypes_decoder_characters::<65>(stream, len)?);
                             grammar_id = 104_i32;
                         }
                         2 => {
-                            exi_basetypes_decoder_uint_16(
-                                stream,
-                                &mut (message.mime_type.clone().unwrap().len() as u16),
-                            )?;
-                            if error == 0_i32 {
-                                if message.mime_type.clone().unwrap().len() >= 2 {
-                                    exi_basetypes_decoder_characters(
-                                        stream,
-                                        message.mime_type.clone().unwrap().len(),
-                                        message.mime_type.as_mut().unwrap(),
-                                    )?;
-                                } else {
-                                    return Err(ExiError::StringValuesNotSupported);
-                                }
-                            }
+                            let len = exi_basetypes_decoder_uint_16(stream)? as usize;
+                            (*message).mime_type =
+                                Some(exi_basetypes_decoder_characters::<65>(stream, len)?);
                             grammar_id = 105_i32;
                         }
                         3 => {
@@ -4847,39 +4570,15 @@ pub fn decode_iso2_object(
                 if error == 0_i32 {
                     match event_code {
                         0 => {
-                            exi_basetypes_decoder_uint_16(
-                                stream,
-                                &mut (message.id.clone().unwrap().len() as u16),
-                            )?;
-                            if error == 0_i32 {
-                                if message.id.clone().unwrap().len() >= 2 {
-                                    exi_basetypes_decoder_characters(
-                                        stream,
-                                        message.id.clone().unwrap().len(),
-                                        message.id.as_mut().unwrap(),
-                                    )?;
-                                } else {
-                                    return Err(ExiError::StringValuesNotSupported);
-                                }
-                            }
+                            let len = exi_basetypes_decoder_uint_16(stream)? as usize;
+                            (*message).id =
+                                Some(exi_basetypes_decoder_characters::<65>(stream, len)?);
                             grammar_id = 104_i32;
                         }
                         1 => {
-                            exi_basetypes_decoder_uint_16(
-                                stream,
-                                &mut (message.mime_type.clone().unwrap().len() as u16),
-                            )?;
-                            if error == 0_i32 {
-                                if message.mime_type.clone().unwrap().len() >= 2 {
-                                    exi_basetypes_decoder_characters(
-                                        stream,
-                                        message.mime_type.clone().unwrap().len(),
-                                        message.mime_type.as_mut().unwrap(),
-                                    )?;
-                                } else {
-                                    return Err(ExiError::StringValuesNotSupported);
-                                }
-                            }
+                            let len = exi_basetypes_decoder_uint_16(stream)? as usize;
+                            (*message).mime_type =
+                                Some(exi_basetypes_decoder_characters::<65>(stream, len)?);
                             grammar_id = 105_i32;
                         }
                         2 => {
@@ -4909,21 +4608,9 @@ pub fn decode_iso2_object(
                 if error == 0_i32 {
                     match event_code {
                         0 => {
-                            exi_basetypes_decoder_uint_16(
-                                stream,
-                                &mut (message.mime_type.clone().unwrap().len() as u16),
-                            )?;
-                            if error == 0_i32 {
-                                if message.mime_type.clone().unwrap().len() >= 2 {
-                                    exi_basetypes_decoder_characters(
-                                        stream,
-                                        message.mime_type.clone().unwrap().len(),
-                                        message.mime_type.as_mut().unwrap(),
-                                    )?;
-                                } else {
-                                    return Err(ExiError::StringValuesNotSupported);
-                                }
-                            }
+                            let len = exi_basetypes_decoder_uint_16(stream)? as usize;
+                            (*message).mime_type =
+                                Some(exi_basetypes_decoder_characters::<65>(stream, len)?);
                             grammar_id = 105_i32;
                         }
                         1 => {
@@ -5347,21 +5034,9 @@ pub fn decode_iso2_notification(
                             )?;
                             if error == 0_i32 {
                                 if event_code == 0_i32 as u32 {
-                                    exi_basetypes_decoder_uint_16(
-                                        stream,
-                                        &mut (message.fault_msg.clone().unwrap().len() as u16),
-                                    )?;
-                                    if error == 0_i32 {
-                                        if message.fault_msg.clone().unwrap().len() >= 2 {
-                                            exi_basetypes_decoder_characters(
-                                                stream,
-                                                message.fault_msg.clone().unwrap().len(),
-                                                message.fault_msg.as_mut().unwrap(),
-                                            )?;
-                                        } else {
-                                            return Err(ExiError::StringValuesNotSupported);
-                                        }
-                                    }
+                                    let len = exi_basetypes_decoder_uint_16(stream)? as usize;
+                                    (*message).fault_msg =
+                                        Some(exi_basetypes_decoder_characters::<65>(stream, len)?);
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
                                 }
@@ -5884,21 +5559,9 @@ pub fn decode_iso2_signature(
                 if error == 0_i32 {
                     match event_code {
                         0 => {
-                            exi_basetypes_decoder_uint_16(
-                                stream,
-                                &mut (message.id.clone().clone().unwrap().len() as u16),
-                            )?;
-                            if error == 0_i32 {
-                                if message.id.clone().clone().unwrap().len() >= 2 {
-                                    exi_basetypes_decoder_characters(
-                                        stream,
-                                        message.id.clone().clone().unwrap().len(),
-                                        &mut message.id.clone().unwrap(),
-                                    )?;
-                                } else {
-                                    return Err(ExiError::StringValuesNotSupported);
-                                }
-                            }
+                            let len = exi_basetypes_decoder_uint_16(stream)? as usize;
+                            (*message).id =
+                                Some(exi_basetypes_decoder_characters::<65>(stream, len)?);
                             grammar_id = 122_i32;
                         }
                         1 => {
@@ -8817,10 +8480,7 @@ pub fn decode_iso2_message_header(
                         }
                         1 => {
                             if message.signature.is_some() {
-                                decode_iso2_signature(
-                                    stream,
-                                    message.signature.as_mut().unwrap(),
-                                )?;
+                                decode_iso2_signature(stream, message.signature.as_mut().unwrap())?;
                             }
                             if error == 0_i32 {
                                 grammar_id = 3_i32;
@@ -10701,17 +10361,10 @@ pub fn decode_iso2_session_setup_res(
                             )?;
                             if error == 0_i32 {
                                 if event_code == 0_i32 as u32 {
-                                    exi_basetypes_decoder_uint_16(
-                                        stream,
-                                        &mut (message.evse_id.len() as u16),
-                                    )?;
+                                    let len = exi_basetypes_decoder_uint_16(stream)? as usize;
                                     if error == 0_i32 {
                                         if message.evse_id.len() as i32 >= 2_i32 {
-                                            exi_basetypes_decoder_characters(
-                                                stream,
-                                                message.evse_id.len(),
-                                                &mut message.evse_id,
-                                            )?;
+                                            exi_basetypes_decoder_characters::<38>(stream, len)?;
                                         } else {
                                             return Err(ExiError::StringValuesNotSupported);
                                         }
@@ -13381,17 +13034,11 @@ pub fn decode_iso2_session_setup_req(
             decode_exi_type_hex_binary(stream, &mut len, &mut message.evcc_id)?;
             exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
             match event_code {
-                0 => {
-                    Ok(())
-                }
-                _ => {
-                    Err(ExiError::UnknownEventCode)
-                }
+                0 => Ok(()),
+                _ => Err(ExiError::UnknownEventCode),
             }
         }
-        _ => {
-            Err(ExiError::UnknownEventCode)
-        }
+        _ => Err(ExiError::UnknownEventCode),
     }
 }
 
@@ -14271,9 +13918,7 @@ pub fn decode_iso2_exi_document(
             decode_iso2_v2g_message(stream, &mut message.v2g_message)?;
             Ok(())
         }
-        _ => {
-            Err(ExiError::UnsupportedSubEvent)
-        }
+        _ => Err(ExiError::UnsupportedSubEvent),
     }
 }
 
