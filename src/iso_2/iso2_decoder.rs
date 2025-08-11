@@ -10155,7 +10155,7 @@ fn decode_iso2_session_setup_res(
                             )?;
                             if error == 0_i32 {
                                 if event_code == 0_i32 as u32 {
-                                    let value: Iso2ResponseCodeType = Iso2ResponseCodeType::Unknown;
+                                    let value: Iso2ResponseCodeType = Iso2ResponseCodeType::OkNewSessionEstablished;
                                     exi_basetypes_decoder_nbit_uint(
                                         stream,
                                         5_i32 as usize,
