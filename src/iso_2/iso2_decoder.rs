@@ -13665,7 +13665,6 @@ fn decode_iso2_body(
             return Err(ExiError::UnknownEventCode);
         }
     }
-    let mut event_code: u32 = 0;
     exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
     match event_code {
         0 => Ok(()),
@@ -13677,59 +13676,25 @@ fn decode_iso2_v2g_message(
     stream: &mut ExiBitstream,
     message: &mut Iso2v2gMessage,
 ) -> Result<(), ExiError> {
-    let mut grammar_id: i32 = 310_i32;
     let mut event_code: u32 = 0;
-    let error: i32 = 0;
-    loop {
-        match grammar_id {
-            310 => {
-                exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
-                if error == 0_i32 {
-                    match event_code {
-                        0 => {
-                            decode_iso2_message_header(stream, &mut message.header)?;
-                            if error == 0_i32 {
-                                grammar_id = 311_i32;
-                            }
-                        }
-                        _ => {
-                            return Err(ExiError::UnknownEventCode);
-                        }
-                    }
+    exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
+    match event_code {
+        0 => {
+            decode_iso2_message_header(stream, &mut message.header)?;
+            exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
+            match event_code {
+                0 => {
+                    decode_iso2_body(stream, message)?;
+                    exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
+                    return Ok(());
+                }
+                _ => {
+                    return Err(ExiError::UnknownEventCode);
                 }
             }
-            311 => {
-                exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
-                if error == 0_i32 {
-                    match event_code {
-                        0 => {
-                            decode_iso2_body(stream, message)?;
-                            if error == 0_i32 {
-                                grammar_id = 3_i32;
-                            }
-                        }
-                        _ => {
-                            return Err(ExiError::UnknownEventCode);
-                        }
-                    }
-                }
-            }
-            3 => {
-                exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
-                if error == 0_i32 {
-                    match event_code {
-                        0 => {
-                            return Ok(());
-                        }
-                        _ => {
-                            return Err(ExiError::UnknownEventCode);
-                        }
-                    }
-                }
-            }
-            _ => {
-                return Err(ExiError::UnknownGrammarId);
-            }
+        }
+        _ => {
+            return Err(ExiError::UnknownEventCode);
         }
     }
 }
