@@ -50,7 +50,7 @@ pub fn exi_basetypes_decoder_bytes<const N: usize>(
     // Not entirely sure why we require a resize here
     match buf.resize(bytes_len, 0) {
         Ok(()) => {}
-        Err(_) => return Err(ExiError::ByteBufferTooSmall),
+        Err(()) => return Err(ExiError::ByteBufferTooSmall),
     }
 
     for b in buf.iter_mut().take(bytes_len) {

@@ -160,5 +160,7 @@ pub fn exi_basetypes_encoder_characters<const N: usize>(
         }
         stream.write_octet(byte)?;
     }
+    // Write the end of characters marker
+    stream.write_octet(0x00)?;
     Ok(())
 }

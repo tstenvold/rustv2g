@@ -7,17 +7,16 @@ use crate::common::exi_bitstream::ExiBitstream;
 use crate::common::exi_error_codes::ExiError;
 use crate::common::exi_types_decoder::{decode_exi_type_hex_binary, decode_exi_type_integer64};
 use crate::iso_2::iso2_datatypes::{
-    Iso2BodyTypeEnum, Iso2CanonicalizationMethodType, Iso2DSAKeyValueType,
-    Iso2DigestMethodType, Iso2FaultCodeType, Iso2KeyInfoType, Iso2KeyValueType,
-    Iso2MessageHeaderType, Iso2NotificationType, Iso2ObjectType, Iso2PGPComponentType,
-    Iso2PGPDataType, Iso2RSAKeyValueType, Iso2ReferenceType, Iso2ResponseCodeType,
-    Iso2RetrievalMethodType, Iso2SPKIDataType, Iso2SessionSetupReqType, Iso2SessionSetupResType,
-    Iso2SignatureMethodType, Iso2SignatureType, Iso2SignatureValueType, Iso2SignedInfoType,
-    Iso2TransformType, Iso2TransformsType, Iso2X509DataType, Iso2X509IssuerSerialType,
-    Iso2v2gMessage,
+    Iso2BodyTypeEnum, Iso2CanonicalizationMethodType, Iso2DSAKeyValueType, Iso2DigestMethodType,
+    Iso2FaultCodeType, Iso2KeyInfoType, Iso2KeyValueType, Iso2MessageHeaderType,
+    Iso2NotificationType, Iso2ObjectType, Iso2PGPComponentType, Iso2PGPDataType,
+    Iso2RSAKeyValueType, Iso2ReferenceType, Iso2ResponseCodeType, Iso2RetrievalMethodType,
+    Iso2SPKIDataType, Iso2SessionSetupReqType, Iso2SessionSetupResType, Iso2SignatureMethodType,
+    Iso2SignatureType, Iso2SignatureValueType, Iso2SignedInfoType, Iso2TransformType,
+    Iso2TransformsType, Iso2X509DataType, Iso2X509IssuerSerialType, Iso2v2gMessage,
 };
 
-// pub fn decode_iso2_cost(
+// fn decode_iso2_cost(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2CostType,
 // ) -> Result<(), ExiError> {
@@ -158,7 +157,7 @@ use crate::iso_2::iso2_datatypes::{
 //     }
 // }
 
-pub fn decode_iso2_transform(
+fn decode_iso2_transform(
     stream: &mut ExiBitstream,
     message: &mut Iso2TransformType,
 ) -> Result<(), ExiError> {
@@ -254,7 +253,7 @@ pub fn decode_iso2_transform(
         }
     }
 }
-// pub fn decode_iso2_interval(
+// fn decode_iso2_interval(
 //     stream: &mut ExiBitstream,
 //     _message: &mut Iso2IntervalType,
 // ) -> Result<(), ExiError> {
@@ -266,7 +265,7 @@ pub fn decode_iso2_transform(
 
 //     return Ok(());
 // }
-pub fn decode_iso2_transforms(
+fn decode_iso2_transforms(
     stream: &mut ExiBitstream,
     message: &mut Iso2TransformsType,
 ) -> Result<(), ExiError> {
@@ -324,7 +323,7 @@ pub fn decode_iso2_transforms(
         }
     }
 }
-pub fn decode_iso2_dsa_key_value(
+fn decode_iso2_dsa_key_value(
     stream: &mut ExiBitstream,
     message: &mut Iso2DSAKeyValueType,
 ) -> Result<(), ExiError> {
@@ -498,7 +497,7 @@ pub fn decode_iso2_dsa_key_value(
         }
     }
 }
-pub fn decode_iso2_x509_issuer_serial(
+fn decode_iso2_x509_issuer_serial(
     stream: &mut ExiBitstream,
     message: &mut Iso2X509IssuerSerialType,
 ) -> Result<(), ExiError> {
@@ -597,7 +596,7 @@ pub fn decode_iso2_x509_issuer_serial(
         }
     }
 }
-// pub fn decode_iso2_relative_time_interval(
+// fn decode_iso2_relative_time_interval(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2RelativeTimeIntervalType,
 // ) -> Result<(), ExiError> {
@@ -663,7 +662,7 @@ pub fn decode_iso2_x509_issuer_serial(
 //         }
 //     }
 // }
-pub fn decode_iso2_digest_method(
+fn decode_iso2_digest_method(
     stream: &mut ExiBitstream,
     message: &mut Iso2DigestMethodType,
 ) -> Result<(), ExiError> {
@@ -730,7 +729,7 @@ pub fn decode_iso2_digest_method(
         }
     }
 }
-pub fn decode_iso2_rsa_key_value(
+fn decode_iso2_rsa_key_value(
     stream: &mut ExiBitstream,
     message: &mut Iso2RSAKeyValueType,
 ) -> Result<(), ExiError> {
@@ -789,7 +788,7 @@ pub fn decode_iso2_rsa_key_value(
         }
     }
 }
-pub fn decode_iso2_canonicalization_method(
+fn decode_iso2_canonicalization_method(
     stream: &mut ExiBitstream,
     message: &mut Iso2CanonicalizationMethodType,
 ) -> Result<(), ExiError> {
@@ -856,7 +855,7 @@ pub fn decode_iso2_canonicalization_method(
         }
     }
 }
-pub fn decode_iso2_signature_method(
+fn decode_iso2_signature_method(
     stream: &mut ExiBitstream,
     message: &mut Iso2SignatureMethodType,
 ) -> Result<(), ExiError> {
@@ -966,7 +965,7 @@ pub fn decode_iso2_signature_method(
         }
     }
 }
-pub fn decode_iso2_key_value(
+fn decode_iso2_key_value(
     stream: &mut ExiBitstream,
     message: &mut Iso2KeyValueType,
 ) -> Result<(), ExiError> {
@@ -1030,7 +1029,7 @@ pub fn decode_iso2_key_value(
     }
 }
 
-// pub fn decode_iso2_physical_value(
+// fn decode_iso2_physical_value(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2PhysicalValueType,
 // ) -> Result<(), ExiError> {
@@ -1167,7 +1166,7 @@ pub fn decode_iso2_key_value(
 //         }
 //     }
 // }
-// pub fn decode_iso2_consumption_cost(
+// fn decode_iso2_consumption_cost(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2ConsumptionCostType,
 // ) -> Result<(), ExiError> {
@@ -1264,7 +1263,7 @@ pub fn decode_iso2_key_value(
 //         }
 //     }
 // }
-// pub fn decode_iso2_pmax_schedule_entry(
+// fn decode_iso2_pmax_schedule_entry(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2PMaxScheduleEntryType,
 // ) -> Result<(), ExiError> {
@@ -1339,7 +1338,7 @@ pub fn decode_iso2_key_value(
 //         }
 //     }
 // }
-// pub fn decode_iso2_sales_tariff_entry(
+// fn decode_iso2_sales_tariff_entry(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2SalesTariffEntryType,
 // ) -> Result<(), ExiError> {
@@ -1552,7 +1551,7 @@ pub fn decode_iso2_key_value(
 //         }
 //     }
 // }
-// pub fn decode_iso2_parameter(
+// fn decode_iso2_parameter(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2ParameterType,
 // ) -> Result<(), ExiError> {
@@ -1762,7 +1761,7 @@ pub fn decode_iso2_key_value(
 //         }
 //     }
 // }
-// pub fn decode_iso2_pmax_schedule(
+// fn decode_iso2_pmax_schedule(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2PMaxScheduleType,
 // ) -> Result<(), ExiError> {
@@ -1850,7 +1849,7 @@ pub fn decode_iso2_key_value(
 //         }
 //     }
 // }
-pub fn decode_iso2_reference(
+fn decode_iso2_reference(
     stream: &mut ExiBitstream,
     message: &mut Iso2ReferenceType,
 ) -> Result<(), ExiError> {
@@ -2047,7 +2046,7 @@ pub fn decode_iso2_reference(
     }
 }
 
-pub fn decode_iso2_retrieval_method(
+fn decode_iso2_retrieval_method(
     stream: &mut ExiBitstream,
     message: &mut Iso2RetrievalMethodType,
 ) -> Result<(), ExiError> {
@@ -2160,7 +2159,7 @@ pub fn decode_iso2_retrieval_method(
         }
     }
 }
-// pub fn decode_iso2_sales_tariff(
+// fn decode_iso2_sales_tariff(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2SalesTariffType,
 // ) -> Result<(), ExiError> {
@@ -2608,7 +2607,7 @@ pub fn decode_iso2_retrieval_method(
 //         }
 //     }
 // }
-pub fn decode_iso2_x509_data(
+fn decode_iso2_x509_data(
     stream: &mut ExiBitstream,
     message: &mut Iso2X509DataType,
 ) -> Result<(), ExiError> {
@@ -2667,7 +2666,8 @@ pub fn decode_iso2_x509_data(
                             }
                         }
                         3 => {
-                            message.x509_certificate = Some(decode_exi_type_hex_binary::<350>(stream)?);
+                            message.x509_certificate =
+                                Some(decode_exi_type_hex_binary::<350>(stream)?);
                             if error == 0_i32 {
                                 grammar_id = 3_i32;
                             }
@@ -2709,7 +2709,7 @@ pub fn decode_iso2_x509_data(
         }
     }
 }
-pub fn decode_iso2_pgp_data(
+fn decode_iso2_pgp_data(
     stream: &mut ExiBitstream,
     message: &mut Iso2PGPDataType,
 ) -> Result<(), ExiError> {
@@ -2877,7 +2877,7 @@ pub fn decode_iso2_pgp_data(
         }
     }
 }
-pub fn decode_iso2_spki_data(
+fn decode_iso2_spki_data(
     stream: &mut ExiBitstream,
     message: &mut Iso2SPKIDataType,
 ) -> Result<(), ExiError> {
@@ -2940,7 +2940,7 @@ pub fn decode_iso2_spki_data(
         }
     }
 }
-pub fn decode_iso2_signed_info(
+fn decode_iso2_signed_info(
     stream: &mut ExiBitstream,
     message: &mut Iso2SignedInfoType,
 ) -> Result<(), ExiError> {
@@ -3078,7 +3078,7 @@ pub fn decode_iso2_signed_info(
         }
     }
 }
-// pub fn decode_iso2_profile_entry(
+// fn decode_iso2_profile_entry(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2ProfileEntryType,
 // ) -> Result<(), ExiError> {
@@ -3196,7 +3196,7 @@ pub fn decode_iso2_signed_info(
 //         }
 //     }
 // }
-// pub fn decode_iso2_dc_ev_status(
+// fn decode_iso2_dc_ev_status(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2DCEVStatusType,
 // ) -> Result<(), ExiError> {
@@ -3363,7 +3363,7 @@ pub fn decode_iso2_signed_info(
 //         }
 //     }
 // }
-// pub fn decode_iso2_parameter_set(
+// fn decode_iso2_parameter_set(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2ParameterSetType,
 // ) -> Result<(), ExiError> {
@@ -3469,7 +3469,7 @@ pub fn decode_iso2_signed_info(
 //         }
 //     }
 // }
-// pub fn decode_iso2_sa_schedule_tuple(
+// fn decode_iso2_sa_schedule_tuple(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2SAScheduleTupleType,
 // ) -> Result<(), ExiError> {
@@ -3583,7 +3583,7 @@ pub fn decode_iso2_signed_info(
 //         }
 //     }
 // }
-// pub fn decode_iso2_selected_service(
+// fn decode_iso2_selected_service(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2SelectedServiceType,
 // ) -> Result<(), ExiError> {
@@ -3650,7 +3650,7 @@ pub fn decode_iso2_signed_info(
 //         }
 //     }
 // }
-// pub fn decode_iso2_service(
+// fn decode_iso2_service(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2ServiceType,
 // ) -> Result<(), ExiError> {
@@ -3969,7 +3969,7 @@ pub fn decode_iso2_signed_info(
 //         }
 //     }
 // }
-pub fn decode_iso2_signature_value(
+fn decode_iso2_signature_value(
     stream: &mut ExiBitstream,
     message: &mut Iso2SignatureValueType,
 ) -> Result<(), ExiError> {
@@ -4039,7 +4039,7 @@ pub fn decode_iso2_signature_value(
         }
     }
 }
-// pub fn decode_iso2_sub_certificates(
+// fn decode_iso2_sub_certificates(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2SubCertificatesType,
 // ) -> Result<(), ExiError> {
@@ -4125,7 +4125,7 @@ pub fn decode_iso2_signature_value(
 //         }
 //     }
 // }
-pub fn decode_iso2_key_info(
+fn decode_iso2_key_info(
     stream: &mut ExiBitstream,
     message: &mut Iso2KeyInfoType,
 ) -> Result<(), ExiError> {
@@ -4378,7 +4378,7 @@ pub fn decode_iso2_key_info(
     }
 }
 
-pub fn decode_iso2_object(
+fn decode_iso2_object(
     stream: &mut ExiBitstream,
     message: &mut Iso2ObjectType,
 ) -> Result<(), ExiError> {
@@ -4528,7 +4528,7 @@ pub fn decode_iso2_object(
         }
     }
 }
-// pub fn decode_iso2_supported_energy_transfer_mode(
+// fn decode_iso2_supported_energy_transfer_mode(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2SupportedEnergyTransferModeType,
 // ) -> Result<(), ExiError> {
@@ -4691,7 +4691,7 @@ pub fn decode_iso2_object(
 //         }
 //     }
 // }
-// pub fn decode_iso2_certificate_chain(
+// fn decode_iso2_certificate_chain(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2CertificateChainType,
 // ) -> Result<(), ExiError> {
@@ -4803,7 +4803,7 @@ pub fn decode_iso2_object(
 //         }
 //     }
 // }
-// pub fn decode_iso2_body_base(
+// fn decode_iso2_body_base(
 //     stream: &mut ExiBitstream,
 //     _message: &mut Iso2BodyBaseType,
 // ) -> Result<(), ExiError> {
@@ -4814,7 +4814,7 @@ pub fn decode_iso2_object(
 //     }
 //     return Ok(());
 // }
-pub fn decode_iso2_notification(
+fn decode_iso2_notification(
     stream: &mut ExiBitstream,
     message: &mut Iso2NotificationType,
 ) -> Result<(), ExiError> {
@@ -4932,7 +4932,7 @@ pub fn decode_iso2_notification(
         }
     }
 }
-// pub fn decode_iso2_dc_evse_status(
+// fn decode_iso2_dc_evse_status(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2DCEvseStatusType,
 // ) -> Result<(), ExiError> {
@@ -5158,7 +5158,7 @@ pub fn decode_iso2_notification(
 //         }
 //     }
 // }
-// pub fn decode_iso2_selected_service_list(
+// fn decode_iso2_selected_service_list(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2SelectedServiceListType,
 // ) -> Result<(), ExiError> {
@@ -5250,7 +5250,7 @@ pub fn decode_iso2_notification(
 //         }
 //     }
 // }
-// pub fn decode_iso2_payment_option_list(
+// fn decode_iso2_payment_option_list(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2PaymentOptionListType,
 // ) -> Result<(), ExiError> {
@@ -5392,7 +5392,7 @@ pub fn decode_iso2_notification(
 //         }
 //     }
 // }
-pub fn decode_iso2_signature(
+fn decode_iso2_signature(
     stream: &mut ExiBitstream,
     message: &mut Iso2SignatureType,
 ) -> Result<(), ExiError> {
@@ -5551,7 +5551,7 @@ pub fn decode_iso2_signature(
     }
 }
 
-// pub fn decode_iso2_charging_profile(
+// fn decode_iso2_charging_profile(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2ChargingProfileType,
 // ) -> Result<(), ExiError> {
@@ -5639,7 +5639,7 @@ pub fn decode_iso2_signature(
 //         }
 //     }
 // }
-// pub fn decode_iso2_service_parameter_list(
+// fn decode_iso2_service_parameter_list(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2ServiceParameterListType,
 // ) -> Result<(), ExiError> {
@@ -5727,7 +5727,7 @@ pub fn decode_iso2_signature(
 //         }
 //     }
 // }
-// pub fn decode_iso2_list_of_root_certificate_ids(
+// fn decode_iso2_list_of_root_certificate_ids(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2ListOfRootCertificateIDsType,
 // ) -> Result<(), ExiError> {
@@ -5815,7 +5815,7 @@ pub fn decode_iso2_signature(
 //         }
 //     }
 // }
-// pub fn decode_iso2_ac_ev_charge_parameter(
+// fn decode_iso2_ac_ev_charge_parameter(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2ACEVChargeParameterType,
 // ) -> Result<(), ExiError> {
@@ -5948,7 +5948,7 @@ pub fn decode_iso2_signature(
 //         }
 //     }
 // }
-// pub fn decode_iso2_dc_ev_charge_parameter(
+// fn decode_iso2_dc_ev_charge_parameter(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2DCEVChargeParameterType,
 // ) -> Result<(), ExiError> {
@@ -6429,7 +6429,7 @@ pub fn decode_iso2_signature(
 //         }
 //     }
 // }
-// pub fn decode_iso2_ev_charge_parameter(
+// fn decode_iso2_ev_charge_parameter(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2EVChargeParameterType,
 // ) -> Result<(), ExiError> {
@@ -6524,7 +6524,7 @@ pub fn decode_iso2_signature(
 //         }
 //     }
 // }
-// pub fn decode_iso2_sa_schedules(
+// fn decode_iso2_sa_schedules(
 //     stream: &mut ExiBitstream,
 //     _message: &mut Iso2SASchedulesType,
 // ) -> Result<(), ExiError> {
@@ -6535,7 +6535,7 @@ pub fn decode_iso2_signature(
 //     }
 //     return Ok(());
 // }
-// pub fn decode_iso2_sa_schedule_list(
+// fn decode_iso2_sa_schedule_list(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2SAScheduleListType,
 // ) -> Result<(), ExiError> {
@@ -6623,7 +6623,7 @@ pub fn decode_iso2_signature(
 //         }
 //     }
 // }
-// pub fn decode_iso2_charge_service(
+// fn decode_iso2_charge_service(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2ChargeServiceType,
 // ) -> Result<(), ExiError> {
@@ -6954,7 +6954,7 @@ pub fn decode_iso2_signature(
 //         }
 //     }
 // }
-// pub fn decode_iso2_ev_power_delivery_parameter(
+// fn decode_iso2_ev_power_delivery_parameter(
 //     stream: &mut ExiBitstream,
 //     _message: &mut Iso2EVPowerDeliveryParameterType,
 // ) -> Result<(), ExiError> {
@@ -6965,7 +6965,7 @@ pub fn decode_iso2_signature(
 //     }
 //     return Ok(());
 // }
-// pub fn decode_iso2_dc_ev_power_delivery_parameter(
+// fn decode_iso2_dc_ev_power_delivery_parameter(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2DCEVPowerDeliveryParameterType,
 // ) -> Result<(), ExiError> {
@@ -7144,7 +7144,7 @@ pub fn decode_iso2_signature(
 //         }
 //     }
 // }
-// pub fn decode_iso2_contract_signature_encrypted_private_key(
+// fn decode_iso2_contract_signature_encrypted_private_key(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2ContractSignatureEncryptedPrivateKeyType,
 // ) -> Result<(), ExiError> {
@@ -7227,7 +7227,7 @@ pub fn decode_iso2_signature(
 //         }
 //     }
 // }
-// pub fn decode_iso2_evse_charge_parameter(
+// fn decode_iso2_evse_charge_parameter(
 //     stream: &mut ExiBitstream,
 //     _message: &mut Iso2EVSEChargeParameterType,
 // ) -> Result<(), ExiError> {
@@ -7238,7 +7238,7 @@ pub fn decode_iso2_signature(
 //     }
 //     return Ok(());
 // }
-// pub fn decode_iso2_dc_evse_charge_parameter(
+// fn decode_iso2_dc_evse_charge_parameter(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2DCEVSEChargeParameterType,
 // ) -> Result<(), ExiError> {
@@ -7457,7 +7457,7 @@ pub fn decode_iso2_signature(
 //         }
 //     }
 // }
-// pub fn decode_iso2_service_list(
+// fn decode_iso2_service_list(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2ServiceListType,
 // ) -> Result<(), ExiError> {
@@ -7541,7 +7541,7 @@ pub fn decode_iso2_signature(
 //         }
 //     }
 // }
-// pub fn decode_iso2_diffie_hellman_publickey(
+// fn decode_iso2_diffie_hellman_publickey(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2DiffieHellmanPublickeyType,
 // ) -> Result<(), ExiError> {
@@ -7620,7 +7620,7 @@ pub fn decode_iso2_signature(
 //         }
 //     }
 // }
-// pub fn decode_iso2_emaid(
+// fn decode_iso2_emaid(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2EMAIDType,
 // ) -> Result<(), ExiError> {
@@ -7705,7 +7705,7 @@ pub fn decode_iso2_signature(
 //         }
 //     }
 // }
-// pub fn decode_iso2_ac_evse_status(
+// fn decode_iso2_ac_evse_status(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2ACEVSEStatusType,
 // ) -> Result<(), ExiError> {
@@ -7846,7 +7846,7 @@ pub fn decode_iso2_signature(
 //         }
 //     }
 // }
-// pub fn decode_iso2_evse_status(
+// fn decode_iso2_evse_status(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2EVSEStatusType,
 // ) -> Result<(), ExiError> {
@@ -7970,7 +7970,7 @@ pub fn decode_iso2_signature(
 //         }
 //     }
 // }
-// pub fn decode_iso2_ac_evse_charge_parameter(
+// fn decode_iso2_ac_evse_charge_parameter(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2ACEVSEChargeParameterType,
 // ) -> Result<(), ExiError> {
@@ -8056,7 +8056,7 @@ pub fn decode_iso2_signature(
 //         }
 //     }
 // }
-// pub fn decode_iso2_meter_info(
+// fn decode_iso2_meter_info(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2MeterInfoType,
 // ) -> Result<(), ExiError> {
@@ -8279,7 +8279,7 @@ pub fn decode_iso2_signature(
 //         }
 //     }
 // }
-pub fn decode_iso2_message_header(
+fn decode_iso2_message_header(
     stream: &mut ExiBitstream,
     message: &mut Iso2MessageHeaderType,
 ) -> Result<(), ExiError> {
@@ -8376,7 +8376,7 @@ pub fn decode_iso2_message_header(
     }
 }
 
-// pub fn decode_iso2_power_delivery_req(
+// fn decode_iso2_power_delivery_req(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2PowerDeliveryReqType,
 // ) -> Result<(), ExiError> {
@@ -8569,7 +8569,7 @@ pub fn decode_iso2_message_header(
 //         }
 //     }
 // }
-// pub fn decode_iso2_current_demand_res(
+// fn decode_iso2_current_demand_res(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2CurrentDemandResType,
 // ) -> Result<(), ExiError> {
@@ -9246,7 +9246,7 @@ pub fn decode_iso2_message_header(
 //         }
 //     }
 // }
-// pub fn decode_iso2_charging_status_res(
+// fn decode_iso2_charging_status_res(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2ChargingStatusResType,
 // ) -> Result<(), ExiError> {
@@ -9619,7 +9619,7 @@ pub fn decode_iso2_message_header(
 //         }
 //     }
 // }
-// pub fn decode_iso2_authorization_req(
+// fn decode_iso2_authorization_req(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2AuthorizationReqType,
 // ) -> Result<(), ExiError> {
@@ -9712,7 +9712,7 @@ pub fn decode_iso2_message_header(
 //         }
 //     }
 // }
-// pub fn decode_iso2_pre_charge_req(
+// fn decode_iso2_pre_charge_req(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2PreChargeReqType,
 // ) -> Result<(), ExiError> {
@@ -9798,7 +9798,7 @@ pub fn decode_iso2_message_header(
 //         }
 //     }
 // }
-// pub fn decode_iso2_service_detail_res(
+// fn decode_iso2_service_detail_res(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2ServiceDetailResType,
 // ) -> Result<(), ExiError> {
@@ -9911,7 +9911,7 @@ pub fn decode_iso2_message_header(
 //         }
 //     }
 // }
-// pub fn decode_iso2_payment_service_selection_res(
+// fn decode_iso2_payment_service_selection_res(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2PaymentServiceSelectionResType,
 // ) -> Result<(), ExiError> {
@@ -9986,7 +9986,7 @@ pub fn decode_iso2_message_header(
 //         }
 //     }
 // }
-// pub fn decode_iso2_certificate_update_req(
+// fn decode_iso2_certificate_update_req(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2CertificateUpdateReqType,
 // ) -> Result<(), ExiError> {
@@ -10133,7 +10133,7 @@ pub fn decode_iso2_message_header(
 //         }
 //     }
 // }
-pub fn decode_iso2_session_setup_res(
+fn decode_iso2_session_setup_res(
     stream: &mut ExiBitstream,
     message: &mut Iso2SessionSetupResType,
 ) -> Result<(), ExiError> {
@@ -10268,7 +10268,7 @@ pub fn decode_iso2_session_setup_res(
     }
 }
 
-// pub fn decode_iso2_certificate_installation_req(
+// fn decode_iso2_certificate_installation_req(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2CertificateInstallationReqType,
 // ) -> Result<(), ExiError> {
@@ -10364,7 +10364,7 @@ pub fn decode_iso2_session_setup_res(
 //         }
 //     }
 // }
-// pub fn decode_iso2_certificate_installation_res(
+// fn decode_iso2_certificate_installation_res(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2CertificateInstallationResType,
 // ) -> Result<(), ExiError> {
@@ -10531,7 +10531,7 @@ pub fn decode_iso2_session_setup_res(
 //         }
 //     }
 // }
-// pub fn decode_iso2_welding_detection_res(
+// fn decode_iso2_welding_detection_res(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2WeldingDetectionResType,
 // ) -> Result<(), ExiError> {
@@ -10638,7 +10638,7 @@ pub fn decode_iso2_session_setup_res(
 //         }
 //     }
 // }
-// pub fn decode_iso2_current_demand_req(
+// fn decode_iso2_current_demand_req(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2CurrentDemandReqType,
 // ) -> Result<(), ExiError> {
@@ -11202,7 +11202,7 @@ pub fn decode_iso2_session_setup_res(
 //         }
 //     }
 // }
-// pub fn decode_iso2_pre_charge_res(
+// fn decode_iso2_pre_charge_res(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2PreChargeResType,
 // ) -> Result<(), ExiError> {
@@ -11312,7 +11312,7 @@ pub fn decode_iso2_session_setup_res(
 //         }
 //     }
 // }
-// pub fn decode_iso2_certificate_update_res(
+// fn decode_iso2_certificate_update_res(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2CertificateUpdateResType,
 // ) -> Result<(), ExiError> {
@@ -11501,7 +11501,7 @@ pub fn decode_iso2_session_setup_res(
 //         }
 //     }
 // }
-// pub fn decode_iso2_metering_receipt_req(
+// fn decode_iso2_metering_receipt_req(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2MeteringReceiptReqType,
 // ) -> Result<(), ExiError> {
@@ -11657,7 +11657,7 @@ pub fn decode_iso2_session_setup_res(
 //         }
 //     }
 // }
-// pub fn decode_iso2_charging_status_req(
+// fn decode_iso2_charging_status_req(
 //     stream: &mut ExiBitstream,
 //     _message: &mut Iso2ChargingStatusReqType,
 // ) -> Result<(), ExiError> {
@@ -11669,7 +11669,7 @@ pub fn decode_iso2_session_setup_res(
 
 //     return Ok(());
 // }
-// pub fn decode_iso2_session_stop_res(
+// fn decode_iso2_session_stop_res(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2SessionStopResType,
 // ) -> Result<(), ExiError> {
@@ -11744,7 +11744,7 @@ pub fn decode_iso2_session_setup_res(
 //         }
 //     }
 // }
-// pub fn decode_iso2_charge_parameter_discovery_req(
+// fn decode_iso2_charge_parameter_discovery_req(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2ChargeParameterDiscoveryReqType,
 // ) -> Result<(), ExiError> {
@@ -11913,7 +11913,7 @@ pub fn decode_iso2_session_setup_res(
 //         }
 //     }
 // }
-// pub fn decode_iso2_cable_check_req(
+// fn decode_iso2_cable_check_req(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2CableCheckReqType,
 // ) -> Result<(), ExiError> {
@@ -11958,7 +11958,7 @@ pub fn decode_iso2_session_setup_res(
 //         }
 //     }
 // }
-// pub fn decode_iso2_welding_detection_req(
+// fn decode_iso2_welding_detection_req(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2WeldingDetectionReqType,
 // ) -> Result<(), ExiError> {
@@ -12002,7 +12002,7 @@ pub fn decode_iso2_session_setup_res(
 //         }
 //     }
 // }
-// pub fn decode_iso2_power_delivery_res(
+// fn decode_iso2_power_delivery_res(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2PowerDeliveryResType,
 // ) -> Result<(), ExiError> {
@@ -12114,7 +12114,7 @@ pub fn decode_iso2_session_setup_res(
 //         }
 //     }
 // }
-// pub fn decode_iso2_charge_parameter_discovery_res(
+// fn decode_iso2_charge_parameter_discovery_res(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2ChargeParameterDiscoveryResType,
 // ) -> Result<(), ExiError> {
@@ -12328,7 +12328,7 @@ pub fn decode_iso2_session_setup_res(
 //         }
 //     }
 // }
-// pub fn decode_iso2_payment_service_selection_req(
+// fn decode_iso2_payment_service_selection_req(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2PaymentServiceSelectionReqType,
 // ) -> Result<(), ExiError> {
@@ -12423,7 +12423,7 @@ pub fn decode_iso2_session_setup_res(
 //         }
 //     }
 // }
-// pub fn decode_iso2_metering_receipt_res(
+// fn decode_iso2_metering_receipt_res(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2MeteringReceiptResType,
 // ) -> Result<(), ExiError> {
@@ -12535,7 +12535,7 @@ pub fn decode_iso2_session_setup_res(
 //         }
 //     }
 // }
-// pub fn decode_iso2_cable_check_res(
+// fn decode_iso2_cable_check_res(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2CableCheckResType,
 // ) -> Result<(), ExiError> {
@@ -12676,7 +12676,7 @@ pub fn decode_iso2_session_setup_res(
 //         }
 //     }
 // }
-// pub fn decode_iso2_service_discovery_res(
+// fn decode_iso2_service_discovery_res(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2ServiceDiscoveryResType,
 // ) -> Result<(), ExiError> {
@@ -12808,7 +12808,7 @@ pub fn decode_iso2_session_setup_res(
 //         }
 //     }
 // }
-// pub fn decode_iso2_service_detail_req(
+// fn decode_iso2_service_detail_req(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2ServiceDetailReqType,
 // ) -> Result<(), ExiError> {
@@ -12854,7 +12854,7 @@ pub fn decode_iso2_session_setup_res(
 //     }
 // }
 
-pub fn decode_iso2_session_setup_req(
+fn decode_iso2_session_setup_req(
     stream: &mut ExiBitstream,
     message: &mut Iso2SessionSetupReqType,
 ) -> Result<(), ExiError> {
@@ -12870,7 +12870,7 @@ pub fn decode_iso2_session_setup_req(
     Err(ExiError::UnknownEventCode)
 }
 
-// pub fn decode_iso2_session_stop_req(
+// fn decode_iso2_session_stop_req(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2SessionStopReqType,
 // ) -> Result<(), ExiError> {
@@ -12946,7 +12946,7 @@ pub fn decode_iso2_session_setup_req(
 //         }
 //     }
 // }
-// pub fn decode_iso2_service_discovery_req(
+// fn decode_iso2_service_discovery_req(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2ServiceDiscoveryReqType,
 // ) -> Result<(), ExiError> {
@@ -13120,7 +13120,7 @@ pub fn decode_iso2_session_setup_req(
 //         }
 //     }
 // }
-// pub fn decode_iso2_authorization_res(
+// fn decode_iso2_authorization_res(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2AuthorizationResType,
 // ) -> Result<(), ExiError> {
@@ -13242,7 +13242,7 @@ pub fn decode_iso2_session_setup_req(
 //         }
 //     }
 // }
-// pub fn decode_iso2_payment_details_req(
+// fn decode_iso2_payment_details_req(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2PaymentDetailsReqType,
 // ) -> Result<(), ExiError> {
@@ -13342,7 +13342,7 @@ pub fn decode_iso2_session_setup_req(
 //         }
 //     }
 // }
-// pub fn decode_iso2_payment_details_res(
+// fn decode_iso2_payment_details_res(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2PaymentDetailsResType,
 // ) -> Result<(), ExiError> {
@@ -13453,7 +13453,7 @@ pub fn decode_iso2_session_setup_req(
 //     }
 // }
 
-pub fn decode_iso2_body(
+fn decode_iso2_body(
     stream: &mut ExiBitstream,
     message: &mut Iso2v2gMessage,
 ) -> Result<(), ExiError> {
@@ -13673,9 +13673,9 @@ pub fn decode_iso2_body(
     }
 }
 
-pub fn decode_iso2_v2g_message(
+fn decode_iso2_v2g_message(
     stream: &mut ExiBitstream,
-    mut message: &mut Iso2v2gMessage,
+    message: &mut Iso2v2gMessage,
 ) -> Result<(), ExiError> {
     let mut grammar_id: i32 = 310_i32;
     let mut event_code: u32 = 0;
@@ -13703,7 +13703,7 @@ pub fn decode_iso2_v2g_message(
                 if error == 0_i32 {
                     match event_code {
                         0 => {
-                            decode_iso2_body(stream, &mut message)?;
+                            decode_iso2_body(stream, message)?;
                             if error == 0_i32 {
                                 grammar_id = 3_i32;
                             }
@@ -13736,21 +13736,21 @@ pub fn decode_iso2_v2g_message(
 
 pub fn decode_iso2_exi(
     stream: &mut ExiBitstream,
-    mut message: &mut Iso2v2gMessage,
+    message: &mut Iso2v2gMessage,
 ) -> Result<(), ExiError> {
     let mut event_code: u32 = 0;
     stream.read_and_check_header()?;
     exi_basetypes_decoder_nbit_uint(stream, 7_i32 as usize, &mut event_code)?;
     match event_code {
         0 | 76 => {
-            decode_iso2_v2g_message(stream, &mut message)?;
+            decode_iso2_v2g_message(stream, message)?;
             Ok(())
         }
         _ => Err(ExiError::UnsupportedSubEvent),
     }
 }
 
-// pub fn decode_iso2_exi_fragment(
+// fn decode_iso2_exi_fragment(
 //     stream: &mut ExiBitstream,
 //     _message: &mut Iso2ExiFragment,
 // ) -> Result<(), ExiError> {
@@ -14075,7 +14075,7 @@ pub fn decode_iso2_exi(
 //     // }
 // }
 
-// pub fn decode_iso2_xmldsig_fragment(
+// fn decode_iso2_xmldsig_fragment(
 //     stream: &mut ExiBitstream,
 //     _message: &mut Iso2XmlDSigFragment,
 // ) -> Result<(), ExiError> {

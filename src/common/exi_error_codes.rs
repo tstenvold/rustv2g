@@ -24,6 +24,7 @@ pub enum ExiError {
 
     // encoder -70 to -89
     UnknownEventForEncoding = -70,
+    UnknownBodyTypeForEncoding = -71,
     EncoderNotImplemented = -89,
 
     // common errors -100 to -129

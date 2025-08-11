@@ -1,6 +1,7 @@
-use crate::{common::{
-    exi_basetypes::ExiSigned, exi_bitstream::ExiBitstream, exi_error_codes::ExiError,
-}, iso_2::iso2_decoder::decode_iso2_exi};
+use crate::{
+    common::{exi_basetypes::ExiSigned, exi_bitstream::ExiBitstream, exi_error_codes::ExiError},
+    iso_2::iso2_decoder::decode_iso2_exi,
+};
 use heapless::Vec;
 
 #[repr(u32)]
@@ -1425,12 +1426,11 @@ pub struct Iso2v2gMessage {
 
 impl Iso2v2gMessage {
     pub fn try_from_bytes<const N: usize>(bytes: &mut [u8; N]) -> Result<Self, ExiError> {
-
         let mut this = Self {
             header: Iso2MessageHeaderType::default(),
             body: Iso2BodyTypeEnum::BodyElement(Iso2BodyBaseType::default()),
         };
-        let mut stream = ExiBitstream{
+        let mut stream = ExiBitstream {
             data: bytes,
             ..Default::default()
         };

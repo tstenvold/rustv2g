@@ -25,4 +25,5 @@ pub mod common {
 pub mod iso_2 {
     pub mod iso2_datatypes;
     pub mod iso2_decoder;
+    pub mod iso2_encoder;
 }

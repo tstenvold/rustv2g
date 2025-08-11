@@ -2219,7 +2219,7 @@ unsafe extern "C" fn encode_iso20_ac_TransformType(
     while done == 0 {
         match grammar_id {
             0 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = exi_basetypes_encoder_uint_16(
                         stream,
@@ -2317,7 +2317,7 @@ unsafe extern "C" fn encode_iso20_ac_TransformType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -2343,7 +2343,7 @@ unsafe extern "C" fn encode_iso20_ac_TransformsType(
     while done == 0 {
         match grammar_id {
             4 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_TransformType(stream, &(*TransformsType).Transform);
                     if error == 0 as i32 {
@@ -2371,7 +2371,7 @@ unsafe extern "C" fn encode_iso20_ac_TransformsType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -2502,10 +2502,10 @@ unsafe extern "C" fn encode_iso20_ac_DSAKeyValueType(
                 }
             }
             7 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error =
-                        exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                        exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                     if error == 0 as i32 {
                         error =
                             exi_basetypes_encoder_uint_16(stream, (*DSAKeyValueType).Q.bytesLen);
@@ -2602,10 +2602,10 @@ unsafe extern "C" fn encode_iso20_ac_DSAKeyValueType(
                 }
             }
             9 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error =
-                        exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                        exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                     if error == 0 as i32 {
                         error =
                             exi_basetypes_encoder_uint_16(stream, (*DSAKeyValueType).Y.bytesLen);
@@ -2797,7 +2797,7 @@ unsafe extern "C" fn encode_iso20_ac_DSAKeyValueType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -2823,10 +2823,10 @@ unsafe extern "C" fn encode_iso20_ac_X509IssuerSerialType(
     while done == 0 {
         match grammar_id {
             13 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error =
-                        exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                        exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                     if error == 0 as i32 {
                         error = exi_basetypes_encoder_uint_16(
                             stream,
@@ -2855,10 +2855,10 @@ unsafe extern "C" fn encode_iso20_ac_X509IssuerSerialType(
                 }
             }
             14 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error =
-                        exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                        exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                     if error == 0 as i32 {
                         error = exi_basetypes_encoder_signed(
                             stream,
@@ -2878,7 +2878,7 @@ unsafe extern "C" fn encode_iso20_ac_X509IssuerSerialType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -2904,7 +2904,7 @@ unsafe extern "C" fn encode_iso20_ac_DigestMethodType(
     while done == 0 {
         match grammar_id {
             15 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = exi_basetypes_encoder_uint_16(
                         stream,
@@ -2968,7 +2968,7 @@ unsafe extern "C" fn encode_iso20_ac_DigestMethodType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -2994,10 +2994,10 @@ unsafe extern "C" fn encode_iso20_ac_RSAKeyValueType(
     while done == 0 {
         match grammar_id {
             17 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error =
-                        exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                        exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                     if error == 0 as i32 {
                         error = exi_basetypes_encoder_uint_16(
                             stream,
@@ -3025,10 +3025,10 @@ unsafe extern "C" fn encode_iso20_ac_RSAKeyValueType(
                 }
             }
             18 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error =
-                        exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                        exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                     if error == 0 as i32 {
                         error = exi_basetypes_encoder_uint_16(
                             stream,
@@ -3056,7 +3056,7 @@ unsafe extern "C" fn encode_iso20_ac_RSAKeyValueType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -3082,7 +3082,7 @@ unsafe extern "C" fn encode_iso20_ac_CanonicalizationMethodType(
     while done == 0 {
         match grammar_id {
             19 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = exi_basetypes_encoder_uint_16(
                         stream,
@@ -3147,7 +3147,7 @@ unsafe extern "C" fn encode_iso20_ac_CanonicalizationMethodType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -3173,7 +3173,7 @@ unsafe extern "C" fn encode_iso20_ac_SignatureMethodType(
     while done == 0 {
         match grammar_id {
             21 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = exi_basetypes_encoder_uint_16(
                         stream,
@@ -3307,7 +3307,7 @@ unsafe extern "C" fn encode_iso20_ac_SignatureMethodType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -3388,7 +3388,7 @@ unsafe extern "C" fn encode_iso20_ac_KeyValueType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -3634,7 +3634,7 @@ unsafe extern "C" fn encode_iso20_ac_ReferenceType(
                 }
             }
             29 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error =
                         encode_iso20_ac_DigestMethodType(stream, &(*ReferenceType).DigestMethod);
@@ -3644,10 +3644,10 @@ unsafe extern "C" fn encode_iso20_ac_ReferenceType(
                 }
             }
             30 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error =
-                        exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                        exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                     if error == 0 as i32 {
                         error = exi_basetypes_encoder_uint_16(
                             stream,
@@ -3675,7 +3675,7 @@ unsafe extern "C" fn encode_iso20_ac_ReferenceType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -3827,7 +3827,7 @@ unsafe extern "C" fn encode_iso20_ac_RetrievalMethodType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -4037,7 +4037,7 @@ unsafe extern "C" fn encode_iso20_ac_X509DataType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -4262,10 +4262,10 @@ unsafe extern "C" fn encode_iso20_ac_PGPDataType(
                 }
             }
             38 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error =
-                        exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                        exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                     if error == 0 as i32 {
                         error = exi_basetypes_encoder_uint_16(
                             stream,
@@ -4339,7 +4339,7 @@ unsafe extern "C" fn encode_iso20_ac_PGPDataType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -4365,10 +4365,10 @@ unsafe extern "C" fn encode_iso20_ac_SPKIDataType(
     while done == 0 {
         match grammar_id {
             40 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error =
-                        exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                        exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                     if error == 0 as i32 {
                         error = exi_basetypes_encoder_uint_16(
                             stream,
@@ -4438,7 +4438,7 @@ unsafe extern "C" fn encode_iso20_ac_SPKIDataType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -4500,7 +4500,7 @@ unsafe extern "C" fn encode_iso20_ac_SignedInfoType(
                 }
             }
             43 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_CanonicalizationMethodType(
                         stream,
@@ -4512,7 +4512,7 @@ unsafe extern "C" fn encode_iso20_ac_SignedInfoType(
                 }
             }
             44 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_SignatureMethodType(
                         stream,
@@ -4526,7 +4526,7 @@ unsafe extern "C" fn encode_iso20_ac_SignedInfoType(
             45 => {
                 if (Reference_currentIndex as i32) < (*SignedInfoType).Reference.arrayLen as i32 {
                     error =
-                        exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                        exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                     if error == 0 as i32 {
                         let fresh0 = Reference_currentIndex;
                         Reference_currentIndex = Reference_currentIndex.wrapping_add(1);
@@ -4571,7 +4571,7 @@ unsafe extern "C" fn encode_iso20_ac_SignedInfoType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -4640,7 +4640,7 @@ unsafe extern "C" fn encode_iso20_ac_SignatureValueType(
                 }
             }
             48 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = exi_basetypes_encoder_uint_16(
                         stream,
@@ -4660,7 +4660,7 @@ unsafe extern "C" fn encode_iso20_ac_SignatureValueType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -5008,7 +5008,7 @@ unsafe extern "C" fn encode_iso20_ac_KeyInfoType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -5322,7 +5322,7 @@ unsafe extern "C" fn encode_iso20_ac_ObjectType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -5348,10 +5348,10 @@ unsafe extern "C" fn encode_iso20_ac_RationalNumberType(
     while done == 0 {
         match grammar_id {
             55 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error =
-                        exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                        exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                     if error == 0 as i32 {
                         error = exi_basetypes_encoder_nbit_uint(
                             stream,
@@ -5372,10 +5372,10 @@ unsafe extern "C" fn encode_iso20_ac_RationalNumberType(
                 }
             }
             56 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error =
-                        exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                        exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                     if error == 0 as i32 {
                         error =
                             exi_basetypes_encoder_integer_16(stream, (*RationalNumberType).Value);
@@ -5393,7 +5393,7 @@ unsafe extern "C" fn encode_iso20_ac_RationalNumberType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -5419,7 +5419,7 @@ unsafe extern "C" fn encode_iso20_ac_DetailedCostType(
     while done == 0 {
         match grammar_id {
             57 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(stream, &(*DetailedCostType).Amount);
                     if error == 0 as i32 {
@@ -5428,7 +5428,7 @@ unsafe extern "C" fn encode_iso20_ac_DetailedCostType(
                 }
             }
             58 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(
                         stream,
@@ -5440,7 +5440,7 @@ unsafe extern "C" fn encode_iso20_ac_DetailedCostType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -5499,7 +5499,7 @@ unsafe extern "C" fn encode_iso20_ac_SignatureType(
                 }
             }
             60 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_SignedInfoType(stream, &(*SignatureType).SignedInfo);
                     if error == 0 as i32 {
@@ -5508,7 +5508,7 @@ unsafe extern "C" fn encode_iso20_ac_SignatureType(
                 }
             }
             61 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_SignatureValueType(
                         stream,
@@ -5605,7 +5605,7 @@ unsafe extern "C" fn encode_iso20_ac_SignatureType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -5631,10 +5631,10 @@ unsafe extern "C" fn encode_iso20_ac_DetailedTaxType(
     while done == 0 {
         match grammar_id {
             66 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error =
-                        exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                        exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                     if error == 0 as i32 {
                         error = exi_basetypes_encoder_uint_32(stream, (*DetailedTaxType).TaxRuleID);
                         if error == 0 as i32 {
@@ -5651,7 +5651,7 @@ unsafe extern "C" fn encode_iso20_ac_DetailedTaxType(
                 }
             }
             67 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(stream, &(*DetailedTaxType).Amount);
                     if error == 0 as i32 {
@@ -5660,7 +5660,7 @@ unsafe extern "C" fn encode_iso20_ac_DetailedTaxType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -5686,10 +5686,10 @@ unsafe extern "C" fn encode_iso20_ac_MessageHeaderType(
     while done == 0 {
         match grammar_id {
             68 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error =
-                        exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                        exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                     if error == 0 as i32 {
                         error = exi_basetypes_encoder_uint_16(
                             stream,
@@ -5717,10 +5717,10 @@ unsafe extern "C" fn encode_iso20_ac_MessageHeaderType(
                 }
             }
             69 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error =
-                        exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                        exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                     if error == 0 as i32 {
                         error =
                             exi_basetypes_encoder_uint_64(stream, (*MessageHeaderType).TimeStamp);
@@ -5758,7 +5758,7 @@ unsafe extern "C" fn encode_iso20_ac_MessageHeaderType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -5828,7 +5828,7 @@ unsafe extern "C" fn encode_iso20_ac_SignaturePropertyType(
                 }
             }
             72 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = exi_basetypes_encoder_uint_16(
                         stream,
@@ -5848,10 +5848,10 @@ unsafe extern "C" fn encode_iso20_ac_SignaturePropertyType(
                 }
             }
             73 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error =
-                        exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                        exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                     if error == 0 as i32 {
                         error = exi_basetypes_encoder_uint_16(
                             stream,
@@ -5879,7 +5879,7 @@ unsafe extern "C" fn encode_iso20_ac_SignaturePropertyType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -5905,7 +5905,7 @@ unsafe extern "C" fn encode_iso20_ac_AC_CPDReqEnergyTransferModeType(
     while done == 0 {
         match grammar_id {
             74 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(
                         stream,
@@ -5985,7 +5985,7 @@ unsafe extern "C" fn encode_iso20_ac_AC_CPDReqEnergyTransferModeType(
                 }
             }
             77 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(
                         stream,
@@ -6055,7 +6055,7 @@ unsafe extern "C" fn encode_iso20_ac_AC_CPDReqEnergyTransferModeType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -7498,7 +7498,7 @@ unsafe extern "C" fn encode_iso20_ac_DisplayParametersType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -7524,7 +7524,7 @@ unsafe extern "C" fn encode_iso20_ac_AC_CPDResEnergyTransferModeType(
     while done == 0 {
         match grammar_id {
             90 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(
                         stream,
@@ -7606,7 +7606,7 @@ unsafe extern "C" fn encode_iso20_ac_AC_CPDResEnergyTransferModeType(
                 }
             }
             93 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(
                         stream,
@@ -7688,7 +7688,7 @@ unsafe extern "C" fn encode_iso20_ac_AC_CPDResEnergyTransferModeType(
                 }
             }
             96 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(
                         stream,
@@ -7952,7 +7952,7 @@ unsafe extern "C" fn encode_iso20_ac_AC_CPDResEnergyTransferModeType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -7978,10 +7978,10 @@ unsafe extern "C" fn encode_iso20_ac_EVSEStatusType(
     while done == 0 {
         match grammar_id {
             102 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error =
-                        exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                        exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                     if error == 0 as i32 {
                         error = exi_basetypes_encoder_uint_16(
                             stream,
@@ -8001,10 +8001,10 @@ unsafe extern "C" fn encode_iso20_ac_EVSEStatusType(
                 }
             }
             103 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error =
-                        exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                        exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                     if error == 0 as i32 {
                         error = exi_basetypes_encoder_nbit_uint(
                             stream,
@@ -8025,7 +8025,7 @@ unsafe extern "C" fn encode_iso20_ac_EVSEStatusType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -8092,7 +8092,7 @@ unsafe extern "C" fn encode_iso20_ac_Dynamic_AC_CLReqControlModeType(
                 }
             }
             105 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(
                         stream,
@@ -8104,7 +8104,7 @@ unsafe extern "C" fn encode_iso20_ac_Dynamic_AC_CLReqControlModeType(
                 }
             }
             106 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(
                         stream,
@@ -8116,7 +8116,7 @@ unsafe extern "C" fn encode_iso20_ac_Dynamic_AC_CLReqControlModeType(
                 }
             }
             107 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(
                         stream,
@@ -8128,7 +8128,7 @@ unsafe extern "C" fn encode_iso20_ac_Dynamic_AC_CLReqControlModeType(
                 }
             }
             108 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(
                         stream,
@@ -8208,7 +8208,7 @@ unsafe extern "C" fn encode_iso20_ac_Dynamic_AC_CLReqControlModeType(
                 }
             }
             111 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(
                         stream,
@@ -8288,7 +8288,7 @@ unsafe extern "C" fn encode_iso20_ac_Dynamic_AC_CLReqControlModeType(
                 }
             }
             114 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(
                         stream,
@@ -8368,7 +8368,7 @@ unsafe extern "C" fn encode_iso20_ac_Dynamic_AC_CLReqControlModeType(
                 }
             }
             117 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(
                         stream,
@@ -8440,7 +8440,7 @@ unsafe extern "C" fn encode_iso20_ac_Dynamic_AC_CLReqControlModeType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -9219,7 +9219,7 @@ unsafe extern "C" fn encode_iso20_ac_Scheduled_AC_CLReqControlModeType(
                 }
             }
             129 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(
                         stream,
@@ -9488,7 +9488,7 @@ unsafe extern "C" fn encode_iso20_ac_Scheduled_AC_CLReqControlModeType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -9509,7 +9509,7 @@ unsafe extern "C" fn encode_iso20_ac_CLReqControlModeType(
     mut CLReqControlModeType: *const iso20_ac_CLReqControlModeType,
 ) -> i32 {
     let mut error: i32 =
-        exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+        exi_basetypes_encoder_nbit_uint(stream, 1, 0);
     return error;
 }
 unsafe extern "C" fn encode_iso20_ac_MeterInfoType(
@@ -9522,10 +9522,10 @@ unsafe extern "C" fn encode_iso20_ac_MeterInfoType(
     while done == 0 {
         match grammar_id {
             135 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error =
-                        exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                        exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                     if error == 0 as i32 {
                         error = exi_basetypes_encoder_uint_16(
                             stream,
@@ -9553,10 +9553,10 @@ unsafe extern "C" fn encode_iso20_ac_MeterInfoType(
                 }
             }
             136 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error =
-                        exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                        exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                     if error == 0 as i32 {
                         error = exi_basetypes_encoder_uint_64(
                             stream,
@@ -10214,7 +10214,7 @@ unsafe extern "C" fn encode_iso20_ac_MeterInfoType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -10241,10 +10241,10 @@ unsafe extern "C" fn encode_iso20_ac_ReceiptType(
     while done == 0 {
         match grammar_id {
             143 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error =
-                        exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                        exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                     if error == 0 as i32 {
                         error = exi_basetypes_encoder_uint_64(stream, (*ReceiptType).TimeAnchor);
                         if error == 0 as i32 {
@@ -10631,7 +10631,7 @@ unsafe extern "C" fn encode_iso20_ac_ReceiptType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -11373,7 +11373,7 @@ unsafe extern "C" fn encode_iso20_ac_Scheduled_AC_CLResControlModeType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -11724,7 +11724,7 @@ unsafe extern "C" fn encode_iso20_ac_Dynamic_AC_CLResControlModeType(
                 }
             }
             167 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(
                         stream,
@@ -12312,7 +12312,7 @@ unsafe extern "C" fn encode_iso20_ac_Dynamic_AC_CLResControlModeType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -12333,7 +12333,7 @@ unsafe extern "C" fn encode_iso20_ac_CLResControlModeType(
     mut CLResControlModeType: *const iso20_ac_CLResControlModeType,
 ) -> i32 {
     let mut error: i32 =
-        exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+        exi_basetypes_encoder_nbit_uint(stream, 1, 0);
     return error;
 }
 unsafe extern "C" fn encode_iso20_ac_BPT_AC_CPDReqEnergyTransferModeType(
@@ -12346,7 +12346,7 @@ unsafe extern "C" fn encode_iso20_ac_BPT_AC_CPDReqEnergyTransferModeType(
     while done == 0 {
         match grammar_id {
             176 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(
                         stream,
@@ -12430,7 +12430,7 @@ unsafe extern "C" fn encode_iso20_ac_BPT_AC_CPDReqEnergyTransferModeType(
                 }
             }
             179 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(
                         stream,
@@ -12514,7 +12514,7 @@ unsafe extern "C" fn encode_iso20_ac_BPT_AC_CPDReqEnergyTransferModeType(
                 }
             }
             182 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(
                         stream,
@@ -12598,7 +12598,7 @@ unsafe extern "C" fn encode_iso20_ac_BPT_AC_CPDReqEnergyTransferModeType(
                 }
             }
             185 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(
                         stream,
@@ -12672,7 +12672,7 @@ unsafe extern "C" fn encode_iso20_ac_BPT_AC_CPDReqEnergyTransferModeType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -12698,7 +12698,7 @@ unsafe extern "C" fn encode_iso20_ac_AC_ChargeParameterDiscoveryReqType(
     while done == 0 {
         match grammar_id {
             188 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_MessageHeaderType(
                         stream,
@@ -12739,7 +12739,7 @@ unsafe extern "C" fn encode_iso20_ac_AC_ChargeParameterDiscoveryReqType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -12765,7 +12765,7 @@ unsafe extern "C" fn encode_iso20_ac_BPT_AC_CPDResEnergyTransferModeType(
     while done == 0 {
         match grammar_id {
             190 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(
                         stream,
@@ -12849,7 +12849,7 @@ unsafe extern "C" fn encode_iso20_ac_BPT_AC_CPDResEnergyTransferModeType(
                 }
             }
             193 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(
                         stream,
@@ -12933,7 +12933,7 @@ unsafe extern "C" fn encode_iso20_ac_BPT_AC_CPDResEnergyTransferModeType(
                 }
             }
             196 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(
                         stream,
@@ -13229,7 +13229,7 @@ unsafe extern "C" fn encode_iso20_ac_BPT_AC_CPDResEnergyTransferModeType(
                 }
             }
             202 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(
                         stream,
@@ -13314,7 +13314,7 @@ unsafe extern "C" fn encode_iso20_ac_BPT_AC_CPDResEnergyTransferModeType(
                 }
             }
             205 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(
                         stream,
@@ -13389,7 +13389,7 @@ unsafe extern "C" fn encode_iso20_ac_BPT_AC_CPDResEnergyTransferModeType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -13415,7 +13415,7 @@ unsafe extern "C" fn encode_iso20_ac_AC_ChargeParameterDiscoveryResType(
     while done == 0 {
         match grammar_id {
             208 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_MessageHeaderType(
                         stream,
@@ -13427,10 +13427,10 @@ unsafe extern "C" fn encode_iso20_ac_AC_ChargeParameterDiscoveryResType(
                 }
             }
             209 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error =
-                        exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                        exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                     if error == 0 as i32 {
                         error = exi_basetypes_encoder_nbit_uint(
                             stream,
@@ -13480,7 +13480,7 @@ unsafe extern "C" fn encode_iso20_ac_AC_ChargeParameterDiscoveryResType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -14271,7 +14271,7 @@ unsafe extern "C" fn encode_iso20_ac_BPT_Scheduled_AC_CLReqControlModeType(
                 }
             }
             220 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(
                         stream,
@@ -15365,7 +15365,7 @@ unsafe extern "C" fn encode_iso20_ac_BPT_Scheduled_AC_CLReqControlModeType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -16135,7 +16135,7 @@ unsafe extern "C" fn encode_iso20_ac_BPT_Scheduled_AC_CLResControlModeType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -16202,7 +16202,7 @@ unsafe extern "C" fn encode_iso20_ac_BPT_Dynamic_AC_CLReqControlModeType(
                 }
             }
             242 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(
                         stream,
@@ -16214,7 +16214,7 @@ unsafe extern "C" fn encode_iso20_ac_BPT_Dynamic_AC_CLReqControlModeType(
                 }
             }
             243 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(
                         stream,
@@ -16226,7 +16226,7 @@ unsafe extern "C" fn encode_iso20_ac_BPT_Dynamic_AC_CLReqControlModeType(
                 }
             }
             244 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(
                         stream,
@@ -16238,7 +16238,7 @@ unsafe extern "C" fn encode_iso20_ac_BPT_Dynamic_AC_CLReqControlModeType(
                 }
             }
             245 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(
                         stream,
@@ -16322,7 +16322,7 @@ unsafe extern "C" fn encode_iso20_ac_BPT_Dynamic_AC_CLReqControlModeType(
                 }
             }
             248 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(
                         stream,
@@ -16406,7 +16406,7 @@ unsafe extern "C" fn encode_iso20_ac_BPT_Dynamic_AC_CLReqControlModeType(
                 }
             }
             251 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(
                         stream,
@@ -16490,7 +16490,7 @@ unsafe extern "C" fn encode_iso20_ac_BPT_Dynamic_AC_CLReqControlModeType(
                 }
             }
             254 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(
                         stream,
@@ -16574,7 +16574,7 @@ unsafe extern "C" fn encode_iso20_ac_BPT_Dynamic_AC_CLReqControlModeType(
                 }
             }
             257 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(
                         stream,
@@ -16658,7 +16658,7 @@ unsafe extern "C" fn encode_iso20_ac_BPT_Dynamic_AC_CLReqControlModeType(
                 }
             }
             260 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(
                         stream,
@@ -16850,7 +16850,7 @@ unsafe extern "C" fn encode_iso20_ac_BPT_Dynamic_AC_CLReqControlModeType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -16876,7 +16876,7 @@ unsafe extern "C" fn encode_iso20_ac_AC_ChargeLoopReqType(
     while done == 0 {
         match grammar_id {
             265 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error =
                         encode_iso20_ac_MessageHeaderType(stream, &(*AC_ChargeLoopReqType).Header);
@@ -16927,10 +16927,10 @@ unsafe extern "C" fn encode_iso20_ac_AC_ChargeLoopReqType(
                 }
             }
             267 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error =
-                        exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                        exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                     if error == 0 as i32 {
                         error = exi_basetypes_encoder_bool(
                             stream,
@@ -17015,7 +17015,7 @@ unsafe extern "C" fn encode_iso20_ac_AC_ChargeLoopReqType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -17366,7 +17366,7 @@ unsafe extern "C" fn encode_iso20_ac_BPT_Dynamic_AC_CLResControlModeType(
                 }
             }
             273 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_RationalNumberType(
                         stream,
@@ -17962,7 +17962,7 @@ unsafe extern "C" fn encode_iso20_ac_BPT_Dynamic_AC_CLResControlModeType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -17988,7 +17988,7 @@ unsafe extern "C" fn encode_iso20_ac_AC_ChargeLoopResType(
     while done == 0 {
         match grammar_id {
             282 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error =
                         encode_iso20_ac_MessageHeaderType(stream, &(*AC_ChargeLoopResType).Header);
@@ -17998,10 +17998,10 @@ unsafe extern "C" fn encode_iso20_ac_AC_ChargeLoopResType(
                 }
             }
             283 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error =
-                        exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                        exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                     if error == 0 as i32 {
                         error = exi_basetypes_encoder_nbit_uint(
                             stream,
@@ -18469,7 +18469,7 @@ unsafe extern "C" fn encode_iso20_ac_AC_ChargeLoopResType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -18565,7 +18565,7 @@ unsafe extern "C" fn encode_iso20_ac_ManifestType(
             291 => {
                 if (Reference_currentIndex as i32) < (*ManifestType).Reference.arrayLen as i32 {
                     error =
-                        exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                        exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                     if error == 0 as i32 {
                         let fresh14 = Reference_currentIndex;
                         Reference_currentIndex = Reference_currentIndex.wrapping_add(1);
@@ -18610,7 +18610,7 @@ unsafe extern "C" fn encode_iso20_ac_ManifestType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
@@ -18693,7 +18693,7 @@ unsafe extern "C" fn encode_iso20_ac_SignaturePropertiesType(
                 }
             }
             295 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     error = encode_iso20_ac_SignaturePropertyType(
                         stream,
@@ -18727,7 +18727,7 @@ unsafe extern "C" fn encode_iso20_ac_SignaturePropertiesType(
                 }
             }
             2 => {
-                error = exi_basetypes_encoder_nbit_uint(stream, 1 as i32 as usize, 0 as i32 as u32);
+                error = exi_basetypes_encoder_nbit_uint(stream, 1, 0);
                 if error == 0 as i32 {
                     done = 1 as i32;
                     grammar_id = 3 as i32;
