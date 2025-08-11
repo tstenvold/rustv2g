@@ -38,18 +38,17 @@ mod tests {
         // Build a new request to test encoding
         let req: Iso2v2gMessage = Iso2v2gMessage {
             header: Iso2MessageHeaderType {
-                session_id: session_id,
+                session_id,
                 notification: None,
-                signature: None
+                signature: None,
             },
-            body: Iso2BodyTypeEnum::SessionSetupReq(Iso2SessionSetupReqType {
-                evcc_id: evcc_id,
-            })
+            body: Iso2BodyTypeEnum::SessionSetupReq(Iso2SessionSetupReqType { evcc_id }),
         };
 
-        let (encoded, len) = req.to_exi_bytes::<2048>().expect("Failed to encode request");
+        let (encoded, len) = req
+            .to_exi_bytes::<2048>()
+            .expect("Failed to encode request");
         assert_eq!(encoded[..len], bytes);
-
     }
 
     #[test]
@@ -72,23 +71,22 @@ mod tests {
         let session_id: Vec<u8, 8> = Vec::from_slice(&session_id_bytes).unwrap();
 
         // Build a new response to test encoding
-        let res: Iso2v2gMessage = Iso2v2gMessage{
-            header: Iso2MessageHeaderType{
-                session_id: session_id,
+        let res: Iso2v2gMessage = Iso2v2gMessage {
+            header: Iso2MessageHeaderType {
+                session_id,
                 notification: None,
-                signature: None
+                signature: None,
             },
-            body: Iso2BodyTypeEnum::SessionSetupRes(Iso2SessionSetupResType{
+            body: Iso2BodyTypeEnum::SessionSetupRes(Iso2SessionSetupResType {
                 response_code: Iso2ResponseCodeType::OkNewSessionEstablished,
                 evse_id: Vec::from_slice(b"ABCDEF12").unwrap(),
                 evse_time_stamp: None,
-            })
+            }),
         };
 
-        let (encoded, len) = res.to_exi_bytes::<2048>().expect("Failed to encode response");
+        let (encoded, len) = res
+            .to_exi_bytes::<2048>()
+            .expect("Failed to encode response");
         assert_eq!(encoded[..len], bytes);
-
     }
-
 }
-

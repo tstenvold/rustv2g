@@ -1425,7 +1425,6 @@ pub struct Iso2v2gMessage {
 }
 
 impl Iso2v2gMessage {
-
     pub fn to_exi_bytes<const N: usize>(&self) -> Result<([u8; N], usize), ExiError> {
         let mut bytes = [0u8; N];
         let mut stream = ExiBitstream {

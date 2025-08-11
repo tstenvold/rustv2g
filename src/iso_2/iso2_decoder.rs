@@ -2769,13 +2769,13 @@ fn decode_iso2_pgp_data(
                             return Ok(());
                         }
                         3 => {
-                            let pgp_data = match &mut message.pgp_component {
-                                Iso2PGPComponentType::Choice1(ref mut c1) => c1,
-                                _ => return Err(ExiError::UnknownEventCode),
-                            };
-                            pgp_data.any = Some(decode_exi_type_hex_binary::<4>(stream)?);
-                            if error == 0_i32 {
+                            if let Iso2PGPComponentType::Choice1(ref mut pgp_data) =
+                                message.pgp_component
+                            {
+                                pgp_data.any = Some(decode_exi_type_hex_binary::<4>(stream)?);
                                 grammar_id = 68_i32;
+                            } else {
+                                return Err(ExiError::UnknownEventCode);
                             }
                         }
                         _ => {
@@ -2791,10 +2791,7 @@ fn decode_iso2_pgp_data(
                         0 => {
                             return Err(ExiError::UnknownEventForDecoding);
                         }
-                        1 => {
-                            return Ok(());
-                        }
-                        2 => {
+                        1 | 2 => {
                             return Ok(());
                         }
                         3 => {
@@ -2819,12 +2816,11 @@ fn decode_iso2_pgp_data(
                     match event_code {
                         0 => {
                             // Ensure we are using PGPChoice2Type
-                            let pgp_data = match &mut message.pgp_component {
-                                Iso2PGPComponentType::Choice2(ref mut c2) => c2,
-                                _ => return Err(ExiError::UnknownEventCode),
-                            };
-                            pgp_data.pgp_key_packet = decode_exi_type_hex_binary::<350>(stream)?;
-                            if error == 0_i32 {
+                            if let Iso2PGPComponentType::Choice2(ref mut pgp_data) =
+                                message.pgp_component
+                            {
+                                pgp_data.pgp_key_packet =
+                                    decode_exi_type_hex_binary::<350>(stream)?;
                                 grammar_id = 69_i32;
                             }
                         }
@@ -2845,12 +2841,14 @@ fn decode_iso2_pgp_data(
                             return Ok(());
                         }
                         2 => {
-                            let pgp_data = match &mut message.pgp_component {
-                                Iso2PGPComponentType::Choice2(ref mut c2) => c2,
-                                _ => return Err(ExiError::UnknownEventCode),
-                            };
-                            pgp_data.any = Some(decode_exi_type_hex_binary::<4>(stream)?);
-                            grammar_id = 68_i32;
+                            if let Iso2PGPComponentType::Choice2(ref mut pgp_data) =
+                                message.pgp_component
+                            {
+                                pgp_data.any = Some(decode_exi_type_hex_binary::<4>(stream)?);
+                                grammar_id = 68_i32;
+                            } else {
+                                return Err(ExiError::UnknownEventCode);
+                            }
                         }
                         _ => {
                             return Err(ExiError::UnknownEventCode);
@@ -10155,7 +10153,8 @@ fn decode_iso2_session_setup_res(
                             )?;
                             if error == 0_i32 {
                                 if event_code == 0_i32 as u32 {
-                                    let value: Iso2ResponseCodeType = Iso2ResponseCodeType::OkNewSessionEstablished;
+                                    let value: Iso2ResponseCodeType =
+                                        Iso2ResponseCodeType::OkNewSessionEstablished;
                                     exi_basetypes_decoder_nbit_uint(
                                         stream,
                                         5_i32 as usize,
@@ -13458,7 +13457,7 @@ fn decode_iso2_body(
     message: &mut Iso2v2gMessage,
 ) -> Result<(), ExiError> {
     let mut event_code: u32 = 0;
-    exi_basetypes_decoder_nbit_uint(stream, 6_i32 as usize, &mut event_code)?;
+    exi_basetypes_decoder_nbit_uint(stream, 6, &mut event_code)?;
     match event_code {
         // 0 => {
         //     let mut authorization_req: Iso2AuthorizationReqType = Default::default();
@@ -13686,16 +13685,12 @@ fn decode_iso2_v2g_message(
                 0 => {
                     decode_iso2_body(stream, message)?;
                     exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
-                    return Ok(());
+                    Ok(())
                 }
-                _ => {
-                    return Err(ExiError::UnknownEventCode);
-                }
+                _ => Err(ExiError::UnknownEventCode),
             }
         }
-        _ => {
-            return Err(ExiError::UnknownEventCode);
-        }
+        _ => Err(ExiError::UnknownEventCode),
     }
 }
 

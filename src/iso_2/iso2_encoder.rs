@@ -9666,7 +9666,7 @@ fn encode_iso2_session_setup_res_type(
     let Ok(len) = u16::try_from(message.evse_id.len()) else {
         return Err(ExiError::InvalidCharactersLength);
     };
-    exi_basetypes_encoder_uint_16(stream, len+2)?;
+    exi_basetypes_encoder_uint_16(stream, len + 2)?;
     exi_basetypes_encoder_characters(stream, &message.evse_id)?;
     exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
 
@@ -9680,7 +9680,6 @@ fn encode_iso2_session_setup_res_type(
     }
 
     exi_basetypes_encoder_nbit_uint(stream, 2, 1)
-
 }
 
 // fn encode_iso2_CertificateInstallationReqType(
