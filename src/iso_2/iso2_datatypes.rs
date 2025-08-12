@@ -2,7 +2,205 @@ use crate::{
     common::{exi_basetypes::ExiSigned, exi_bitstream::ExiBitstream, exi_error_codes::ExiError},
     iso_2::{iso2_decoder::decode_iso2_exi, iso2_encoder::encode_iso2_exi},
 };
+use core::convert::TryFrom;
 use heapless::Vec;
+
+impl TryFrom<u32> for Iso2CostKindType {
+    type Error = ExiError;
+    fn try_from(value: u32) -> Result<Self, Self::Error> {
+        match value {
+            0 => Ok(Self::RelativePricePercentage),
+            1 => Ok(Self::RenewableGenerationPercentage),
+            2 => Ok(Self::CarbonDioxideEmission),
+            255 => Ok(Self::Unknown),
+            _ => Err(ExiError::InvalidValue),
+        }
+    }
+}
+
+impl TryFrom<u32> for Iso2UnitSymbolType {
+    type Error = ExiError;
+    fn try_from(value: u32) -> Result<Self, Self::Error> {
+        match value {
+            0 => Ok(Self::H),
+            1 => Ok(Self::M),
+            2 => Ok(Self::S),
+            3 => Ok(Self::A),
+            4 => Ok(Self::V),
+            5 => Ok(Self::W),
+            6 => Ok(Self::Wh),
+            255 => Ok(Self::Unknown),
+            _ => Err(ExiError::InvalidValue),
+        }
+    }
+}
+
+impl TryFrom<u32> for Iso2DcEvErrorCodeType {
+    type Error = ExiError;
+    fn try_from(value: u32) -> Result<Self, Self::Error> {
+        match value {
+            0 => Ok(Self::NoError),
+            1 => Ok(Self::FailedResstemperatureInhibit),
+            2 => Ok(Self::FailedEvshiftPosition),
+            3 => Ok(Self::FailedChargerConnectorLockFault),
+            4 => Ok(Self::FailedEvressmalfunction),
+            5 => Ok(Self::FailedChargingCurrentdifferential),
+            6 => Ok(Self::FailedChargingVoltageOutOfRange),
+            7 => Ok(Self::ReservedA),
+            8 => Ok(Self::ReservedB),
+            9 => Ok(Self::ReservedC),
+            10 => Ok(Self::FailedChargingSystemIncompatibility),
+            11 => Ok(Self::NoData),
+            255 => Ok(Self::Unknown),
+            _ => Err(ExiError::InvalidValue),
+        }
+    }
+}
+
+impl TryFrom<u32> for Iso2FaultCodeType {
+    type Error = ExiError;
+    fn try_from(value: u32) -> Result<Self, Self::Error> {
+        match value {
+            0 => Ok(Self::ParsingError),
+            1 => Ok(Self::NoTlsrootCertificatAvailable),
+            2 => Ok(Self::UnknownError),
+            255 => Ok(Self::Unknown),
+            _ => Err(ExiError::InvalidValue),
+        }
+    }
+}
+
+impl TryFrom<u32> for Iso2EvseNotificationType {
+    type Error = ExiError;
+    fn try_from(value: u32) -> Result<Self, Self::Error> {
+        match value {
+            0 => Ok(Self::None),
+            1 => Ok(Self::StopCharging),
+            2 => Ok(Self::ReNegotiation),
+            255 => Ok(Self::Unknown),
+            _ => Err(ExiError::InvalidValue),
+        }
+    }
+}
+
+impl TryFrom<u32> for Iso2IsolationLevelType {
+    type Error = ExiError;
+    fn try_from(value: u32) -> Result<Self, Self::Error> {
+        match value {
+            0 => Ok(Self::Invalid),
+            1 => Ok(Self::Valid),
+            2 => Ok(Self::Warning),
+            3 => Ok(Self::Fault),
+            4 => Ok(Self::NoImd),
+            255 => Ok(Self::Unknown),
+            _ => Err(ExiError::InvalidValue),
+        }
+    }
+}
+
+impl TryFrom<u32> for Iso2ServiceCategoryType {
+    type Error = ExiError;
+    fn try_from(value: u32) -> Result<Self, Self::Error> {
+        match value {
+            0 => Ok(Self::EvCharging),
+            1 => Ok(Self::Internet),
+            2 => Ok(Self::ContractCertificate),
+            3 => Ok(Self::OtherCustom),
+            255 => Ok(Self::Unknown),
+            _ => Err(ExiError::InvalidValue),
+        }
+    }
+}
+
+impl TryFrom<u32> for Iso2DcEvseStatusCodeType {
+    type Error = ExiError;
+    fn try_from(value: u32) -> Result<Self, Self::Error> {
+        match value {
+            0 => Ok(Self::EvseNotReady),
+            1 => Ok(Self::EvseReady),
+            2 => Ok(Self::EvseShutdown),
+            3 => Ok(Self::EvseUtilityInterruptEvent),
+            4 => Ok(Self::EvseIsolationMonitoringActive),
+            5 => Ok(Self::EvseEmergencyShutdown),
+            6 => Ok(Self::EvseMalfunction),
+            7 => Ok(Self::Reserved8),
+            8 => Ok(Self::Reserved9),
+            9 => Ok(Self::ReservedA),
+            10 => Ok(Self::ReservedB),
+            11 => Ok(Self::ReservedC),
+            255 => Ok(Self::Unknown),
+            _ => Err(ExiError::InvalidValue),
+        }
+    }
+}
+
+impl TryFrom<u32> for Iso2ChargeProgressType {
+    type Error = ExiError;
+    fn try_from(value: u32) -> Result<Self, Self::Error> {
+        match value {
+            0 => Ok(Self::Start),
+            1 => Ok(Self::Stop),
+            2 => Ok(Self::Renegotiate),
+            255 => Ok(Self::Unknown),
+            _ => Err(ExiError::InvalidValue),
+        }
+    }
+}
+
+// Iso2ResponseCodeType already has a hand-written TryFrom
+
+impl TryFrom<u32> for Iso2PaymentOptionType {
+    type Error = ExiError;
+    fn try_from(value: u32) -> Result<Self, Self::Error> {
+        match value {
+            0 => Ok(Self::Contract),
+            1 => Ok(Self::ExternalPayment),
+            255 => Ok(Self::Unknown),
+            _ => Err(ExiError::InvalidValue),
+        }
+    }
+}
+
+impl TryFrom<u32> for Iso2ChargingSessionType {
+    type Error = ExiError;
+    fn try_from(value: u32) -> Result<Self, Self::Error> {
+        match value {
+            0 => Ok(Self::Terminate),
+            1 => Ok(Self::Pause),
+            255 => Ok(Self::Unknown),
+            _ => Err(ExiError::InvalidValue),
+        }
+    }
+}
+
+impl TryFrom<u32> for Iso2EnergyTransferModeType {
+    type Error = ExiError;
+    fn try_from(value: u32) -> Result<Self, Self::Error> {
+        match value {
+            0 => Ok(Self::AcSinglePhaseCore),
+            1 => Ok(Self::AcThreePhaseCore),
+            2 => Ok(Self::DcCore),
+            3 => Ok(Self::DcExtended),
+            4 => Ok(Self::DcComboCore),
+            5 => Ok(Self::DcUnique),
+            255 => Ok(Self::Unknown),
+            _ => Err(ExiError::InvalidValue),
+        }
+    }
+}
+
+impl TryFrom<u32> for Iso2EvseProcessingType {
+    type Error = ExiError;
+    fn try_from(value: u32) -> Result<Self, Self::Error> {
+        match value {
+            0 => Ok(Self::Finished),
+            1 => Ok(Self::Ongoing),
+            2 => Ok(Self::OngoingWaitingForCustomerInteraction),
+            255 => Ok(Self::Unknown),
+            _ => Err(ExiError::InvalidValue),
+        }
+    }
+}
 
 #[repr(u32)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
@@ -150,6 +348,42 @@ pub enum Iso2ResponseCodeType {
     FailedCertificateRevoked = 25,
     #[default]
     Unknown = 255,
+}
+
+impl TryFrom<u32> for Iso2ResponseCodeType {
+    type Error = ExiError;
+
+    fn try_from(value: u32) -> Result<Self, Self::Error> {
+        match value {
+            0 => Ok(Self::Ok),
+            1 => Ok(Self::OkNewSessionEstablished),
+            2 => Ok(Self::OkOldSessionJoined),
+            3 => Ok(Self::OkCertificateExpiresSoon),
+            4 => Ok(Self::Failed),
+            5 => Ok(Self::FailedSequenceError),
+            6 => Ok(Self::FailedServiceIdInvalid),
+            7 => Ok(Self::FailedUnknownSession),
+            8 => Ok(Self::FailedServiceSelectionInvalid),
+            9 => Ok(Self::FailedPaymentSelectionInvalid),
+            10 => Ok(Self::FailedCertificateExpired),
+            11 => Ok(Self::FailedSignatureError),
+            12 => Ok(Self::FailedNoCertificateAvailable),
+            13 => Ok(Self::FailedCertChainError),
+            14 => Ok(Self::FailedChallengeInvalid),
+            15 => Ok(Self::FailedContractCanceled),
+            16 => Ok(Self::FailedWrongChargeParameter),
+            17 => Ok(Self::FailedPowerDeliveryNotApplied),
+            18 => Ok(Self::FailedTariffSelectionInvalid),
+            19 => Ok(Self::FailedChargingProfileInvalid),
+            20 => Ok(Self::FailedMeteringSignatureNotValid),
+            21 => Ok(Self::FailedNoChargeServiceSelected),
+            22 => Ok(Self::FailedWrongEnergyTransferMode),
+            23 => Ok(Self::FailedContactorError),
+            24 => Ok(Self::FailedCertificateNotAllowedAtThisEvse),
+            25 => Ok(Self::FailedCertificateRevoked),
+            _ => Err(ExiError::InvalidValue),
+        }
+    }
 }
 
 #[repr(u32)]

@@ -1,6 +1,6 @@
 use core::result::Result;
 
-use crate::common::exi_basetypes::{ExiSigned, ExiUnsigned, EXI_UNSIGNED_MAX_OCTETS};
+use crate::common::exi_basetypes::{EXI_UNSIGNED_MAX_OCTETS, ExiSigned, ExiUnsigned};
 use crate::common::exi_bitstream::ExiBitstream;
 use crate::common::exi_error_codes::ExiError;
 use heapless::Vec;

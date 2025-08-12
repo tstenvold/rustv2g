@@ -89,4 +89,94 @@ mod tests {
             .expect("Failed to encode response");
         assert_eq!(encoded[..len], bytes);
     }
+
+    #[test]
+    fn test_iso2_service_discovery_req() {
+        let hex_data = "8098004011b01c8af0c2dae0d8caa6c6dee0ca0000";
+        let bytes: Vec<u8, 2048> = hexstr_to_bytes(hex_data);
+        let mut bytes_array = [0u8; 2048];
+        bytes_array[..bytes.len()].copy_from_slice(&bytes);
+        let v2g_msg = Iso2v2gMessage::try_from_bytes::<2048>(&mut bytes_array)
+            .expect("Failed to decode Iso2ServiceDiscoveryReq");
+
+        let service_list = b"ExampleScope";
+        let session_id_bytes = hexstr_to_bytes("00");
+        let session_id: Vec<u8, 8> = Vec::from_slice(&session_id_bytes).unwrap();
+
+        // TODO: Add assertions for the decoded request fields
+        match v2g_msg.body {
+            Iso2BodyTypeEnum::ServiceDiscoveryReq(ref req) => {
+                // Example assertion (replace with actual expected values):
+                assert_eq!(
+                    req.service_scope,
+                    Some(Vec::from_slice(service_list).unwrap())
+                );
+                assert_eq!(
+                    req.service_category,
+                    Some(Iso2ServiceCategoryType::EvCharging)
+                );
+            }
+            _ => panic!("Expected ServiceDiscoveryReq body type"),
+        }
+
+        // // TODO: Implement Encoding
+        // let req: Iso2v2gMessage = Iso2v2gMessage {
+        //     header: Iso2MessageHeaderType {
+        //         session_id: session_id,
+        //         notification: None,
+        //         signature: None,
+        //     },
+        //     body: Iso2BodyTypeEnum::ServiceDiscoveryReq(Iso2ServiceDiscoveryReqType {
+        //         service_scope: Some(Vec::from_slice(service_list).unwrap()),
+        //         service_category: Some(Iso2ServiceCategoryType::EvCharging),
+        //     }),
+        // };
+
+        // let (encoded, len) = req
+        //     .to_exi_bytes::<2048>()
+        //     .expect("Failed to encode request");
+        // assert_eq!(encoded[..len], bytes);
+    }
+
+    #[test]
+    fn test_iso2_service_discovery_res() {
+        // TODO: Replace with the correct EXI hex string for ServiceDiscoveryRes
+        let hex_data = "8098004011c00008004041050d7d110d7d0da185c99da5b99c0502400300f4661737420496e7465726e657409000200d4365727469666963617465110400";
+        let bytes: Vec<u8, 2048> = hexstr_to_bytes(hex_data);
+        let mut bytes_array = [0u8; 2048];
+        bytes_array[..bytes.len()].copy_from_slice(&bytes);
+        let v2g_msg = Iso2v2gMessage::try_from_bytes::<2048>(&mut bytes_array)
+            .expect("Failed to decode Iso2ServiceDiscoveryRes");
+
+        // TODO: Add assertions for the decoded response fields
+        match v2g_msg.body {
+            Iso2BodyTypeEnum::ServiceDiscoveryRes(ref res) => {
+                assert_eq!(res.response_code, Iso2ResponseCodeType::Ok);
+                assert_eq!(res.charge_service.free_service, 1);
+                assert_eq!(
+                    res.charge_service.service_category,
+                    Iso2ServiceCategoryType::EvCharging
+                );
+                assert_eq!(res.charge_service.service_id, 1);
+            }
+            _ => panic!("Expected ServiceDiscoveryRes body type"),
+        }
+
+        //     // TODO: Build a new response to test encoding (replace with actual fields)
+        //     let res: Iso2v2gMessage = Iso2v2gMessage {
+        //         header: Iso2MessageHeaderType {
+        //             session_id: Vec::new(), // Replace with actual session_id
+        //             notification: None,
+        //             signature: None,
+        //         },
+        //         body: Iso2BodyTypeEnum::ServiceDiscoveryRes{
+
+        //         },
+        //     };
+
+        //     let (encoded, len) = res
+        //         .to_exi_bytes::<2048>()
+        //         .expect("Failed to encode response");
+        //     assert_eq!(encoded[..len], bytes);
+    }
 }

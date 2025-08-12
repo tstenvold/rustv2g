@@ -3,11 +3,10 @@ use core::result::Result;
 use heapless::Vec;
 
 use crate::common::exi_basetypes_decoder::{
-    exi_basetypes_decoder_bytes, exi_basetypes_decoder_integer_16,
+    exi_basetypes_decoder_bytes, exi_basetypes_decoder_integer_8, exi_basetypes_decoder_integer_16,
     exi_basetypes_decoder_integer_32, exi_basetypes_decoder_integer_64,
-    exi_basetypes_decoder_integer_8, exi_basetypes_decoder_nbit_uint,
-    exi_basetypes_decoder_uint_16, exi_basetypes_decoder_uint_32, exi_basetypes_decoder_uint_64,
-    exi_basetypes_decoder_uint_8,
+    exi_basetypes_decoder_nbit_uint, exi_basetypes_decoder_uint_8, exi_basetypes_decoder_uint_16,
+    exi_basetypes_decoder_uint_32, exi_basetypes_decoder_uint_64,
 };
 use crate::common::exi_bitstream::ExiBitstream;
 use crate::common::exi_error_codes::ExiError;

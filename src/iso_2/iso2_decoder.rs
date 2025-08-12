@@ -5,15 +5,24 @@ use crate::common::exi_basetypes_decoder::{
 };
 use crate::common::exi_bitstream::ExiBitstream;
 use crate::common::exi_error_codes::ExiError;
-use crate::common::exi_types_decoder::{decode_exi_type_hex_binary, decode_exi_type_integer64};
+use crate::common::exi_types_decoder::{
+    decode_exi_type_hex_binary, decode_exi_type_integer64, decode_exi_type_uint16,
+};
 use crate::iso_2::iso2_datatypes::{
     Iso2BodyTypeEnum, Iso2CanonicalizationMethodType, Iso2DSAKeyValueType, Iso2DigestMethodType,
     Iso2FaultCodeType, Iso2KeyInfoType, Iso2KeyValueType, Iso2MessageHeaderType,
     Iso2NotificationType, Iso2ObjectType, Iso2PGPComponentType, Iso2PGPDataType,
     Iso2RSAKeyValueType, Iso2ReferenceType, Iso2ResponseCodeType, Iso2RetrievalMethodType,
-    Iso2SPKIDataType, Iso2SessionSetupReqType, Iso2SessionSetupResType, Iso2SignatureMethodType,
-    Iso2SignatureType, Iso2SignatureValueType, Iso2SignedInfoType, Iso2TransformType,
-    Iso2TransformsType, Iso2X509DataType, Iso2X509IssuerSerialType, Iso2v2gMessage,
+    Iso2SPKIDataType, Iso2ServiceDiscoveryReqType, Iso2ServiceDiscoveryResType,
+    Iso2SessionSetupReqType, Iso2SessionSetupResType, Iso2SignatureMethodType, Iso2SignatureType,
+    Iso2SignatureValueType, Iso2SignedInfoType, Iso2TransformType, Iso2TransformsType,
+    Iso2X509DataType, Iso2X509IssuerSerialType, Iso2v2gMessage,
+};
+
+use super::iso2_datatypes::{
+    Iso2ChargeServiceType, Iso2EnergyTransferModeType, Iso2PaymentOptionListType,
+    Iso2PaymentOptionType, Iso2ServiceCategoryType, Iso2ServiceListType, Iso2ServiceType,
+    Iso2SupportedEnergyTransferModeType,
 };
 
 // fn decode_iso2_cost(
@@ -2724,7 +2733,7 @@ fn decode_iso2_pgp_data(
                     match event_code {
                         0 => {
                             let pgp_data = match &mut message.pgp_component {
-                                Iso2PGPComponentType::Choice1(ref mut c1) => c1,
+                                Iso2PGPComponentType::Choice1(c1) => c1,
                                 _ => return Err(ExiError::UnknownEventCode),
                             };
                             pgp_data.pgp_key_id = decode_exi_type_hex_binary::<350>(stream)?;
@@ -2734,7 +2743,7 @@ fn decode_iso2_pgp_data(
                         }
                         1 => {
                             let pgp_data = match &mut message.pgp_component {
-                                Iso2PGPComponentType::Choice1(ref mut c1) => c1,
+                                Iso2PGPComponentType::Choice1(c1) => c1,
                                 _ => return Err(ExiError::UnknownEventCode),
                             };
                             pgp_data.pgp_key_packet =
@@ -2755,7 +2764,7 @@ fn decode_iso2_pgp_data(
                     match event_code {
                         0 => {
                             let pgp_data = match &mut message.pgp_component {
-                                Iso2PGPComponentType::Choice1(ref mut c1) => c1,
+                                Iso2PGPComponentType::Choice1(c1) => c1,
                                 _ => return Err(ExiError::UnknownEventCode),
                             };
                             pgp_data.pgp_key_packet =
@@ -2796,7 +2805,7 @@ fn decode_iso2_pgp_data(
                         }
                         3 => {
                             let pgp_data = match &mut message.pgp_component {
-                                Iso2PGPComponentType::Choice1(ref mut c1) => c1,
+                                Iso2PGPComponentType::Choice1(c1) => c1,
                                 _ => return Err(ExiError::UnknownEventCode),
                             };
                             pgp_data.any = Some(decode_exi_type_hex_binary::<4>(stream)?);
@@ -3648,325 +3657,294 @@ fn decode_iso2_signed_info(
 //         }
 //     }
 // }
-// fn decode_iso2_service(
-//     stream: &mut ExiBitstream,
-//     message: &mut Iso2ServiceType,
-// ) -> Result<(), ExiError> {
-//     let mut grammar_id: i32 = 91 as i32;
+fn decode_iso2_service(
+    stream: &mut ExiBitstream,
+    message: &mut Iso2ServiceType,
+) -> Result<(), ExiError> {
+    let mut grammar_id: i32 = 91_i32;
 
-//     let mut event_code: u32 = 0;
-//     let error: i32 = 0;
-//     loop {
-//         match grammar_id {
-//             91 => {
-//                 exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
-//                 if error == 0 as i32 {
-//                     match event_code {
-//                         0 => {
-//                             decode_exi_type_uint16(stream, &mut (*message).service_id)?;
-//                             if error == 0 as i32 {
-//                                 grammar_id = 92 as i32;
-//                             }
-//                         }
-//                         _ => {
-//                             return Err(ExiError::UnknownEventCode);
-//                         }
-//                     }
-//                 }
-//             }
-//             92 => {
-//                 exi_basetypes_decoder_nbit_uint(stream, 2, &mut event_code)?;
-//                 if error == 0 as i32 {
-//                     match event_code {
-//                         0 => {
-//                             exi_basetypes_decoder_nbit_uint(
-//                                 stream,
-//                                 1 as i32 as usize,
-//                                 &mut event_code,
-//                             )?;
-//                             if error == 0 as i32 {
-//                                 if event_code == 0 as i32 as u32 {
-//                                     exi_basetypes_decoder_uint_16(
-//                                         stream,
-//                                         &mut ((*message).service_name.clone().unwrap().len() as u16),
-//                                     )?;
-//                                     if error == 0 as i32 {
-//                                         if (*message).service_name.clone().unwrap().len() >= 2 {
-//                                             (*message).service_name.unwrap().len -= 2;
-//                                             exi_basetypes_decoder_characters(
-//                                                 stream,
-//                                                 (*message).service_name.clone().unwrap().len(),
-//                                                 &mut (*message).service_name.unwrap(),
-//                                                 33,
-//                                             )?;
-//                                         } else {
-//                                             return Err(ExiError::StringValuesNotSupported);
-//                                         }
-//                                     }
-//                                 } else {
-//                                     return Err(ExiError::UnsupportedSubEvent);
-//                                 }
-//                             }
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_decoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     &mut event_code,
-//                                 )?;
-//                                 if error == 0 as i32 {
-//                                     if event_code == 0 as i32 as u32 {
-//                                         grammar_id = 93 as i32;
-//                                     } else {
-//                                         return Err(ExiError::DeviantsNotSupported);
-//                                     }
-//                                 }
-//                             }
-//                         }
-//                         1 => {
-//                             exi_basetypes_decoder_nbit_uint(
-//                                 stream,
-//                                 1 as i32 as usize,
-//                                 &mut event_code,
-//                             )?;
-//                             if error == 0 as i32 {
-//                                 if event_code == 0 as i32 as u32 {
-//                                     let mut value: u32 = 0;
-//                                     exi_basetypes_decoder_nbit_uint(
-//                                         stream,
-//                                         2 as i32 as usize,
-//                                         &mut value,
-//                                     )?;
-//                                     if error == 0 as i32 {
-//                                         (*message).service_category =
-//                                             value as Iso2ServiceCategoryType;
-//                                     }
-//                                 } else {
-//                                     return Err(ExiError::UnsupportedSubEvent);
-//                                 }
-//                             }
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_decoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     &mut event_code,
-//                                 )?;
-//                                 if error == 0 as i32 {
-//                                     if event_code == 0 as i32 as u32 {
-//                                         grammar_id = 94 as i32;
-//                                     } else {
-//                                         return Err(ExiError::DeviantsNotSupported);
-//                                     }
-//                                 }
-//                             }
-//                         }
-//                         _ => {
-//                             return Err(ExiError::UnknownEventCode);
-//                         }
-//                     }
-//                 }
-//             }
-//             93 => {
-//                 exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
-//                 if error == 0 as i32 {
-//                     match event_code {
-//                         0 => {
-//                             exi_basetypes_decoder_nbit_uint(
-//                                 stream,
-//                                 1 as i32 as usize,
-//                                 &mut event_code,
-//                             )?;
-//                             if error == 0 as i32 {
-//                                 if event_code == 0 as i32 as u32 {
-//                                     let mut value_0: u32 = 0;
-//                                     exi_basetypes_decoder_nbit_uint(
-//                                         stream,
-//                                         2 as i32 as usize,
-//                                         &mut value_0,
-//                                     )?;
-//                                     if error == 0 as i32 {
-//                                         (*message).service_category =
-//                                             value_0 as Iso2ServiceCategoryType;
-//                                     }
-//                                 } else {
-//                                     return Err(ExiError::UnsupportedSubEvent);
-//                                 }
-//                             }
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_decoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     &mut event_code,
-//                                 )?;
-//                                 if error == 0 as i32 {
-//                                     if event_code == 0 as i32 as u32 {
-//                                         grammar_id = 94 as i32;
-//                                     } else {
-//                                         return Err(ExiError::DeviantsNotSupported);
-//                                     }
-//                                 }
-//                             }
-//                         }
-//                         _ => {
-//                             return Err(ExiError::UnknownEventCode);
-//                         }
-//                     }
-//                 }
-//             }
-//             94 => {
-//                 exi_basetypes_decoder_nbit_uint(stream, 2, &mut event_code)?;
-//                 if error == 0 as i32 {
-//                     match event_code {
-//                         0 => {
-//                             exi_basetypes_decoder_nbit_uint(
-//                                 stream,
-//                                 1 as i32 as usize,
-//                                 &mut event_code,
-//                             )?;
-//                             if error == 0 as i32 {
-//                                 if event_code == 0 as i32 as u32 {
-//                                     exi_basetypes_decoder_uint_16(
-//                                         stream,
-//                                         &mut ((*message).ServiceScope.clone().unwrap().len() as u16),
-//                                     )?;
-//                                     if error == 0 as i32 {
-//                                         if (*message).ServiceScope.clone().unwrap().len() >= 2 {
-//                                             (*message).ServiceScope.unwrap().len -= 2;
-//                                             exi_basetypes_decoder_characters(
-//                                                 stream,
-//                                                 (*message).ServiceScope.clone().unwrap().len(),
-//                                                 &mut (*message).ServiceScope.unwrap(),
-//                                                 65,
-//                                             )?;
-//                                         } else {
-//                                             return Err(ExiError::StringValuesNotSupported);
-//                                         }
-//                                     }
-//                                 } else {
-//                                     return Err(ExiError::UnsupportedSubEvent);
-//                                 }
-//                             }
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_decoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     &mut event_code,
-//                                 )?;
-//                                 if error == 0 as i32 {
-//                                     if event_code == 0 as i32 as u32 {
-//                                         grammar_id = 95 as i32;
-//                                     } else {
-//                                         return Err(ExiError::DeviantsNotSupported);
-//                                     }
-//                                 }
-//                             }
-//                         }
-//                         1 => {
-//                             exi_basetypes_decoder_nbit_uint(
-//                                 stream,
-//                                 1 as i32 as usize,
-//                                 &mut event_code,
-//                             )?;
-//                             if error == 0 as i32 {
-//                                 if event_code == 0 as i32 as u32 {
-//                                     let mut value_1: u32 = 0;
-//                                     exi_basetypes_decoder_nbit_uint(
-//                                         stream,
-//                                         1 as i32 as usize,
-//                                         &mut value_1,
-//                                     )?;
-//                                     if error == 0 as i32 {
-//                                         (*message).FreeService = value_1 as i32;
-//                                     }
-//                                 } else {
-//                                     return Err(ExiError::UnsupportedSubEvent);
-//                                 }
-//                             }
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_decoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     &mut event_code,
-//                                 )?;
-//                                 if error == 0 as i32 {
-//                                     if event_code == 0 as i32 as u32 {
-//                                         grammar_id = 3 as i32;
-//                                     } else {
-//                                         return Err(ExiError::DeviantsNotSupported);
-//                                     }
-//                                 }
-//                             }
-//                         }
-//                         _ => {
-//                             return Err(ExiError::UnknownEventCode);
-//                         }
-//                     }
-//                 }
-//             }
-//             95 => {
-//                 exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
-//                 if error == 0 as i32 {
-//                     match event_code {
-//                         0 => {
-//                             exi_basetypes_decoder_nbit_uint(
-//                                 stream,
-//                                 1 as i32 as usize,
-//                                 &mut event_code,
-//                             )?;
-//                             if error == 0 as i32 {
-//                                 if event_code == 0 as i32 as u32 {
-//                                     let mut value_2: u32 = 0;
-//                                     exi_basetypes_decoder_nbit_uint(
-//                                         stream,
-//                                         1 as i32 as usize,
-//                                         &mut value_2,
-//                                     )?;
-//                                     if error == 0 as i32 {
-//                                         (*message).FreeService = value_2 as i32;
-//                                     }
-//                                 } else {
-//                                     return Err(ExiError::UnsupportedSubEvent);
-//                                 }
-//                             }
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_decoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     &mut event_code,
-//                                 )?;
-//                                 if error == 0 as i32 {
-//                                     if event_code == 0 as i32 as u32 {
-//                                         grammar_id = 3 as i32;
-//                                     } else {
-//                                         return Err(ExiError::DeviantsNotSupported);
-//                                     }
-//                                 }
-//                             }
-//                         }
-//                         _ => {
-//                             return Err(ExiError::UnknownEventCode);
-//                         }
-//                     }
-//                 }
-//             }
-//             3 => {
-//                 exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
-//                 if error == 0 as i32 {
-//                     match event_code {
-//                         0 => {
-//                             return Ok(());
-//                         }
-//                         _ => {
-//                             return Err(ExiError::UnknownEventCode);
-//                         }
-//                     }
-//                 }
-//             }
-//             _ => {
-//                 return Err(ExiError::UnknownGrammarId);
-//             }
-//         }
-//     }
-// }
+    let mut event_code: u32 = 0;
+    let error: i32 = 0;
+    loop {
+        match grammar_id {
+            91 => {
+                exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
+                if error == 0_i32 {
+                    match event_code {
+                        0 => {
+                            decode_exi_type_uint16(stream, &mut message.service_id)?;
+                            if error == 0_i32 {
+                                grammar_id = 92_i32;
+                            }
+                        }
+                        _ => {
+                            return Err(ExiError::UnknownEventCode);
+                        }
+                    }
+                }
+            }
+            92 => {
+                exi_basetypes_decoder_nbit_uint(stream, 2, &mut event_code)?;
+                if error == 0_i32 {
+                    match event_code {
+                        0 => {
+                            exi_basetypes_decoder_nbit_uint(
+                                stream,
+                                1_i32 as usize,
+                                &mut event_code,
+                            )?;
+                            if event_code == 0_i32 as u32 {
+                                let len = exi_basetypes_decoder_uint_16(stream)?;
+                                message.service_name =
+                                    Some(exi_basetypes_decoder_characters(stream, len as usize)?);
+                            } else {
+                                return Err(ExiError::UnsupportedSubEvent);
+                            }
+                            exi_basetypes_decoder_nbit_uint(
+                                stream,
+                                1_i32 as usize,
+                                &mut event_code,
+                            )?;
+                            if event_code == 0_i32 as u32 {
+                                grammar_id = 93_i32;
+                            } else {
+                                return Err(ExiError::DeviantsNotSupported);
+                            }
+                        }
+                        1 => {
+                            exi_basetypes_decoder_nbit_uint(
+                                stream,
+                                1_i32 as usize,
+                                &mut event_code,
+                            )?;
+                            if error == 0_i32 {
+                                if event_code == 0_i32 as u32 {
+                                    let mut value: u32 = 0;
+                                    exi_basetypes_decoder_nbit_uint(
+                                        stream,
+                                        2_i32 as usize,
+                                        &mut value,
+                                    )?;
+                                    if error == 0_i32 {
+                                        message.service_category =
+                                            Iso2ServiceCategoryType::try_from(value)?;
+                                    }
+                                } else {
+                                    return Err(ExiError::UnsupportedSubEvent);
+                                }
+                            }
+                            if error == 0_i32 {
+                                exi_basetypes_decoder_nbit_uint(
+                                    stream,
+                                    1_i32 as usize,
+                                    &mut event_code,
+                                )?;
+                                if error == 0_i32 {
+                                    if event_code == 0_i32 as u32 {
+                                        grammar_id = 94_i32;
+                                    } else {
+                                        return Err(ExiError::DeviantsNotSupported);
+                                    }
+                                }
+                            }
+                        }
+                        _ => {
+                            return Err(ExiError::UnknownEventCode);
+                        }
+                    }
+                }
+            }
+            93 => {
+                exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
+                if error == 0_i32 {
+                    match event_code {
+                        0 => {
+                            exi_basetypes_decoder_nbit_uint(
+                                stream,
+                                1_i32 as usize,
+                                &mut event_code,
+                            )?;
+                            if error == 0_i32 {
+                                if event_code == 0_i32 as u32 {
+                                    let mut value_0: u32 = 0;
+                                    exi_basetypes_decoder_nbit_uint(
+                                        stream,
+                                        2_i32 as usize,
+                                        &mut value_0,
+                                    )?;
+                                    if error == 0_i32 {
+                                        message.service_category =
+                                            Iso2ServiceCategoryType::try_from(value_0)?;
+                                    }
+                                } else {
+                                    return Err(ExiError::UnsupportedSubEvent);
+                                }
+                            }
+                            if error == 0_i32 {
+                                exi_basetypes_decoder_nbit_uint(
+                                    stream,
+                                    1_i32 as usize,
+                                    &mut event_code,
+                                )?;
+                                if error == 0_i32 {
+                                    if event_code == 0_i32 as u32 {
+                                        grammar_id = 94_i32;
+                                    } else {
+                                        return Err(ExiError::DeviantsNotSupported);
+                                    }
+                                }
+                            }
+                        }
+                        _ => {
+                            return Err(ExiError::UnknownEventCode);
+                        }
+                    }
+                }
+            }
+            94 => {
+                exi_basetypes_decoder_nbit_uint(stream, 2, &mut event_code)?;
+                if error == 0_i32 {
+                    match event_code {
+                        0 => {
+                            exi_basetypes_decoder_nbit_uint(
+                                stream,
+                                1_i32 as usize,
+                                &mut event_code,
+                            )?;
+                            if error == 0_i32 {
+                                if event_code == 0_i32 as u32 {
+                                    let len = exi_basetypes_decoder_uint_16(stream)?;
+                                    message.service_scope = Some(exi_basetypes_decoder_characters(
+                                        stream,
+                                        len as usize,
+                                    )?);
+                                } else {
+                                    return Err(ExiError::UnsupportedSubEvent);
+                                }
+                            }
+                            if error == 0_i32 {
+                                exi_basetypes_decoder_nbit_uint(
+                                    stream,
+                                    1_i32 as usize,
+                                    &mut event_code,
+                                )?;
+                                if error == 0_i32 {
+                                    if event_code == 0_i32 as u32 {
+                                        grammar_id = 95_i32;
+                                    } else {
+                                        return Err(ExiError::DeviantsNotSupported);
+                                    }
+                                }
+                            }
+                        }
+                        1 => {
+                            exi_basetypes_decoder_nbit_uint(
+                                stream,
+                                1_i32 as usize,
+                                &mut event_code,
+                            )?;
+                            if error == 0_i32 {
+                                if event_code == 0_i32 as u32 {
+                                    let mut value_1: u32 = 0;
+                                    exi_basetypes_decoder_nbit_uint(
+                                        stream,
+                                        1_i32 as usize,
+                                        &mut value_1,
+                                    )?;
+                                    if error == 0_i32 {
+                                        message.free_service = value_1 as i32;
+                                    }
+                                } else {
+                                    return Err(ExiError::UnsupportedSubEvent);
+                                }
+                            }
+                            if error == 0_i32 {
+                                exi_basetypes_decoder_nbit_uint(
+                                    stream,
+                                    1_i32 as usize,
+                                    &mut event_code,
+                                )?;
+                                if error == 0_i32 {
+                                    if event_code == 0_i32 as u32 {
+                                        grammar_id = 3_i32;
+                                    } else {
+                                        return Err(ExiError::DeviantsNotSupported);
+                                    }
+                                }
+                            }
+                        }
+                        _ => {
+                            return Err(ExiError::UnknownEventCode);
+                        }
+                    }
+                }
+            }
+            95 => {
+                exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
+                if error == 0_i32 {
+                    match event_code {
+                        0 => {
+                            exi_basetypes_decoder_nbit_uint(
+                                stream,
+                                1_i32 as usize,
+                                &mut event_code,
+                            )?;
+                            if error == 0_i32 {
+                                if event_code == 0_i32 as u32 {
+                                    let mut value_2: u32 = 0;
+                                    exi_basetypes_decoder_nbit_uint(
+                                        stream,
+                                        1_i32 as usize,
+                                        &mut value_2,
+                                    )?;
+                                    if error == 0_i32 {
+                                        message.free_service = value_2 as i32;
+                                    }
+                                } else {
+                                    return Err(ExiError::UnsupportedSubEvent);
+                                }
+                            }
+                            if error == 0_i32 {
+                                exi_basetypes_decoder_nbit_uint(
+                                    stream,
+                                    1_i32 as usize,
+                                    &mut event_code,
+                                )?;
+                                if error == 0_i32 {
+                                    if event_code == 0_i32 as u32 {
+                                        grammar_id = 3_i32;
+                                    } else {
+                                        return Err(ExiError::DeviantsNotSupported);
+                                    }
+                                }
+                            }
+                        }
+                        _ => {
+                            return Err(ExiError::UnknownEventCode);
+                        }
+                    }
+                }
+            }
+            3 => {
+                exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
+                if error == 0_i32 {
+                    match event_code {
+                        0 => {
+                            return Ok(());
+                        }
+                        _ => {
+                            return Err(ExiError::UnknownEventCode);
+                        }
+                    }
+                }
+            }
+            _ => {
+                return Err(ExiError::UnknownGrammarId);
+            }
+        }
+    }
+}
+
 fn decode_iso2_signature_value(
     stream: &mut ExiBitstream,
     message: &mut Iso2SignatureValueType,
@@ -4526,169 +4504,138 @@ fn decode_iso2_object(
         }
     }
 }
-// fn decode_iso2_supported_energy_transfer_mode(
-//     stream: &mut ExiBitstream,
-//     message: &mut Iso2SupportedEnergyTransferModeType,
-// ) -> Result<(), ExiError> {
-//     let mut grammar_id: i32 = 106 as i32;
+fn decode_iso2_supported_energy_transfer_mode(
+    stream: &mut ExiBitstream,
+    message: &mut Iso2SupportedEnergyTransferModeType,
+) -> Result<(), ExiError> {
+    let mut grammar_id: i32 = 106_i32;
 
-//     let mut event_code: u32 = 0;
-//     let error: i32 = 0;
-//     loop {
-//         match grammar_id {
-//             106 => {
-//                 exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
-//                 if error == 0 as i32 {
-//                     match event_code {
-//                         0 => {
-//                             if ((*SupportedEnergyTransferModeType).EnergyTransferMode.len() as i32)
-//                                 < 6 as i32
-//                             {
-//                                 exi_basetypes_decoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     &mut event_code,
-//                                 )?;
-//                                 if error == 0 as i32 {
-//                                     if event_code == 0 as i32 as u32 {
-//                                         let mut value: u32 = 0;
-//                                         exi_basetypes_decoder_nbit_uint(
-//                                             stream,
-//                                             3 as i32 as usize,
-//                                             &mut value,
-//                                         )?;
-//                                         if error == 0 as i32 {
-//                                             (*SupportedEnergyTransferModeType).EnergyTransferMode
-//                                                 [(*SupportedEnergyTransferModeType)
-//                                                     .EnergyTransferMode
-//                                                     .len()
-//                                                     as usize] = value as Iso2EnergyTransferModeType;
-//                                             (*SupportedEnergyTransferModeType)
-//                                                 .EnergyTransferMode
-//                                                 .len() = ((*SupportedEnergyTransferModeType)
-//                                                 .EnergyTransferMode
-//                                                 .len())
-//                                             .wrapping_add(1);
-//                                             (*SupportedEnergyTransferModeType)
-//                                                 .EnergyTransferMode
-//                                                 .len();
-//                                         }
-//                                     } else {
-//                                         return Err(ExiError::UnsupportedSubEvent);
-//                                     }
-//                                 }
-//                             } else {
-//                                 return Err(ExiError::ArrayOutOfBounds);
-//                             }
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_decoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     &mut event_code,
-//                                 )?;
-//                                 if error == 0 as i32 {
-//                                     if event_code == 0 as i32 as u32 {
-//                                         grammar_id = 107 as i32;
-//                                     } else {
-//                                         return Err(ExiError::DeviantsNotSupported);
-//                                     }
-//                                 }
-//                             }
-//                         }
-//                         _ => {
-//                             return Err(ExiError::UnknownEventCode);
-//                         }
-//                     }
-//                 }
-//             }
-//             107 => {
-//                 exi_basetypes_decoder_nbit_uint(stream, 2, &mut event_code)?;
-//                 if error == 0 as i32 {
-//                     match event_code {
-//                         0 => {
-//                             if ((*SupportedEnergyTransferModeType).EnergyTransferMode.len() as i32)
-//                                 < 6 as i32
-//                             {
-//                                 exi_basetypes_decoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     &mut event_code,
-//                                 )?;
-//                                 if error == 0 as i32 {
-//                                     if event_code == 0 as i32 as u32 {
-//                                         let mut value_0: u32 = 0;
-//                                         exi_basetypes_decoder_nbit_uint(
-//                                             stream,
-//                                             3 as i32 as usize,
-//                                             &mut value_0,
-//                                         )?;
-//                                         if error == 0 as i32 {
-//                                             (*SupportedEnergyTransferModeType).EnergyTransferMode
-//                                                 [(*SupportedEnergyTransferModeType)
-//                                                     .EnergyTransferMode
-//                                                     .len()
-//                                                     as usize] =
-//                                                 value_0 as Iso2EnergyTransferModeType;
-//                                             (*SupportedEnergyTransferModeType)
-//                                                 .EnergyTransferMode
-//                                                 .len() = ((*SupportedEnergyTransferModeType)
-//                                                 .EnergyTransferMode
-//                                                 .len())
-//                                             .wrapping_add(1);
-//                                             (*SupportedEnergyTransferModeType)
-//                                                 .EnergyTransferMode
-//                                                 .len();
-//                                         }
-//                                     } else {
-//                                         return Err(ExiError::UnsupportedSubEvent);
-//                                     }
-//                                 }
-//                             } else {
-//                                 return Err(ExiError::ArrayOutOfBounds);
-//                             }
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_decoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     &mut event_code,
-//                                 )?;
-//                                 if error == 0 as i32 {
-//                                     if event_code == 0 as i32 as u32 {
-//                                         grammar_id = 107 as i32;
-//                                     } else {
-//                                         return Err(ExiError::DeviantsNotSupported);
-//                                     }
-//                                 }
-//                             }
-//                         }
-//                         1 => {
-//                             return Ok(());
-//                         }
-//                         _ => {
-//                             return Err(ExiError::UnknownEventCode);
-//                         }
-//                     }
-//                 }
-//             }
-//             3 => {
-//                 exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
-//                 if error == 0 as i32 {
-//                     match event_code {
-//                         0 => {
-//                             return Ok(());
-//                         }
-//                         _ => {
-//                             return Err(ExiError::UnknownEventCode);
-//                         }
-//                     }
-//                 }
-//             }
-//             _ => {
-//                 return Err(ExiError::UnknownGrammarId);
-//             }
-//         }
-//     }
-// }
+    let mut event_code: u32 = 0;
+    let error: i32 = 0;
+    loop {
+        match grammar_id {
+            106 => {
+                exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
+                if error == 0_i32 {
+                    match event_code {
+                        0 => {
+                            if message.energy_transfer_mode.len() < 6 {
+                                exi_basetypes_decoder_nbit_uint(
+                                    stream,
+                                    1_i32 as usize,
+                                    &mut event_code,
+                                )?;
+                                if error == 0_i32 {
+                                    if event_code == 0_i32 as u32 {
+                                        let mut value: u32 = 0;
+                                        exi_basetypes_decoder_nbit_uint(
+                                            stream,
+                                            3_i32 as usize,
+                                            &mut value,
+                                        )?;
+                                        message
+                                            .energy_transfer_mode
+                                            .push(Iso2EnergyTransferModeType::try_from(value)?);
+                                    } else {
+                                        return Err(ExiError::UnsupportedSubEvent);
+                                    }
+                                }
+                            } else {
+                                return Err(ExiError::ArrayOutOfBounds);
+                            }
+                            if error == 0_i32 {
+                                exi_basetypes_decoder_nbit_uint(
+                                    stream,
+                                    1_i32 as usize,
+                                    &mut event_code,
+                                )?;
+                                if error == 0_i32 {
+                                    if event_code == 0_i32 as u32 {
+                                        grammar_id = 107_i32;
+                                    } else {
+                                        return Err(ExiError::DeviantsNotSupported);
+                                    }
+                                }
+                            }
+                        }
+                        _ => {
+                            return Err(ExiError::UnknownEventCode);
+                        }
+                    }
+                }
+            }
+            107 => {
+                exi_basetypes_decoder_nbit_uint(stream, 2, &mut event_code)?;
+                if error == 0_i32 {
+                    match event_code {
+                        0 => {
+                            if message.energy_transfer_mode.len() < 6 {
+                                exi_basetypes_decoder_nbit_uint(
+                                    stream,
+                                    1_i32 as usize,
+                                    &mut event_code,
+                                )?;
+                                if error == 0_i32 {
+                                    if event_code == 0_i32 as u32 {
+                                        let mut value_0: u32 = 0;
+                                        exi_basetypes_decoder_nbit_uint(
+                                            stream,
+                                            3_i32 as usize,
+                                            &mut value_0,
+                                        )?;
+                                        message
+                                            .energy_transfer_mode
+                                            .push(Iso2EnergyTransferModeType::try_from(value_0)?);
+                                    } else {
+                                        return Err(ExiError::UnsupportedSubEvent);
+                                    }
+                                }
+                            } else {
+                                return Err(ExiError::ArrayOutOfBounds);
+                            }
+                            if error == 0_i32 {
+                                exi_basetypes_decoder_nbit_uint(
+                                    stream,
+                                    1_i32 as usize,
+                                    &mut event_code,
+                                )?;
+                                if error == 0_i32 {
+                                    if event_code == 0_i32 as u32 {
+                                        grammar_id = 107_i32;
+                                    } else {
+                                        return Err(ExiError::DeviantsNotSupported);
+                                    }
+                                }
+                            }
+                        }
+                        1 => {
+                            return Ok(());
+                        }
+                        _ => {
+                            return Err(ExiError::UnknownEventCode);
+                        }
+                    }
+                }
+            }
+            3 => {
+                exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
+                if error == 0_i32 {
+                    match event_code {
+                        0 => {
+                            return Ok(());
+                        }
+                        _ => {
+                            return Err(ExiError::UnknownEventCode);
+                        }
+                    }
+                }
+            }
+            _ => {
+                return Err(ExiError::UnknownGrammarId);
+            }
+        }
+    }
+}
 // fn decode_iso2_certificate_chain(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2CertificateChainType,
@@ -5248,148 +5195,132 @@ fn decode_iso2_notification(
 //         }
 //     }
 // }
-// fn decode_iso2_payment_option_list(
-//     stream: &mut ExiBitstream,
-//     message: &mut Iso2PaymentOptionListType,
-// ) -> Result<(), ExiError> {
-//     let mut grammar_id: i32 = 119 as i32;
+fn decode_iso2_payment_option_list(
+    stream: &mut ExiBitstream,
+    message: &mut Iso2PaymentOptionListType,
+) -> Result<(), ExiError> {
+    let mut grammar_id: i32 = 119_i32;
 
-//     let mut event_code: u32 = 0;
-//     let error: i32 = 0;
-//     loop {
-//         match grammar_id {
-//             119 => {
-//                 exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
-//                 if error == 0 as i32 {
-//                     match event_code {
-//                         0 => {
-//                             if ((*message).PaymentOption.len() as i32) < 2 as i32 {
-//                                 exi_basetypes_decoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     &mut event_code,
-//                                 )?;
-//                                 if error == 0 as i32 {
-//                                     if event_code == 0 as i32 as u32 {
-//                                         let mut value: u32 = 0;
-//                                         exi_basetypes_decoder_nbit_uint(
-//                                             stream,
-//                                             1 as i32 as usize,
-//                                             &mut value,
-//                                         )?;
-//                                         if error == 0 as i32 {
-//                                             (*message).PaymentOption
-//                                                 [(*message).PaymentOption.len() as usize] =
-//                                                 value as Iso2PaymentOptionType;
-//                                             (*message).PaymentOption.len() =
-//                                                 ((*message).PaymentOption.len()).wrapping_add(1);
-//                                             (*message).PaymentOption.len();
-//                                         }
-//                                     } else {
-//                                         return Err(ExiError::UnsupportedSubEvent);
-//                                     }
-//                                 }
-//                             } else {
-//                                 return Err(ExiError::ArrayOutOfBounds);
-//                             }
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_decoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     &mut event_code,
-//                                 )?;
-//                                 if error == 0 as i32 {
-//                                     if event_code == 0 as i32 as u32 {
-//                                         grammar_id = 120 as i32;
-//                                     } else {
-//                                         return Err(ExiError::DeviantsNotSupported);
-//                                     }
-//                                 }
-//                             }
-//                         }
-//                         _ => {
-//                             return Err(ExiError::UnknownEventCode);
-//                         }
-//                     }
-//                 }
-//             }
-//             120 => {
-//                 exi_basetypes_decoder_nbit_uint(stream, 2, &mut event_code)?;
-//                 if error == 0 as i32 {
-//                     match event_code {
-//                         0 => {
-//                             if ((*message).payment_option.len() as i32) < 2 as i32 {
-//                                 exi_basetypes_decoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     &mut event_code,
-//                                 )?;
-//                                 if error == 0 as i32 {
-//                                     if event_code == 0 as i32 as u32 {
-//                                         let mut value_0: u32 = 0;
-//                                         exi_basetypes_decoder_nbit_uint(
-//                                             stream,
-//                                             1 as i32 as usize,
-//                                             &mut value_0,
-//                                         )?;
-//                                         if error == 0 as i32 {
-//                                             (*message).payment_option
-//                                                 [(*message).payment_option.len() as usize] =
-//                                                 value_0 as Iso2PaymentOptionType;
-//                                             (*message).payment_option.len() =
-//                                                 ((*message).payment_option.len()).wrapping_add(1);
-//                                             (*message).payment_option.len();
-//                                         }
-//                                     } else {
-//                                         return Err(ExiError::UnsupportedSubEvent);
-//                                     }
-//                                 }
-//                             } else {
-//                                 return Err(ExiError::ArrayOutOfBounds);
-//                             }
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_decoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     &mut event_code,
-//                                 )?;
-//                                 if error == 0 as i32 {
-//                                     if event_code == 0 as i32 as u32 {
-//                                         grammar_id = 3 as i32;
-//                                     } else {
-//                                         return Err(ExiError::DeviantsNotSupported);
-//                                     }
-//                                 }
-//                             }
-//                         }
-//                         1 => {
-//                             return Ok(());
-//                         }
-//                         _ => {
-//                             return Err(ExiError::UnknownEventCode);
-//                         }
-//                     }
-//                 }
-//             }
-//             3 => {
-//                 exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
-//                 if error == 0 as i32 {
-//                     match event_code {
-//                         0 => {
-//                             return Ok(());
-//                         }
-//                         _ => {
-//                             return Err(ExiError::UnknownEventCode);
-//                         }
-//                     }
-//                 }
-//             }
-//             _ => {
-//                 return Err(ExiError::UnknownGrammarId);
-//             }
-//         }
-//     }
-// }
+    let mut event_code: u32 = 0;
+    let error: i32 = 0;
+    loop {
+        match grammar_id {
+            119 => {
+                exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
+                if error == 0_i32 {
+                    match event_code {
+                        0 => {
+                            exi_basetypes_decoder_nbit_uint(
+                                stream,
+                                1_i32 as usize,
+                                &mut event_code,
+                            )?;
+                            if error == 0_i32 {
+                                if event_code == 0_i32 as u32 {
+                                    let mut value: u32 = 0;
+                                    exi_basetypes_decoder_nbit_uint(
+                                        stream,
+                                        1_i32 as usize,
+                                        &mut value,
+                                    )?;
+                                    message
+                                        .payment_option
+                                        .push(Iso2PaymentOptionType::try_from(value)?);
+                                } else {
+                                    return Err(ExiError::UnsupportedSubEvent);
+                                }
+                            }
+
+                            if error == 0_i32 {
+                                exi_basetypes_decoder_nbit_uint(
+                                    stream,
+                                    1_i32 as usize,
+                                    &mut event_code,
+                                )?;
+                                if error == 0_i32 {
+                                    if event_code == 0_i32 as u32 {
+                                        grammar_id = 120_i32;
+                                    } else {
+                                        return Err(ExiError::DeviantsNotSupported);
+                                    }
+                                }
+                            }
+                        }
+                        _ => {
+                            return Err(ExiError::UnknownEventCode);
+                        }
+                    }
+                }
+            }
+            120 => {
+                exi_basetypes_decoder_nbit_uint(stream, 2, &mut event_code)?;
+                if error == 0_i32 {
+                    match event_code {
+                        0 => {
+                            exi_basetypes_decoder_nbit_uint(
+                                stream,
+                                1_i32 as usize,
+                                &mut event_code,
+                            )?;
+                            if error == 0_i32 {
+                                if event_code == 0_i32 as u32 {
+                                    let mut value_0: u32 = 0;
+                                    exi_basetypes_decoder_nbit_uint(
+                                        stream,
+                                        1_i32 as usize,
+                                        &mut value_0,
+                                    )?;
+                                    message
+                                        .payment_option
+                                        .push(Iso2PaymentOptionType::try_from(value_0)?);
+                                } else {
+                                    return Err(ExiError::UnsupportedSubEvent);
+                                }
+                            }
+
+                            if error == 0_i32 {
+                                exi_basetypes_decoder_nbit_uint(
+                                    stream,
+                                    1_i32 as usize,
+                                    &mut event_code,
+                                )?;
+                                if error == 0_i32 {
+                                    if event_code == 0_i32 as u32 {
+                                        grammar_id = 3_i32;
+                                    } else {
+                                        return Err(ExiError::DeviantsNotSupported);
+                                    }
+                                }
+                            }
+                        }
+                        1 => {
+                            return Ok(());
+                        }
+                        _ => {
+                            return Err(ExiError::UnknownEventCode);
+                        }
+                    }
+                }
+            }
+            3 => {
+                exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
+                if error == 0_i32 {
+                    match event_code {
+                        0 => {
+                            return Ok(());
+                        }
+                        _ => {
+                            return Err(ExiError::UnknownEventCode);
+                        }
+                    }
+                }
+            }
+            _ => {
+                return Err(ExiError::UnknownGrammarId);
+            }
+        }
+    }
+}
 fn decode_iso2_signature(
     stream: &mut ExiBitstream,
     message: &mut Iso2SignatureType,
@@ -6621,337 +6552,317 @@ fn decode_iso2_signature(
 //         }
 //     }
 // }
-// fn decode_iso2_charge_service(
-//     stream: &mut ExiBitstream,
-//     message: &mut Iso2ChargeServiceType,
-// ) -> Result<(), ExiError> {
-//     let mut grammar_id: i32 = 153 as i32;
-//     let mut event_code: u32 = 0;
-//     let error: i32 = 0;
-//     loop {
-//         match grammar_id {
-//             153 => {
-//                 exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
-//                 if error == 0 as i32 {
-//                     match event_code {
-//                         0 => {
-//                             decode_exi_type_uint16(stream, &mut (*message).service_id)?;
-//                             grammar_id = 154 as i32;
-//                         }
-//                         _ => {
-//                             return Err(ExiError::UnknownEventCode);
-//                         }
-//                     }
-//                 }
-//             }
-//             154 => {
-//                 exi_basetypes_decoder_nbit_uint(stream, 2, &mut event_code)?;
-//                 if error == 0 as i32 {
-//                     match event_code {
-//                         0 => {
-//                             exi_basetypes_decoder_nbit_uint(
-//                                 stream,
-//                                 1 as i32 as usize,
-//                                 &mut event_code,
-//                             )?;
-//                             if error == 0 as i32 {
-//                                 if event_code == 0 as i32 as u32 {
-//                                     exi_basetypes_decoder_uint_16(
-//                                         stream,
-//                                         &mut ((*message).service_name.clone().clone().unwrap().len() as u16),
-//                                     )?;
-//                                     if error == 0 as i32 {
-//                                         if (*message).service_name.clone().clone().unwrap().len() >= 2 {
-//                                             exi_basetypes_decoder_characters(
-//                                                 stream,
-//                                                 (*message).service_name.clone().clone().unwrap().len(),
-//                                                 &mut (*message).service_name.clone().unwrap(),
-//                                             )?;
-//                                         } else {
-//                                             return Err(ExiError::StringValuesNotSupported);
-//                                         }
-//                                     }
-//                                 } else {
-//                                     return Err(ExiError::UnsupportedSubEvent);
-//                                 }
-//                             }
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_decoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     &mut event_code,
-//                                 )?;
-//                                 if error == 0 as i32 {
-//                                     if event_code == 0 as i32 as u32 {
-//                                         grammar_id = 155 as i32;
-//                                     } else {
-//                                         return Err(ExiError::DeviantsNotSupported);
-//                                     }
-//                                 }
-//                             }
-//                         }
-//                         1 => {
-//                             exi_basetypes_decoder_nbit_uint(
-//                                 stream,
-//                                 1 as i32 as usize,
-//                                 &mut event_code,
-//                             )?;
-//                             if error == 0 as i32 {
-//                                 if event_code == 0 as i32 as u32 {
-//                                     let mut value: u32 = 0;
-//                                     exi_basetypes_decoder_nbit_uint(
-//                                         stream,
-//                                         2 as i32 as usize,
-//                                         &mut value,
-//                                     )?;
-//                                     if error == 0 as i32 {
-//                                         (*message).service_category =
-//                                             value as Iso2ServiceCategoryType;
-//                                     }
-//                                 } else {
-//                                     return Err(ExiError::UnsupportedSubEvent);
-//                                 }
-//                             }
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_decoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     &mut event_code,
-//                                 )?;
-//                                 if error == 0 as i32 {
-//                                     if event_code == 0 as i32 as u32 {
-//                                         grammar_id = 156 as i32;
-//                                     } else {
-//                                         return Err(ExiError::DeviantsNotSupported);
-//                                     }
-//                                 }
-//                             }
-//                         }
-//                         _ => {
-//                             return Err(ExiError::UnknownEventCode);
-//                         }
-//                     }
-//                 }
-//             }
-//             155 => {
-//                 exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
-//                 if error == 0 as i32 {
-//                     match event_code {
-//                         0 => {
-//                             exi_basetypes_decoder_nbit_uint(
-//                                 stream,
-//                                 1 as i32 as usize,
-//                                 &mut event_code,
-//                             )?;
-//                             if error == 0 as i32 {
-//                                 if event_code == 0 as i32 as u32 {
-//                                     let mut value_0: u32 = 0;
-//                                     exi_basetypes_decoder_nbit_uint(
-//                                         stream,
-//                                         2 as i32 as usize,
-//                                         &mut value_0,
-//                                     )?;
-//                                     if error == 0 as i32 {
-//                                         (*message).service_category =
-//                                             value_0 as Iso2ServiceCategoryType;
-//                                     }
-//                                 } else {
-//                                     return Err(ExiError::UnsupportedSubEvent);
-//                                 }
-//                             }
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_decoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     &mut event_code,
-//                                 )?;
-//                                 if error == 0 as i32 {
-//                                     if event_code == 0 as i32 as u32 {
-//                                         grammar_id = 156 as i32;
-//                                     } else {
-//                                         return Err(ExiError::DeviantsNotSupported);
-//                                     }
-//                                 }
-//                             }
-//                         }
-//                         _ => {
-//                             return Err(ExiError::UnknownEventCode);
-//                         }
-//                     }
-//                 }
-//             }
-//             156 => {
-//                 exi_basetypes_decoder_nbit_uint(stream, 2, &mut event_code)?;
-//                 if error == 0 as i32 {
-//                     match event_code {
-//                         0 => {
-//                             exi_basetypes_decoder_nbit_uint(
-//                                 stream,
-//                                 1 as i32 as usize,
-//                                 &mut event_code,
-//                             )?;
-//                             if error == 0 as i32 {
-//                                 if event_code == 0 as i32 as u32 {
-//                                     exi_basetypes_decoder_uint_16(
-//                                         stream,
-//                                         &mut ((*message).service_scope.clone().unwrap().len() as u16),
-//                                     )?;
-//                                     if error == 0 as i32 {
-//                                         if (*message).service_scope.clone().unwrap().len() >= 2 {
-//                                             exi_basetypes_decoder_characters(
-//                                                 stream,
-//                                                 (*message).service_scope.clone().unwrap().len() as usize,
-//                                                 &mut (*message).service_scope.unwrap(),
-//                                             )?;
-//                                         } else {
-//                                             return Err(ExiError::StringValuesNotSupported);
-//                                         }
-//                                     }
-//                                 } else {
-//                                     return Err(ExiError::UnsupportedSubEvent);
-//                                 }
-//                             }
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_decoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     &mut event_code,
-//                                 )?;
-//                                 if error == 0 as i32 {
-//                                     if event_code == 0 as i32 as u32 {
-//                                         grammar_id = 157 as i32;
-//                                     } else {
-//                                         return Err(ExiError::DeviantsNotSupported);
-//                                     }
-//                                 }
-//                             }
-//                         }
-//                         1 => {
-//                             exi_basetypes_decoder_nbit_uint(
-//                                 stream,
-//                                 1 as i32 as usize,
-//                                 &mut event_code,
-//                             )?;
-//                             if error == 0 as i32 {
-//                                 if event_code == 0 as i32 as u32 {
-//                                     let mut value_1: u32 = 0;
-//                                     exi_basetypes_decoder_nbit_uint(
-//                                         stream,
-//                                         1 as i32 as usize,
-//                                         &mut value_1,
-//                                     )?;
-//                                     if error == 0 as i32 {
-//                                         (*message).free_service = value_1 as i32;
-//                                     }
-//                                 } else {
-//                                     return Err(ExiError::UnsupportedSubEvent);
-//                                 }
-//                             }
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_decoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     &mut event_code,
-//                                 )?;
-//                                 if error == 0 as i32 {
-//                                     if event_code == 0 as i32 as u32 {
-//                                         grammar_id = 158 as i32;
-//                                     } else {
-//                                         return Err(ExiError::DeviantsNotSupported);
-//                                     }
-//                                 }
-//                             }
-//                         }
-//                         _ => {
-//                             return Err(ExiError::UnknownEventCode);
-//                         }
-//                     }
-//                 }
-//             }
-//             157 => {
-//                 exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
-//                 if error == 0 as i32 {
-//                     match event_code {
-//                         0 => {
-//                             exi_basetypes_decoder_nbit_uint(
-//                                 stream,
-//                                 1 as i32 as usize,
-//                                 &mut event_code,
-//                             )?;
-//                             if error == 0 as i32 {
-//                                 if event_code == 0 as i32 as u32 {
-//                                     let mut value_2: u32 = 0;
-//                                     exi_basetypes_decoder_nbit_uint(
-//                                         stream,
-//                                         1 as i32 as usize,
-//                                         &mut value_2,
-//                                     )?;
-//                                     if error == 0 as i32 {
-//                                         (*message).free_service = value_2 as i32;
-//                                     }
-//                                 } else {
-//                                     return Err(ExiError::UnsupportedSubEvent);
-//                                 }
-//                             }
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_decoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     &mut event_code,
-//                                 )?;
-//                                 if error == 0 as i32 {
-//                                     if event_code == 0 as i32 as u32 {
-//                                         grammar_id = 158 as i32;
-//                                     } else {
-//                                         return Err(ExiError::DeviantsNotSupported);
-//                                     }
-//                                 }
-//                             }
-//                         }
-//                         _ => {
-//                             return Err(ExiError::UnknownEventCode);
-//                         }
-//                     }
-//                 }
-//             }
-//             158 => {
-//                 exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
-//                 if error == 0 as i32 {
-//                     match event_code {
-//                         0 => {
-//                             decode_iso2_supported_energy_transfer_mode(
-//                                 stream,
-//                                 &mut (*message).supported_energy_transfer_mode,
-//                             )?;
-//                             if error == 0 as i32 {
-//                                 grammar_id = 3 as i32;
-//                             }
-//                         }
-//                         _ => {
-//                             return Err(ExiError::UnknownEventCode);
-//                         }
-//                     }
-//                 }
-//             }
-//             3 => {
-//                 exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
-//                 if error == 0 as i32 {
-//                     match event_code {
-//                         0 => {
-//                             return Ok(());
-//                         }
-//                         _ => {
-//                             return Err(ExiError::UnknownEventCode);
-//                         }
-//                     }
-//                 }
-//             }
-//             _ => {
-//                 return Err(ExiError::UnknownGrammarId);
-//             }
-//         }
-//     }
-// }
+fn decode_iso2_charge_service(
+    stream: &mut ExiBitstream,
+    message: &mut Iso2ChargeServiceType,
+) -> Result<(), ExiError> {
+    let mut grammar_id: i32 = 153_i32;
+    let mut event_code: u32 = 0;
+    let error: i32 = 0;
+    loop {
+        match grammar_id {
+            153 => {
+                exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
+                if error == 0_i32 {
+                    match event_code {
+                        0 => {
+                            decode_exi_type_uint16(stream, &mut message.service_id)?;
+                            grammar_id = 154_i32;
+                        }
+                        _ => {
+                            return Err(ExiError::UnknownEventCode);
+                        }
+                    }
+                }
+            }
+            154 => {
+                exi_basetypes_decoder_nbit_uint(stream, 2, &mut event_code)?;
+                if error == 0_i32 {
+                    match event_code {
+                        0 => {
+                            exi_basetypes_decoder_nbit_uint(
+                                stream,
+                                1_i32 as usize,
+                                &mut event_code,
+                            )?;
+                            if error == 0_i32 {
+                                if event_code == 0_i32 as u32 {
+                                    let len = exi_basetypes_decoder_uint_16(stream)?;
+                                    message.service_name = Some(exi_basetypes_decoder_characters(
+                                        stream,
+                                        len as usize,
+                                    )?);
+                                } else {
+                                    return Err(ExiError::UnsupportedSubEvent);
+                                }
+                            }
+                            if error == 0_i32 {
+                                exi_basetypes_decoder_nbit_uint(
+                                    stream,
+                                    1_i32 as usize,
+                                    &mut event_code,
+                                )?;
+                                if error == 0_i32 {
+                                    if event_code == 0_i32 as u32 {
+                                        grammar_id = 155_i32;
+                                    } else {
+                                        return Err(ExiError::DeviantsNotSupported);
+                                    }
+                                }
+                            }
+                        }
+                        1 => {
+                            exi_basetypes_decoder_nbit_uint(
+                                stream,
+                                1_i32 as usize,
+                                &mut event_code,
+                            )?;
+                            if error == 0_i32 {
+                                if event_code == 0_i32 as u32 {
+                                    let mut value: u32 = 0;
+                                    exi_basetypes_decoder_nbit_uint(
+                                        stream,
+                                        2_i32 as usize,
+                                        &mut value,
+                                    )?;
+                                    if error == 0_i32 {
+                                        message.service_category =
+                                            Iso2ServiceCategoryType::try_from(value)?;
+                                    }
+                                } else {
+                                    return Err(ExiError::UnsupportedSubEvent);
+                                }
+                            }
+                            if error == 0_i32 {
+                                exi_basetypes_decoder_nbit_uint(
+                                    stream,
+                                    1_i32 as usize,
+                                    &mut event_code,
+                                )?;
+                                if error == 0_i32 {
+                                    if event_code == 0_i32 as u32 {
+                                        grammar_id = 156_i32;
+                                    } else {
+                                        return Err(ExiError::DeviantsNotSupported);
+                                    }
+                                }
+                            }
+                        }
+                        _ => {
+                            return Err(ExiError::UnknownEventCode);
+                        }
+                    }
+                }
+            }
+            155 => {
+                exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
+                if error == 0_i32 {
+                    match event_code {
+                        0 => {
+                            exi_basetypes_decoder_nbit_uint(
+                                stream,
+                                1_i32 as usize,
+                                &mut event_code,
+                            )?;
+                            if error == 0_i32 {
+                                if event_code == 0_i32 as u32 {
+                                    let mut value_0: u32 = 0;
+                                    exi_basetypes_decoder_nbit_uint(
+                                        stream,
+                                        2_i32 as usize,
+                                        &mut value_0,
+                                    )?;
+                                    if error == 0_i32 {
+                                        message.service_category =
+                                            Iso2ServiceCategoryType::try_from(value_0)?;
+                                    }
+                                } else {
+                                    return Err(ExiError::UnsupportedSubEvent);
+                                }
+                            }
+                            if error == 0_i32 {
+                                exi_basetypes_decoder_nbit_uint(
+                                    stream,
+                                    1_i32 as usize,
+                                    &mut event_code,
+                                )?;
+                                if error == 0_i32 {
+                                    if event_code == 0_i32 as u32 {
+                                        grammar_id = 156_i32;
+                                    } else {
+                                        return Err(ExiError::DeviantsNotSupported);
+                                    }
+                                }
+                            }
+                        }
+                        _ => {
+                            return Err(ExiError::UnknownEventCode);
+                        }
+                    }
+                }
+            }
+            156 => {
+                exi_basetypes_decoder_nbit_uint(stream, 2, &mut event_code)?;
+                if error == 0_i32 {
+                    match event_code {
+                        0 => {
+                            exi_basetypes_decoder_nbit_uint(
+                                stream,
+                                1_i32 as usize,
+                                &mut event_code,
+                            )?;
+                            if error == 0_i32 {
+                                if event_code == 0_i32 as u32 {
+                                    let len = exi_basetypes_decoder_uint_16(stream)?;
+                                    message.service_scope = Some(exi_basetypes_decoder_characters(
+                                        stream,
+                                        len as usize,
+                                    )?);
+                                } else {
+                                    return Err(ExiError::UnsupportedSubEvent);
+                                }
+                            }
+                            if error == 0_i32 {
+                                exi_basetypes_decoder_nbit_uint(
+                                    stream,
+                                    1_i32 as usize,
+                                    &mut event_code,
+                                )?;
+                                if error == 0_i32 {
+                                    if event_code == 0_i32 as u32 {
+                                        grammar_id = 157_i32;
+                                    } else {
+                                        return Err(ExiError::DeviantsNotSupported);
+                                    }
+                                }
+                            }
+                        }
+                        1 => {
+                            exi_basetypes_decoder_nbit_uint(
+                                stream,
+                                1_i32 as usize,
+                                &mut event_code,
+                            )?;
+                            if error == 0_i32 {
+                                if event_code == 0_i32 as u32 {
+                                    let mut value_1: u32 = 0;
+                                    exi_basetypes_decoder_nbit_uint(
+                                        stream,
+                                        1_i32 as usize,
+                                        &mut value_1,
+                                    )?;
+                                    if error == 0_i32 {
+                                        message.free_service = value_1 as i32;
+                                    }
+                                } else {
+                                    return Err(ExiError::UnsupportedSubEvent);
+                                }
+                            }
+                            if error == 0_i32 {
+                                exi_basetypes_decoder_nbit_uint(
+                                    stream,
+                                    1_i32 as usize,
+                                    &mut event_code,
+                                )?;
+                                if error == 0_i32 {
+                                    if event_code == 0_i32 as u32 {
+                                        grammar_id = 158_i32;
+                                    } else {
+                                        return Err(ExiError::DeviantsNotSupported);
+                                    }
+                                }
+                            }
+                        }
+                        _ => {
+                            return Err(ExiError::UnknownEventCode);
+                        }
+                    }
+                }
+            }
+            157 => {
+                exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
+                if error == 0_i32 {
+                    match event_code {
+                        0 => {
+                            exi_basetypes_decoder_nbit_uint(
+                                stream,
+                                1_i32 as usize,
+                                &mut event_code,
+                            )?;
+                            if error == 0_i32 {
+                                if event_code == 0_i32 as u32 {
+                                    let mut value_2: u32 = 0;
+                                    exi_basetypes_decoder_nbit_uint(
+                                        stream,
+                                        1_i32 as usize,
+                                        &mut value_2,
+                                    )?;
+                                    if error == 0_i32 {
+                                        message.free_service = value_2 as i32;
+                                    }
+                                } else {
+                                    return Err(ExiError::UnsupportedSubEvent);
+                                }
+                            }
+                            if error == 0_i32 {
+                                exi_basetypes_decoder_nbit_uint(
+                                    stream,
+                                    1_i32 as usize,
+                                    &mut event_code,
+                                )?;
+                                if error == 0_i32 {
+                                    if event_code == 0_i32 as u32 {
+                                        grammar_id = 158_i32;
+                                    } else {
+                                        return Err(ExiError::DeviantsNotSupported);
+                                    }
+                                }
+                            }
+                        }
+                        _ => {
+                            return Err(ExiError::UnknownEventCode);
+                        }
+                    }
+                }
+            }
+            158 => {
+                exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
+                if error == 0_i32 {
+                    match event_code {
+                        0 => {
+                            decode_iso2_supported_energy_transfer_mode(
+                                stream,
+                                &mut message.supported_energy_transfer_mode,
+                            )?;
+                            if error == 0_i32 {
+                                grammar_id = 3_i32;
+                            }
+                        }
+                        _ => {
+                            return Err(ExiError::UnknownEventCode);
+                        }
+                    }
+                }
+            }
+            3 => {
+                exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
+                if error == 0_i32 {
+                    match event_code {
+                        0 => {
+                            return Ok(());
+                        }
+                        _ => {
+                            return Err(ExiError::UnknownEventCode);
+                        }
+                    }
+                }
+            }
+            _ => {
+                return Err(ExiError::UnknownGrammarId);
+            }
+        }
+    }
+}
 // fn decode_iso2_ev_power_delivery_parameter(
 //     stream: &mut ExiBitstream,
 //     _message: &mut Iso2EVPowerDeliveryParameterType,
@@ -7455,90 +7366,88 @@ fn decode_iso2_signature(
 //         }
 //     }
 // }
-// fn decode_iso2_service_list(
-//     stream: &mut ExiBitstream,
-//     message: &mut Iso2ServiceListType,
-// ) -> Result<(), ExiError> {
-//     let mut grammar_id: i32 = 173 as i32;
+fn decode_iso2_service_list(
+    stream: &mut ExiBitstream,
+    message: &mut Iso2ServiceListType,
+) -> Result<(), ExiError> {
+    let mut grammar_id: i32 = 173_i32;
 
-//     let mut event_code: u32 = 0;
-//     let error: i32 = 0;
-//     loop {
-//         match grammar_id {
-//             173 => {
-//                 exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
-//                 if error == 0 as i32 {
-//                     match event_code {
-//                         0 => {
-//                             if ((*message).service.len() as i32) < 8 as i32 {
-//                                 let fresh28 = (*message).service.len();
-//                                 if let Some(service) = (*message).service.get_mut(fresh28 as usize)
-//                                 {
-//                                     decode_iso2_service(stream, service)?;
-//                                 } else {
-//                                     return Err(ExiError::ArrayOutOfBounds);
-//                                 }
-//                             } else {
-//                                 return Err(ExiError::ArrayOutOfBounds);
-//                             }
-//                             grammar_id = 174 as i32;
-//                         }
-//                         _ => {
-//                             return Err(ExiError::UnknownEventCode);
-//                         }
-//                     }
-//                 }
-//             }
-//             174 => {
-//                 exi_basetypes_decoder_nbit_uint(stream, 2, &mut event_code)?;
-//                 if error == 0 as i32 {
-//                     match event_code {
-//                         0 => {
-//                             if ((*message).service.len() as i32) < 8 as i32 {
-//                                 let fresh29 = (*message).service.len();
-//                                 if let Some(service) = (*message).service.get_mut(fresh29 as usize)
-//                                 {
-//                                     decode_iso2_service(stream, service)?;
-//                                 } else {
-//                                     return Err(ExiError::ArrayOutOfBounds);
-//                                 }
-//                             } else {
-//                                 return Err(ExiError::ArrayOutOfBounds);
-//                             }
-//                             if ((*message).service.len() as i32) < 8 as i32 {
-//                                 grammar_id = 174 as i32;
-//                             } else {
-//                                 grammar_id = 3 as i32;
-//                             }
-//                         }
-//                         1 => {
-//                             return Ok(());
-//                         }
-//                         _ => {
-//                             return Err(ExiError::UnknownEventCode);
-//                         }
-//                     }
-//                 }
-//             }
-//             3 => {
-//                 exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
-//                 if error == 0 as i32 {
-//                     match event_code {
-//                         0 => {
-//                             return Ok(());
-//                         }
-//                         _ => {
-//                             return Err(ExiError::UnknownEventCode);
-//                         }
-//                     }
-//                 }
-//             }
-//             _ => {
-//                 return Err(ExiError::UnknownGrammarId);
-//             }
-//         }
-//     }
-// }
+    let mut event_code: u32 = 0;
+    let error: i32 = 0;
+    loop {
+        match grammar_id {
+            173 => {
+                exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
+                if error == 0_i32 {
+                    match event_code {
+                        0 => {
+                            if message.service.len() < 8 {
+                                let fresh28 = message.service.len();
+                                if let Some(service) = message.service.get_mut(fresh28) {
+                                    decode_iso2_service(stream, service)?;
+                                } else {
+                                    return Err(ExiError::ArrayOutOfBounds);
+                                }
+                            } else {
+                                return Err(ExiError::ArrayOutOfBounds);
+                            }
+                            grammar_id = 174_i32;
+                        }
+                        _ => {
+                            return Err(ExiError::UnknownEventCode);
+                        }
+                    }
+                }
+            }
+            174 => {
+                exi_basetypes_decoder_nbit_uint(stream, 2, &mut event_code)?;
+                if error == 0_i32 {
+                    match event_code {
+                        0 => {
+                            if message.service.len() < 8 {
+                                let fresh29 = message.service.len();
+                                if let Some(service) = message.service.get_mut(fresh29) {
+                                    decode_iso2_service(stream, service)?;
+                                } else {
+                                    return Err(ExiError::ArrayOutOfBounds);
+                                }
+                            } else {
+                                return Err(ExiError::ArrayOutOfBounds);
+                            }
+                            if message.service.len() < 8 {
+                                grammar_id = 174_i32;
+                            } else {
+                                grammar_id = 3_i32;
+                            }
+                        }
+                        1 => {
+                            return Ok(());
+                        }
+                        _ => {
+                            return Err(ExiError::UnknownEventCode);
+                        }
+                    }
+                }
+            }
+            3 => {
+                exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
+                if error == 0_i32 {
+                    match event_code {
+                        0 => {
+                            return Ok(());
+                        }
+                        _ => {
+                            return Err(ExiError::UnknownEventCode);
+                        }
+                    }
+                }
+            }
+            _ => {
+                return Err(ExiError::UnknownGrammarId);
+            }
+        }
+    }
+}
 // fn decode_iso2_diffie_hellman_publickey(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2DiffieHellmanPublickeyType,
@@ -12675,138 +12584,133 @@ fn decode_iso2_session_setup_res(
 //         }
 //     }
 // }
-// fn decode_iso2_service_discovery_res(
-//     stream: &mut ExiBitstream,
-//     message: &mut Iso2ServiceDiscoveryResType,
-// ) -> Result<(), ExiError> {
-//     let mut grammar_id: i32 = 293 as i32;
+fn decode_iso2_service_discovery_res(
+    stream: &mut ExiBitstream,
+    message: &mut Iso2ServiceDiscoveryResType,
+) -> Result<(), ExiError> {
+    let mut grammar_id: i32 = 293_i32;
 
-//     let mut event_code: u32 = 0;
-//     let error: i32 = 0;
-//     loop {
-//         match grammar_id {
-//             293 => {
-//                 exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
-//                 if error == 0 as i32 {
-//                     match event_code {
-//                         0 => {
-//                             exi_basetypes_decoder_nbit_uint(
-//                                 stream,
-//                                 1 as i32 as usize,
-//                                 &mut event_code,
-//                             )?;
-//                             if error == 0 as i32 {
-//                                 if event_code == 0 as i32 as u32 {
-//                                     let mut value: u32 = 0;
-//                                     exi_basetypes_decoder_nbit_uint(
-//                                         stream,
-//                                         5 as i32 as usize,
-//                                         &mut value,
-//                                     )?;
-//                                     if error == 0 as i32 {
-//                                         (*message).response_code = value as u32;
-//                                     }
-//                                 } else {
-//                                     return Err(ExiError::UnsupportedSubEvent);
-//                                 }
-//                             }
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_decoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     &mut event_code,
-//                                 )?;
-//                                 if error == 0 as i32 {
-//                                     if event_code == 0 as i32 as u32 {
-//                                         grammar_id = 294 as i32;
-//                                     } else {
-//                                         return Err(ExiError::DeviantsNotSupported);
-//                                     }
-//                                 }
-//                             }
-//                         }
-//                         _ => {
-//                             return Err(ExiError::UnknownEventCode);
-//                         }
-//                     }
-//                 }
-//             }
-//             294 => {
-//                 exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
-//                 if error == 0 as i32 {
-//                     match event_code {
-//                         0 => {
-//                             decode_iso2_payment_option_list(
-//                                 stream,
-//                                 &mut (*message).payment_option_list,
-//                             )?;
-//                             if error == 0 as i32 {
-//                                 grammar_id = 295 as i32;
-//                             }
-//                         }
-//                         _ => {
-//                             return Err(ExiError::UnknownEventCode);
-//                         }
-//                     }
-//                 }
-//             }
-//             295 => {
-//                 exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
-//                 if error == 0 as i32 {
-//                     match event_code {
-//                         0 => {
-//                             decode_iso2_charge_service(stream, &mut (*message).charge_service)?;
-//                             if error == 0 as i32 {
-//                                 grammar_id = 296 as i32;
-//                             }
-//                         }
-//                         _ => {
-//                             return Err(ExiError::UnknownEventCode);
-//                         }
-//                     }
-//                 }
-//             }
-//             296 => {
-//                 exi_basetypes_decoder_nbit_uint(stream, 2, &mut event_code)?;
-//                 if error == 0 as i32 {
-//                     match event_code {
-//                         0 => {
-//                             decode_iso2_service_list(
-//                                 stream,
-//                                 &mut (*message).service_list.clone().unwrap(),
-//                             )?;
-//                             if error == 0 as i32 {
-//                                 grammar_id = 3 as i32;
-//                             }
-//                         }
-//                         1 => {
-//                             return Ok(());
-//                         }
-//                         _ => {
-//                             return Err(ExiError::UnknownEventCode);
-//                         }
-//                     }
-//                 }
-//             }
-//             3 => {
-//                 exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
-//                 if error == 0 as i32 {
-//                     match event_code {
-//                         0 => {
-//                             return Ok(());
-//                         }
-//                         _ => {
-//                             return Err(ExiError::UnknownEventCode);
-//                         }
-//                     }
-//                 }
-//             }
-//             _ => {
-//                 return Err(ExiError::UnknownGrammarId);
-//             }
-//         }
-//     }
-// }
+    let mut event_code: u32 = 0;
+    let error: i32 = 0;
+    loop {
+        match grammar_id {
+            293 => {
+                exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
+                if error == 0_i32 {
+                    match event_code {
+                        0 => {
+                            exi_basetypes_decoder_nbit_uint(
+                                stream,
+                                1_i32 as usize,
+                                &mut event_code,
+                            )?;
+                            if error == 0_i32 {
+                                if event_code == 0_i32 as u32 {
+                                    let mut value: u32 = 0;
+                                    exi_basetypes_decoder_nbit_uint(
+                                        stream,
+                                        5_i32 as usize,
+                                        &mut value,
+                                    )?;
+                                    message.response_code = Iso2ResponseCodeType::try_from(value)?;
+                                } else {
+                                    return Err(ExiError::UnsupportedSubEvent);
+                                }
+                            }
+                            if error == 0_i32 {
+                                exi_basetypes_decoder_nbit_uint(
+                                    stream,
+                                    1_i32 as usize,
+                                    &mut event_code,
+                                )?;
+                                if error == 0_i32 {
+                                    if event_code == 0_i32 as u32 {
+                                        grammar_id = 294_i32;
+                                    } else {
+                                        return Err(ExiError::DeviantsNotSupported);
+                                    }
+                                }
+                            }
+                        }
+                        _ => {
+                            return Err(ExiError::UnknownEventCode);
+                        }
+                    }
+                }
+            }
+            294 => {
+                exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
+                if error == 0_i32 {
+                    match event_code {
+                        0 => {
+                            decode_iso2_payment_option_list(
+                                stream,
+                                &mut message.payment_option_list,
+                            )?;
+                            if error == 0_i32 {
+                                grammar_id = 295_i32;
+                            }
+                        }
+                        _ => {
+                            return Err(ExiError::UnknownEventCode);
+                        }
+                    }
+                }
+            }
+            295 => {
+                exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
+                if error == 0_i32 {
+                    match event_code {
+                        0 => {
+                            decode_iso2_charge_service(stream, &mut message.charge_service)?;
+                            if error == 0_i32 {
+                                grammar_id = 296_i32;
+                            }
+                        }
+                        _ => {
+                            return Err(ExiError::UnknownEventCode);
+                        }
+                    }
+                }
+            }
+            296 => {
+                exi_basetypes_decoder_nbit_uint(stream, 2, &mut event_code)?;
+                if error == 0_i32 {
+                    match event_code {
+                        0 => {
+                            if let Some(ref mut service_list) = message.service_list {
+                                decode_iso2_service_list(stream, &mut service_list.clone())?;
+                            }
+                            grammar_id = 3_i32;
+                        }
+                        1 => {
+                            return Ok(());
+                        }
+                        _ => {
+                            return Err(ExiError::UnknownEventCode);
+                        }
+                    }
+                }
+            }
+            3 => {
+                exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
+                if error == 0_i32 {
+                    match event_code {
+                        0 => {
+                            return Ok(());
+                        }
+                        _ => {
+                            return Err(ExiError::UnknownEventCode);
+                        }
+                    }
+                }
+            }
+            _ => {
+                return Err(ExiError::UnknownGrammarId);
+            }
+        }
+    }
+}
 // fn decode_iso2_service_detail_req(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2ServiceDetailReqType,
@@ -12945,180 +12849,132 @@ fn decode_iso2_session_setup_req(
 //         }
 //     }
 // }
-// fn decode_iso2_service_discovery_req(
-//     stream: &mut ExiBitstream,
-//     message: &mut Iso2ServiceDiscoveryReqType,
-// ) -> Result<(), ExiError> {
-//     let mut grammar_id: i32 = 300 as i32;
+fn decode_iso2_service_discovery_req(
+    stream: &mut ExiBitstream,
+    message: &mut Iso2ServiceDiscoveryReqType,
+) -> Result<(), ExiError> {
+    let mut grammar_id: i32 = 300_i32;
+    let mut event_code: u32 = 0;
+    let error: i32 = 0;
+    loop {
+        match grammar_id {
+            300 => {
+                exi_basetypes_decoder_nbit_uint(stream, 2, &mut event_code)?;
+                match event_code {
+                    0 => {
+                        exi_basetypes_decoder_nbit_uint(stream, 1_i32 as usize, &mut event_code)?;
+                        if event_code == 0_i32 as u32 {
+                            let len = exi_basetypes_decoder_uint_16(stream)?;
+                            message.service_scope =
+                                Some(exi_basetypes_decoder_characters(stream, len as usize)?);
+                        } else {
+                            return Err(ExiError::UnsupportedSubEvent);
+                        }
+                        exi_basetypes_decoder_nbit_uint(stream, 1_i32 as usize, &mut event_code)?;
+                        if event_code == 0_i32 as u32 {
+                            grammar_id = 301_i32;
+                        } else {
+                            return Err(ExiError::DeviantsNotSupported);
+                        }
+                    }
+                    1 => {
+                        exi_basetypes_decoder_nbit_uint(stream, 1_i32 as usize, &mut event_code)?;
+                        if event_code == 0_i32 as u32 {
+                            let mut value: u32 = 0;
+                            exi_basetypes_decoder_nbit_uint(stream, 2_i32 as usize, &mut value)?;
 
-//     let mut event_code: u32 = 0;
-//     let error: i32 = 0;
-//     loop {
-//         match grammar_id {
-//             300 => {
-//                 exi_basetypes_decoder_nbit_uint(stream, 2, &mut event_code)?;
-//                 if error == 0 as i32 {
-//                     match event_code {
-//                         0 => {
-//                             exi_basetypes_decoder_nbit_uint(
-//                                 stream,
-//                                 1 as i32 as usize,
-//                                 &mut event_code,
-//                             )?;
-//                             if error == 0 as i32 {
-//                                 if event_code == 0 as i32 as u32 {
-//                                     exi_basetypes_decoder_uint_16(
-//                                         stream,
-//                                         &mut ((*message).service_scope.clone().clone().unwrap().len()
-//                                             as u16),
-//                                     )?;
-//                                     if error == 0 as i32 {
-//                                         if (*message).service_scope.clone().clone().unwrap().len() as i32
-//                                             >= 2 as i32
-//                                         {
-//                                             exi_basetypes_decoder_characters(
-//                                                 stream,
-//                                                 (*message).service_scope.clone().clone().unwrap().len(),
-//                                                 &mut (*message).service_scope.clone().unwrap(),
-//                                             )?;
-//                                         } else {
-//                                             return Err(ExiError::StringValuesNotSupported);
-//                                         }
-//                                     }
-//                                 } else {
-//                                     return Err(ExiError::UnsupportedSubEvent);
-//                                 }
-//                             }
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_decoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     &mut event_code,
-//                                 )?;
-//                                 if error == 0 as i32 {
-//                                     if event_code == 0 as i32 as u32 {
-//                                         grammar_id = 301 as i32;
-//                                     } else {
-//                                         return Err(ExiError::DeviantsNotSupported);
-//                                     }
-//                                 }
-//                             }
-//                         }
-//                         1 => {
-//                             exi_basetypes_decoder_nbit_uint(
-//                                 stream,
-//                                 1 as i32 as usize,
-//                                 &mut event_code,
-//                             )?;
-//                             if error == 0 as i32 {
-//                                 if event_code == 0 as i32 as u32 {
-//                                     let mut value: u32 = 0;
-//                                     exi_basetypes_decoder_nbit_uint(
-//                                         stream,
-//                                         2 as i32 as usize,
-//                                         &mut value,
-//                                     )?;
-//                                     if error == 0 as i32 {
-//                                         (*message).service_category =
-//                                             Some(value as Iso2ServiceCategoryType);
-//                                     }
-//                                 } else {
-//                                     return Err(ExiError::UnsupportedSubEvent);
-//                                 }
-//                             }
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_decoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     &mut event_code,
-//                                 )?;
-//                                 if error == 0 as i32 {
-//                                     if event_code == 0 as i32 as u32 {
-//                                         grammar_id = 3 as i32;
-//                                     } else {
-//                                         return Err(ExiError::DeviantsNotSupported);
-//                                     }
-//                                 }
-//                             }
-//                         }
-//                         2 => {
-//                             return Ok(());
-//                         }
-//                         _ => {
-//                             return Err(ExiError::UnknownEventCode);
-//                         }
-//                     }
-//                 }
-//             }
-//             301 => {
-//                 exi_basetypes_decoder_nbit_uint(stream, 2, &mut event_code)?;
-//                 if error == 0 as i32 {
-//                     match event_code {
-//                         0 => {
-//                             exi_basetypes_decoder_nbit_uint(
-//                                 stream,
-//                                 1 as i32 as usize,
-//                                 &mut event_code,
-//                             )?;
-//                             if error == 0 as i32 {
-//                                 if event_code == 0 as i32 as u32 {
-//                                     let mut value_0: u32 = 0;
-//                                     exi_basetypes_decoder_nbit_uint(
-//                                         stream,
-//                                         2 as i32 as usize,
-//                                         &mut value_0,
-//                                     )?;
-//                                     if error == 0 as i32 {
-//                                         (*message).service_category =
-//                                             Some(value_0 as Iso2ServiceCategoryType);
-//                                     }
-//                                 } else {
-//                                     return Err(ExiError::UnsupportedSubEvent);
-//                                 }
-//                             }
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_decoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     &mut event_code,
-//                                 )?;
-//                                 if error == 0 as i32 {
-//                                     if event_code == 0 as i32 as u32 {
-//                                         grammar_id = 3 as i32;
-//                                     } else {
-//                                         return Err(ExiError::DeviantsNotSupported);
-//                                     }
-//                                 }
-//                             }
-//                         }
-//                         1 => {
-//                             return Ok(());
-//                         }
-//                         _ => {
-//                             return Err(ExiError::UnknownEventCode);
-//                         }
-//                     }
-//                 }
-//             }
-//             3 => {
-//                 exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
-//                 if error == 0 as i32 {
-//                     match event_code {
-//                         0 => {
-//                             return Ok(());
-//                         }
-//                         _ => {
-//                             return Err(ExiError::UnknownEventCode);
-//                         }
-//                     }
-//                 }
-//             }
-//             _ => {
-//                 return Err(ExiError::UnknownGrammarId);
-//             }
-//         }
-//     }
-// }
+                            message.service_category =
+                                Iso2ServiceCategoryType::try_from(value).ok();
+                        } else {
+                            return Err(ExiError::UnsupportedSubEvent);
+                        }
+
+                        exi_basetypes_decoder_nbit_uint(stream, 1_i32 as usize, &mut event_code)?;
+                        if error == 0_i32 {
+                            if event_code == 0_i32 as u32 {
+                                grammar_id = 3_i32;
+                            } else {
+                                return Err(ExiError::DeviantsNotSupported);
+                            }
+                        }
+                    }
+                    2 => {
+                        return Ok(());
+                    }
+                    _ => {
+                        return Err(ExiError::UnknownEventCode);
+                    }
+                }
+            }
+            301 => {
+                exi_basetypes_decoder_nbit_uint(stream, 2, &mut event_code)?;
+                if error == 0_i32 {
+                    match event_code {
+                        0 => {
+                            exi_basetypes_decoder_nbit_uint(
+                                stream,
+                                1_i32 as usize,
+                                &mut event_code,
+                            )?;
+                            if error == 0_i32 {
+                                if event_code == 0_i32 as u32 {
+                                    let mut value_0: u32 = 0;
+                                    exi_basetypes_decoder_nbit_uint(
+                                        stream,
+                                        2_i32 as usize,
+                                        &mut value_0,
+                                    )?;
+                                    if error == 0_i32 {
+                                        message.service_category =
+                                            Iso2ServiceCategoryType::try_from(value_0).ok();
+                                    }
+                                } else {
+                                    return Err(ExiError::UnsupportedSubEvent);
+                                }
+                            }
+                            if error == 0_i32 {
+                                exi_basetypes_decoder_nbit_uint(
+                                    stream,
+                                    1_i32 as usize,
+                                    &mut event_code,
+                                )?;
+                                if error == 0_i32 {
+                                    if event_code == 0_i32 as u32 {
+                                        grammar_id = 3_i32;
+                                    } else {
+                                        return Err(ExiError::DeviantsNotSupported);
+                                    }
+                                }
+                            }
+                        }
+                        1 => {
+                            return Ok(());
+                        }
+                        _ => {
+                            return Err(ExiError::UnknownEventCode);
+                        }
+                    }
+                }
+            }
+            3 => {
+                exi_basetypes_decoder_nbit_uint(stream, 1, &mut event_code)?;
+                if error == 0_i32 {
+                    match event_code {
+                        0 => {
+                            return Ok(());
+                        }
+                        _ => {
+                            return Err(ExiError::UnknownEventCode);
+                        }
+                    }
+                }
+            }
+            _ => {
+                return Err(ExiError::UnknownGrammarId);
+            }
+        }
+    }
+}
 // fn decode_iso2_authorization_res(
 //     stream: &mut ExiBitstream,
 //     message: &mut Iso2AuthorizationResType,
@@ -13616,18 +13472,18 @@ fn decode_iso2_body(
         //     decode_iso2_service_detail_res(stream, &mut service_detail_res)?;
         //     message.body_type_component = Iso2BodyTypeEnum::ServiceDetailRes(service_detail_res);
         // }
-        // 27 => {
-        //     let mut service_discovery_req: Iso2ServiceDiscoveryReqType = Default::default();
-        //     decode_iso2_service_discovery_req(stream, &mut service_discovery_req)?;
-        //     message.body_type_component =
-        //         Iso2BodyTypeEnum::ServiceDiscoveryReq(service_discovery_req);
-        // }
-        // 28 => {
-        //     let mut service_discovery_res: Iso2ServiceDiscoveryResType = Default::default();
-        //     decode_iso2_service_discovery_res(stream, &mut service_discovery_res)?;
-        //     message.body_type_component =
-        //         Iso2BodyTypeEnum::ServiceDiscoveryRes(service_discovery_res);
-        // }
+        27 => {
+            let mut service_discovery_req: Iso2ServiceDiscoveryReqType =
+                Iso2ServiceDiscoveryReqType::default();
+            decode_iso2_service_discovery_req(stream, &mut service_discovery_req)?;
+            message.body = Iso2BodyTypeEnum::ServiceDiscoveryReq(service_discovery_req);
+        }
+        28 => {
+            let mut service_discovery_res: Iso2ServiceDiscoveryResType =
+                Iso2ServiceDiscoveryResType::default();
+            decode_iso2_service_discovery_res(stream, &mut service_discovery_res)?;
+            message.body = Iso2BodyTypeEnum::ServiceDiscoveryRes(service_discovery_res);
+        }
         29 => {
             let mut session_setup_req: Iso2SessionSetupReqType = Iso2SessionSetupReqType::default();
             decode_iso2_session_setup_req(stream, &mut session_setup_req)?;
