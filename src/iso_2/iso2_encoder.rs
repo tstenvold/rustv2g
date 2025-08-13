@@ -1,16 +1,18 @@
 use crate::{
     common::{
         exi_basetypes_encoder::{
-            exi_basetypes_encoder_bytes, exi_basetypes_encoder_characters,
-            exi_basetypes_encoder_integer_64, exi_basetypes_encoder_nbit_uint,
-            exi_basetypes_encoder_uint_16,
+            exi_basetypes_encoder_bool, exi_basetypes_encoder_bytes,
+            exi_basetypes_encoder_characters, exi_basetypes_encoder_integer_64,
+            exi_basetypes_encoder_nbit_uint, exi_basetypes_encoder_uint_16,
         },
         exi_bitstream::ExiBitstream,
         exi_error_codes::ExiError,
     },
     iso_2::iso2_datatypes::{
-        Iso2BodyTypeEnum, Iso2MessageHeaderType, Iso2NotificationType, Iso2SessionSetupReqType,
-        Iso2SessionSetupResType, Iso2v2gMessage,
+        Iso2BodyTypeEnum, Iso2ChargeServiceType, Iso2MessageHeaderType, Iso2NotificationType,
+        Iso2PaymentOptionListType, Iso2ServiceDiscoveryReqType, Iso2ServiceDiscoveryResType,
+        Iso2ServiceListType, Iso2ServiceType, Iso2SessionSetupReqType, Iso2SessionSetupResType,
+        Iso2SupportedEnergyTransferModeType, Iso2v2gMessage,
     },
 };
 
@@ -1408,101 +1410,28 @@ use crate::{
 //     }
 //     return error;
 // }
-// fn encode_iso2_PhysicalValueType(
+// fn encode_iso2_physical_value(
 //     stream: &mut ExiBitstream,
-//     mut PhysicalValueType: *const iso2_PhysicalValueType,
+//     message: &Iso2PhysicalValueType,
 // ) -> Result<(), ExiError> {
-//     let mut grammar_id: i32 = 30 as i32;
-//     let mut done: i32 = 0 as i32;
-//     let mut error: i32 = 0 as i32;
-//     while done == 0 {
-//         match grammar_id {
-//             30 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                     if error == 0 as i32 {
-//                         exi_basetypes_encoder_nbit_uint(
-//                             stream,
-//                             3 as i32 as usize,
-//                             ((*PhysicalValueType).Multiplier as u32)
-//                                 .wrapping_sub(-(3 as i32) as u32),
-//                         );
-//                         if error == 0 as i32 {
-//                             exi_basetypes_encoder_nbit_uint(
-//                                 stream,
-//                                 1 as i32 as usize,
-//                                 0 as i32 as u32,
-//                             );
-//                             if error == 0 as i32 {
-//                                 grammar_id = 31 as i32;
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//             31 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                     if error == 0 as i32 {
-//                         exi_basetypes_encoder_nbit_uint(
-//                             stream,
-//                             3 as i32 as usize,
-//                             (*PhysicalValueType).Unit as u32,
-//                         );
-//                         if error == 0 as i32 {
-//                             exi_basetypes_encoder_nbit_uint(
-//                                 stream,
-//                                 1 as i32 as usize,
-//                                 0 as i32 as u32,
-//                             );
-//                             if error == 0 as i32 {
-//                                 grammar_id = 32 as i32;
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//             32 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                     if error == 0 as i32 {
-//                         error =
-//                             exi_basetypes_encoder_integer_16(stream, (*PhysicalValueType).Value);
-//                         if error == 0 as i32 {
-//                             exi_basetypes_encoder_nbit_uint(
-//                                 stream,
-//                                 1 as i32 as usize,
-//                                 0 as i32 as u32,
-//                             );
-//                             if error == 0 as i32 {
-//                                 grammar_id = 3 as i32;
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//             3 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     done = 1 as i32;
-//                     grammar_id = 4 as i32;
-//                 }
-//             }
-//             _ => {
-//                 error = -(130 as i32);
-//             }
-//         }
-//         if error != 0 {
-//             done = 1 as i32;
-//         }
-//     }
-//     return error;
+
+//     exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//     exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//     exi_basetypes_encoder_nbit_uint(stream, 3, message.multiplier as u32)?;
+//     exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+
+//     exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//     exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//     exi_basetypes_encoder_nbit_uint(stream, 3, message.unit as u32)?;
+//     exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+
+//     exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//     exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//     exi_basetypes_encoder_integer_16(stream, message.value)?;
+//     exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+
+//     exi_basetypes_encoder_nbit_uint(stream, 1, 0)
+
 // }
 // fn encode_iso2_ConsumptionCostType(
 //     stream: &mut ExiBitstream,
@@ -3726,100 +3655,28 @@ use crate::{
 //     }
 //     return error;
 // }
-// fn encode_iso2_DC_EVStatusType(
+// fn encode_iso2_dc_ev_status(
 //     stream: &mut ExiBitstream,
-//     mut DC_EVStatusType: *const iso2_DC_EVStatusType,
+//     message:  &Iso2DCEVStatusType,
 // ) -> Result<(), ExiError> {
-//     let mut grammar_id: i32 = 80 as i32;
-//     let mut done: i32 = 0 as i32;
-//     let mut error: i32 = 0 as i32;
-//     while done == 0 {
-//         match grammar_id {
-//             80 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                     if error == 0 as i32 {
-//                         error = exi_basetypes_encoder_bool(stream, (*DC_EVStatusType).EVReady);
-//                         if error == 0 as i32 {
-//                             exi_basetypes_encoder_nbit_uint(
-//                                 stream,
-//                                 1 as i32 as usize,
-//                                 0 as i32 as u32,
-//                             );
-//                             if error == 0 as i32 {
-//                                 grammar_id = 81 as i32;
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//             81 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                     if error == 0 as i32 {
-//                         exi_basetypes_encoder_nbit_uint(
-//                             stream,
-//                             4 as i32 as usize,
-//                             (*DC_EVStatusType).EVErrorCode as u32,
-//                         );
-//                         if error == 0 as i32 {
-//                             exi_basetypes_encoder_nbit_uint(
-//                                 stream,
-//                                 1 as i32 as usize,
-//                                 0 as i32 as u32,
-//                             );
-//                             if error == 0 as i32 {
-//                                 grammar_id = 82 as i32;
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//             82 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                     if error == 0 as i32 {
-//                         exi_basetypes_encoder_nbit_uint(
-//                             stream,
-//                             7 as i32 as usize,
-//                             (*DC_EVStatusType).EVRESSSOC as u32,
-//                         );
-//                         if error == 0 as i32 {
-//                             exi_basetypes_encoder_nbit_uint(
-//                                 stream,
-//                                 1 as i32 as usize,
-//                                 0 as i32 as u32,
-//                             );
-//                             if error == 0 as i32 {
-//                                 grammar_id = 3 as i32;
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//             3 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     done = 1 as i32;
-//                     grammar_id = 4 as i32;
-//                 }
-//             }
-//             _ => {
-//                 error = -(130 as i32);
-//             }
-//         }
-//         if error != 0 {
-//             done = 1 as i32;
-//         }
-//     }
-//     return error;
+
+//     exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//     exi_basetypes_encoder_bool(stream, message.ev_ready)?;
+//     exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+
+//     exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//     exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//     exi_basetypes_encoder_nbit_uint(stream, 4, message.ev_error_code as u32)?;
+//     exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+
+//     exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//     exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//     exi_basetypes_encoder_nbit_uint(stream, 7, message.ev_res_soc as u32)?;
+//     exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+
+//     exi_basetypes_encoder_nbit_uint(stream, 1, 0)
 // }
+
 // fn encode_iso2_ParameterSetType(
 //     stream: &mut ExiBitstream,
 //     mut ParameterSetType: *const iso2_ParameterSetType,
@@ -4083,221 +3940,49 @@ use crate::{
 //     }
 //     return error;
 // }
-// fn encode_iso2_ServiceType(
-//     stream: &mut ExiBitstream,
-//     mut ServiceType: *const iso2_ServiceType,
-// ) -> Result<(), ExiError> {
-//     let mut grammar_id: i32 = 91 as i32;
-//     let mut done: i32 = 0 as i32;
-//     let mut error: i32 = 0 as i32;
-//     while done == 0 {
-//         match grammar_id {
-//             91 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                     if error == 0 as i32 {
-//                         error = exi_basetypes_encoder_uint_16(stream, (*ServiceType).ServiceID);
-//                         if error == 0 as i32 {
-//                             exi_basetypes_encoder_nbit_uint(
-//                                 stream,
-//                                 1 as i32 as usize,
-//                                 0 as i32 as u32,
-//                             );
-//                             if error == 0 as i32 {
-//                                 grammar_id = 92 as i32;
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//             92 => {
-//                 if (*ServiceType).ServiceName_isUsed() == 1 as u32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 0 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         exi_basetypes_encoder_nbit_uint(
-//                             stream,
-//                             1 as i32 as usize,
-//                             0 as i32 as u32,
-//                         );
-//                         if error == 0 as i32 {
-//                             error = exi_basetypes_encoder_uint_16(
-//                                 stream,
-//                                 ((*ServiceType).ServiceName.charactersLen as i32 + 2 as i32) as u16,
-//                             );
-//                             if error == 0 as i32 {
-//                                 error = exi_basetypes_encoder_characters(
-//                                     stream,
-//                                     (*ServiceType).ServiceName.charactersLen as usize,
-//                                     ((*ServiceType).ServiceName.characters).as_ptr(),
-//                                     (32 as i32 + 1 as i32) as usize,
-//                                 );
-//                                 if error == 0 as i32 {
-//                                     exi_basetypes_encoder_nbit_uint(
-//                                         stream,
-//                                         1 as i32 as usize,
-//                                         0 as i32 as u32,
-//                                     );
-//                                     if error == 0 as i32 {
-//                                         grammar_id = 93 as i32;
-//                                     }
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 } else {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 1 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         exi_basetypes_encoder_nbit_uint(
-//                             stream,
-//                             1 as i32 as usize,
-//                             0 as i32 as u32,
-//                         );
-//                         if error == 0 as i32 {
-//                             exi_basetypes_encoder_nbit_uint(
-//                                 stream,
-//                                 2 as i32 as usize,
-//                                 (*ServiceType).ServiceCategory as u32,
-//                             );
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_encoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     0 as i32 as u32,
-//                                 );
-//                                 if error == 0 as i32 {
-//                                     grammar_id = 94 as i32;
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//             93 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                     if error == 0 as i32 {
-//                         exi_basetypes_encoder_nbit_uint(
-//                             stream,
-//                             2 as i32 as usize,
-//                             (*ServiceType).ServiceCategory as u32,
-//                         );
-//                         if error == 0 as i32 {
-//                             exi_basetypes_encoder_nbit_uint(
-//                                 stream,
-//                                 1 as i32 as usize,
-//                                 0 as i32 as u32,
-//                             );
-//                             if error == 0 as i32 {
-//                                 grammar_id = 94 as i32;
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//             94 => {
-//                 if (*ServiceType).ServiceScope_isUsed() == 1 as u32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 0 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         exi_basetypes_encoder_nbit_uint(
-//                             stream,
-//                             1 as i32 as usize,
-//                             0 as i32 as u32,
-//                         );
-//                         if error == 0 as i32 {
-//                             error = exi_basetypes_encoder_uint_16(
-//                                 stream,
-//                                 ((*ServiceType).ServiceScope.charactersLen as i32 + 2 as i32)
-//                                     as u16,
-//                             );
-//                             if error == 0 as i32 {
-//                                 error = exi_basetypes_encoder_characters(
-//                                     stream,
-//                                     (*ServiceType).ServiceScope.charactersLen as usize,
-//                                     ((*ServiceType).ServiceScope.characters).as_ptr(),
-//                                     (64 as i32 + 1 as i32) as usize,
-//                                 );
-//                                 if error == 0 as i32 {
-//                                     exi_basetypes_encoder_nbit_uint(
-//                                         stream,
-//                                         1 as i32 as usize,
-//                                         0 as i32 as u32,
-//                                     );
-//                                     if error == 0 as i32 {
-//                                         grammar_id = 95 as i32;
-//                                     }
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 } else {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 1 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         exi_basetypes_encoder_nbit_uint(
-//                             stream,
-//                             1 as i32 as usize,
-//                             0 as i32 as u32,
-//                         );
-//                         if error == 0 as i32 {
-//                             error = exi_basetypes_encoder_bool(stream, (*ServiceType).FreeService);
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_encoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     0 as i32 as u32,
-//                                 );
-//                                 if error == 0 as i32 {
-//                                     grammar_id = 3 as i32;
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//             95 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                     if error == 0 as i32 {
-//                         error = exi_basetypes_encoder_bool(stream, (*ServiceType).FreeService);
-//                         if error == 0 as i32 {
-//                             exi_basetypes_encoder_nbit_uint(
-//                                 stream,
-//                                 1 as i32 as usize,
-//                                 0 as i32 as u32,
-//                             );
-//                             if error == 0 as i32 {
-//                                 grammar_id = 3 as i32;
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//             3 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     done = 1 as i32;
-//                     grammar_id = 4 as i32;
-//                 }
-//             }
-//             _ => {
-//                 error = -(130 as i32);
-//             }
-//         }
-//         if error != 0 {
-//             done = 1 as i32;
-//         }
-//     }
-//     return error;
-// }
+fn encode_iso2_service(
+    stream: &mut ExiBitstream,
+    message: &Iso2ServiceType,
+) -> Result<(), ExiError> {
+    exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+    exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+    exi_basetypes_encoder_uint_16(stream, message.service_id)?;
+    exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+
+    if let Some(ref name) = message.service_name {
+        exi_basetypes_encoder_nbit_uint(stream, 2, 0)?;
+        exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+        let Ok(len) = u16::try_from(name.len()) else {
+            return Err(ExiError::InvalidCharactersLength);
+        };
+        exi_basetypes_encoder_uint_16(stream, len)?;
+        exi_basetypes_encoder_characters(stream, name)?;
+        exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+    } else {
+        exi_basetypes_encoder_nbit_uint(stream, 2, 1)?;
+        exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+        exi_basetypes_encoder_nbit_uint(stream, 2, message.service_category as u32)?;
+        exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+    }
+
+    if let Some(ref scope) = message.service_scope {
+        exi_basetypes_encoder_nbit_uint(stream, 2, 0)?;
+        exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+        let Ok(len) = u16::try_from(scope.len()) else {
+            return Err(ExiError::InvalidCharactersLength);
+        };
+        exi_basetypes_encoder_uint_16(stream, len)?;
+        exi_basetypes_encoder_characters(stream, scope)?;
+        exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+    } else {
+        exi_basetypes_encoder_nbit_uint(stream, 2, 1)?;
+        exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+        exi_basetypes_encoder_bool(stream, message.free_service)?;
+        exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+    }
+
+    Ok(())
+}
 // fn encode_iso2_SignatureValueType(
 //     stream: &mut ExiBitstream,
 //     mut SignatureValueType: *const iso2_SignatureValueType,
@@ -5183,118 +4868,25 @@ use crate::{
 //     }
 //     return error;
 // }
-// fn encode_iso2_SupportedEnergyTransferModeType(
-//     stream: &mut ExiBitstream,
-//     mut SupportedEnergyTransferModeType: *const iso2_SupportedEnergyTransferModeType,
-// ) -> Result<(), ExiError> {
-//     let mut grammar_id: i32 = 106 as i32;
-//     let mut done: i32 = 0 as i32;
-//     let mut error: i32 = 0 as i32;
-//     let mut EnergyTransferMode_currentIndex: u16 = 0 as i32 as u16;
-//     while done == 0 {
-//         match grammar_id {
-//             106 => {
-//                 if (EnergyTransferMode_currentIndex as i32)
-//                     < (*SupportedEnergyTransferModeType)
-//                         .EnergyTransferMode
-//                         .arrayLen as i32
-//                 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                     if error == 0 as i32 {
-//                         exi_basetypes_encoder_nbit_uint(
-//                             stream,
-//                             1 as i32 as usize,
-//                             0 as i32 as u32,
-//                         );
-//                         if error == 0 as i32 {
-//                             let fresh18 = EnergyTransferMode_currentIndex;
-//                             EnergyTransferMode_currentIndex =
-//                                 EnergyTransferMode_currentIndex.wrapping_add(1);
-//                             exi_basetypes_encoder_nbit_uint(
-//                                 stream,
-//                                 3 as i32 as usize,
-//                                 (*SupportedEnergyTransferModeType).EnergyTransferMode.array
-//                                     [fresh18 as usize] as u32,
-//                             );
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_encoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     0 as i32 as u32,
-//                                 );
-//                                 if error == 0 as i32 {
-//                                     grammar_id = 107 as i32;
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 } else {
-//                     error = -(150 as i32);
-//                 }
-//             }
-//             107 => {
-//                 if (EnergyTransferMode_currentIndex as i32)
-//                     < (*SupportedEnergyTransferModeType)
-//                         .EnergyTransferMode
-//                         .arrayLen as i32
-//                 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 0 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         exi_basetypes_encoder_nbit_uint(
-//                             stream,
-//                             1 as i32 as usize,
-//                             0 as i32 as u32,
-//                         );
-//                         if error == 0 as i32 {
-//                             let fresh19 = EnergyTransferMode_currentIndex;
-//                             EnergyTransferMode_currentIndex =
-//                                 EnergyTransferMode_currentIndex.wrapping_add(1);
-//                             exi_basetypes_encoder_nbit_uint(
-//                                 stream,
-//                                 3 as i32 as usize,
-//                                 (*SupportedEnergyTransferModeType).EnergyTransferMode.array
-//                                     [fresh19 as usize] as u32,
-//                             );
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_encoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     0 as i32 as u32,
-//                                 );
-//                                 if error == 0 as i32 {
-//                                     grammar_id = 107 as i32;
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 } else {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 1 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         done = 1 as i32;
-//                         grammar_id = 4 as i32;
-//                     }
-//                 }
-//             }
-//             3 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     done = 1 as i32;
-//                     grammar_id = 4 as i32;
-//                 }
-//             }
-//             _ => {
-//                 error = -(130 as i32);
-//             }
-//         }
-//         if error != 0 {
-//             done = 1 as i32;
-//         }
-//     }
-//     return error;
-// }
+fn encode_iso2_supported_energy_transfer_mode(
+    stream: &mut ExiBitstream,
+    message: &Iso2SupportedEnergyTransferModeType,
+) -> Result<(), ExiError> {
+    if message.energy_transfer_mode.is_empty() {
+        return Err(ExiError::ArrayOutOfBounds);
+    }
+
+    for (idx, mode) in message.energy_transfer_mode.iter().enumerate() {
+        let bit_val = if idx == 0 { 1 } else { 2 };
+        exi_basetypes_encoder_nbit_uint(stream, bit_val, 0)?;
+        exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+        exi_basetypes_encoder_nbit_uint(stream, 3, *mode as u32)?;
+        exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+    }
+
+    exi_basetypes_encoder_nbit_uint(stream, 2, 1)
+}
+
 // fn encode_iso2_CertificateChainType(
 //     stream: &mut ExiBitstream,
 //     mut CertificateChainType: *const iso2_CertificateChainType,
@@ -5439,7 +5031,7 @@ use crate::{
 //         exi_basetypes_encoder_nbit_uint(stream, 1, 0);
 //     return error;
 // }
-fn encode_iso2_notification_type(
+fn encode_iso2_notification(
     stream: &mut ExiBitstream,
     message: &Iso2NotificationType,
 ) -> Result<(), ExiError> {
@@ -5697,113 +5289,29 @@ fn encode_iso2_notification_type(
 //     }
 //     return error;
 // }
-// fn encode_iso2_PaymentOptionListType(
-//     stream: &mut ExiBitstream,
-//     mut PaymentOptionListType: *const iso2_PaymentOptionListType,
-// ) -> Result<(), ExiError> {
-//     let mut grammar_id: i32 = 119 as i32;
-//     let mut done: i32 = 0 as i32;
-//     let mut error: i32 = 0 as i32;
-//     let mut PaymentOption_currentIndex: u16 = 0 as i32 as u16;
-//     while done == 0 {
-//         match grammar_id {
-//             119 => {
-//                 if (PaymentOption_currentIndex as i32)
-//                     < (*PaymentOptionListType).PaymentOption.arrayLen as i32
-//                 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                     if error == 0 as i32 {
-//                         exi_basetypes_encoder_nbit_uint(
-//                             stream,
-//                             1 as i32 as usize,
-//                             0 as i32 as u32,
-//                         );
-//                         if error == 0 as i32 {
-//                             let fresh22 = PaymentOption_currentIndex;
-//                             PaymentOption_currentIndex = PaymentOption_currentIndex.wrapping_add(1);
-//                             exi_basetypes_encoder_nbit_uint(
-//                                 stream,
-//                                 1 as i32 as usize,
-//                                 (*PaymentOptionListType).PaymentOption.array[fresh22 as usize]
-//                                     as u32,
-//                             );
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_encoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     0 as i32 as u32,
-//                                 );
-//                                 if error == 0 as i32 {
-//                                     grammar_id = 120 as i32;
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 } else {
-//                     error = -(150 as i32);
-//                 }
-//             }
-//             120 => {
-//                 if (PaymentOption_currentIndex as i32)
-//                     < (*PaymentOptionListType).PaymentOption.arrayLen as i32
-//                 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 0 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         exi_basetypes_encoder_nbit_uint(
-//                             stream,
-//                             1 as i32 as usize,
-//                             0 as i32 as u32,
-//                         );
-//                         if error == 0 as i32 {
-//                             let fresh23 = PaymentOption_currentIndex;
-//                             PaymentOption_currentIndex = PaymentOption_currentIndex.wrapping_add(1);
-//                             exi_basetypes_encoder_nbit_uint(
-//                                 stream,
-//                                 1 as i32 as usize,
-//                                 (*PaymentOptionListType).PaymentOption.array[fresh23 as usize]
-//                                     as u32,
-//                             );
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_encoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     0 as i32 as u32,
-//                                 );
-//                                 if error == 0 as i32 {
-//                                     grammar_id = 3 as i32;
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 } else {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 1 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         done = 1 as i32;
-//                         grammar_id = 4 as i32;
-//                     }
-//                 }
-//             }
-//             3 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     done = 1 as i32;
-//                     grammar_id = 4 as i32;
-//                 }
-//             }
-//             _ => {
-//                 error = -(130 as i32);
-//             }
-//         }
-//         if error != 0 {
-//             done = 1 as i32;
-//         }
-//     }
-//     return error;
-// }
-// // fn encode_iso2_signature_type(
+fn encode_iso2_payment_option_list(
+    stream: &mut ExiBitstream,
+    message: &Iso2PaymentOptionListType,
+) -> Result<(), ExiError> {
+    if message.payment_option.len() > 0 {
+        for (i, option) in message.payment_option.iter().enumerate() {
+            exi_basetypes_encoder_nbit_uint(stream, i + 1, 0)?;
+            exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+            exi_basetypes_encoder_nbit_uint(stream, 1, *option as u32)?;
+            exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+        }
+
+        match message.payment_option.len() {
+            1 => exi_basetypes_encoder_nbit_uint(stream, 2, 1)?,
+            2 => exi_basetypes_encoder_nbit_uint(stream, 1, 0)?,
+            _ => return Err(ExiError::ArrayOutOfBounds),
+        }
+    } else {
+        return Err(ExiError::ArrayOutOfBounds);
+    }
+    Ok(())
+}
+// // fn encode_iso2_signature(
 //     stream: &mut ExiBitstream,
 //     mut message: &mut Iso2SignatureType,
 // ) -> Result<(), ExiError>{
@@ -6182,605 +5690,160 @@ fn encode_iso2_notification_type(
 //     }
 //     return error;
 // }
-// fn encode_iso2_AC_EVChargeParameterType(
+// fn encode_iso2_ac_evcharge_parameter(
 //     stream: &mut ExiBitstream,
-//     mut AC_EVChargeParameterType: *const iso2_AC_EVChargeParameterType,
+//     message: &Iso2ACEVChargeParameterType,
 // ) -> Result<(), ExiError> {
-//     let mut grammar_id: i32 = 134 as i32;
-//     let mut done: i32 = 0 as i32;
-//     let mut error: i32 = 0 as i32;
-//     while done == 0 {
-//         match grammar_id {
-//             134 => {
-//                 if (*AC_EVChargeParameterType).DepartureTime_isUsed() == 1 as u32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 0 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         exi_basetypes_encoder_nbit_uint(
-//                             stream,
-//                             1 as i32 as usize,
-//                             0 as i32 as u32,
-//                         );
-//                         if error == 0 as i32 {
-//                             error = exi_basetypes_encoder_uint_32(
-//                                 stream,
-//                                 (*AC_EVChargeParameterType).DepartureTime,
-//                             );
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_encoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     0 as i32 as u32,
-//                                 );
-//                                 if error == 0 as i32 {
-//                                     grammar_id = 135 as i32;
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 } else {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 1 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         error = encode_iso2_PhysicalValueType(
-//                             stream,
-//                             &(*AC_EVChargeParameterType).EAmount,
-//                         );
-//                         if error == 0 as i32 {
-//                             grammar_id = 136 as i32;
-//                         }
-//                     }
-//                 }
-//             }
-//             135 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     error =
-//                         encode_iso2_PhysicalValueType(stream, &(*AC_EVChargeParameterType).EAmount);
-//                     if error == 0 as i32 {
-//                         grammar_id = 136 as i32;
-//                     }
-//                 }
-//             }
-//             136 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     error = encode_iso2_PhysicalValueType(
-//                         stream,
-//                         &(*AC_EVChargeParameterType).EVMaxVoltage,
-//                     );
-//                     if error == 0 as i32 {
-//                         grammar_id = 137 as i32;
-//                     }
-//                 }
-//             }
-//             137 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     error = encode_iso2_PhysicalValueType(
-//                         stream,
-//                         &(*AC_EVChargeParameterType).EVMaxCurrent,
-//                     );
-//                     if error == 0 as i32 {
-//                         grammar_id = 138 as i32;
-//                     }
-//                 }
-//             }
-//             138 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     error = encode_iso2_PhysicalValueType(
-//                         stream,
-//                         &(*AC_EVChargeParameterType).EVMinCurrent,
-//                     );
-//                     if error == 0 as i32 {
-//                         grammar_id = 3 as i32;
-//                     }
-//                 }
-//             }
-//             3 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     done = 1 as i32;
-//                     grammar_id = 4 as i32;
-//                 }
-//             }
-//             _ => {
-//                 error = -(130 as i32);
-//             }
-//         }
-//         if error != 0 {
-//             done = 1 as i32;
-//         }
+
+//     if let Some(departure_time) = &message.departure_time {
+//         exi_basetypes_encoder_nbit_uint(stream, 2, 0)?;
+//         exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//         exi_basetypes_encoder_uint_32(stream, *departure_time)?;
+//         exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+
+//         exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//     } else {
+//         exi_basetypes_encoder_nbit_uint(stream, 2, 1)?;
 //     }
-//     return error;
+
+//     encode_iso2_physical_value(stream, &message.e_amount)?;
+
+//     exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//     encode_iso2_physical_value(stream, &message.ev_max_voltage)?;
+
+//     exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//     encode_iso2_physical_value(stream, &message.ev_max_current)?;
+
+//     exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//     encode_iso2_physical_value(stream, &message.ev_min_current)?;
+
+//     exi_basetypes_encoder_nbit_uint(stream, 1, 0)
 // }
-// fn encode_iso2_DC_EVChargeParameterType(
+
+// fn encode_iso2_dc_evcharge_parameter(
 //     stream: &mut ExiBitstream,
-//     mut DC_EVChargeParameterType: *const iso2_DC_EVChargeParameterType,
+//     message: &Iso2DCEVChargeParameterType,
 // ) -> Result<(), ExiError> {
-//     let mut grammar_id: i32 = 139 as i32;
-//     let mut done: i32 = 0 as i32;
-//     let mut error: i32 = 0 as i32;
-//     while done == 0 {
-//         match grammar_id {
-//             139 => {
-//                 if (*DC_EVChargeParameterType).DepartureTime_isUsed() == 1 as u32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 0 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         exi_basetypes_encoder_nbit_uint(
-//                             stream,
-//                             1 as i32 as usize,
-//                             0 as i32 as u32,
-//                         );
-//                         if error == 0 as i32 {
-//                             error = exi_basetypes_encoder_uint_32(
-//                                 stream,
-//                                 (*DC_EVChargeParameterType).DepartureTime,
-//                             );
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_encoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     0 as i32 as u32,
-//                                 );
-//                                 if error == 0 as i32 {
-//                                     grammar_id = 140 as i32;
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 } else {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 1 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         error = encode_iso2_DC_EVStatusType(
-//                             stream,
-//                             &(*DC_EVChargeParameterType).DC_EVStatus,
-//                         );
-//                         if error == 0 as i32 {
-//                             grammar_id = 141 as i32;
-//                         }
-//                     }
-//                 }
-//             }
-//             140 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     error = encode_iso2_DC_EVStatusType(
-//                         stream,
-//                         &(*DC_EVChargeParameterType).DC_EVStatus,
-//                     );
-//                     if error == 0 as i32 {
-//                         grammar_id = 141 as i32;
-//                     }
-//                 }
-//             }
-//             141 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     error = encode_iso2_PhysicalValueType(
-//                         stream,
-//                         &(*DC_EVChargeParameterType).EVMaximumCurrentLimit,
-//                     );
-//                     if error == 0 as i32 {
-//                         grammar_id = 142 as i32;
-//                     }
-//                 }
-//             }
-//             142 => {
-//                 if (*DC_EVChargeParameterType).EVMaximumPowerLimit_isUsed() == 1 as u32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 0 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         error = encode_iso2_PhysicalValueType(
-//                             stream,
-//                             &(*DC_EVChargeParameterType).EVMaximumPowerLimit,
-//                         );
-//                         if error == 0 as i32 {
-//                             grammar_id = 143 as i32;
-//                         }
-//                     }
-//                 } else {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 1 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         error = encode_iso2_PhysicalValueType(
-//                             stream,
-//                             &(*DC_EVChargeParameterType).EVMaximumVoltageLimit,
-//                         );
-//                         if error == 0 as i32 {
-//                             grammar_id = 144 as i32;
-//                         }
-//                     }
-//                 }
-//             }
-//             143 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     error = encode_iso2_PhysicalValueType(
-//                         stream,
-//                         &(*DC_EVChargeParameterType).EVMaximumVoltageLimit,
-//                     );
-//                     if error == 0 as i32 {
-//                         grammar_id = 144 as i32;
-//                     }
-//                 }
-//             }
-//             144 => {
-//                 if (*DC_EVChargeParameterType).EVEnergyCapacity_isUsed() == 1 as u32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 3 as i32 as usize, 0 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         error = encode_iso2_PhysicalValueType(
-//                             stream,
-//                             &(*DC_EVChargeParameterType).EVEnergyCapacity,
-//                         );
-//                         if error == 0 as i32 {
-//                             grammar_id = 145 as i32;
-//                         }
-//                     }
-//                 } else if (*DC_EVChargeParameterType).EVEnergyRequest_isUsed() == 1 as u32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 3 as i32 as usize, 1 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         error = encode_iso2_PhysicalValueType(
-//                             stream,
-//                             &(*DC_EVChargeParameterType).EVEnergyRequest,
-//                         );
-//                         if error == 0 as i32 {
-//                             grammar_id = 146 as i32;
-//                         }
-//                     }
-//                 } else if (*DC_EVChargeParameterType).FullSOC_isUsed() == 1 as u32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 3 as i32 as usize, 2 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         exi_basetypes_encoder_nbit_uint(
-//                             stream,
-//                             1 as i32 as usize,
-//                             0 as i32 as u32,
-//                         );
-//                         if error == 0 as i32 {
-//                             exi_basetypes_encoder_nbit_uint(
-//                                 stream,
-//                                 7 as i32 as usize,
-//                                 (*DC_EVChargeParameterType).FullSOC as u32,
-//                             );
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_encoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     0 as i32 as u32,
-//                                 );
-//                                 if error == 0 as i32 {
-//                                     grammar_id = 147 as i32;
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 } else if (*DC_EVChargeParameterType).BulkSOC_isUsed() == 1 as u32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 3 as i32 as usize, 3 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         exi_basetypes_encoder_nbit_uint(
-//                             stream,
-//                             1 as i32 as usize,
-//                             0 as i32 as u32,
-//                         );
-//                         if error == 0 as i32 {
-//                             exi_basetypes_encoder_nbit_uint(
-//                                 stream,
-//                                 7 as i32 as usize,
-//                                 (*DC_EVChargeParameterType).BulkSOC as u32,
-//                             );
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_encoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     0 as i32 as u32,
-//                                 );
-//                                 if error == 0 as i32 {
-//                                     grammar_id = 3 as i32;
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 } else {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 3 as i32 as usize, 4 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         done = 1 as i32;
-//                         grammar_id = 4 as i32;
-//                     }
-//                 }
-//             }
-//             145 => {
-//                 if (*DC_EVChargeParameterType).EVEnergyRequest_isUsed() == 1 as u32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 3 as i32 as usize, 0 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         error = encode_iso2_PhysicalValueType(
-//                             stream,
-//                             &(*DC_EVChargeParameterType).EVEnergyRequest,
-//                         );
-//                         if error == 0 as i32 {
-//                             grammar_id = 146 as i32;
-//                         }
-//                     }
-//                 } else if (*DC_EVChargeParameterType).FullSOC_isUsed() == 1 as u32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 3 as i32 as usize, 1 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         exi_basetypes_encoder_nbit_uint(
-//                             stream,
-//                             1 as i32 as usize,
-//                             0 as i32 as u32,
-//                         );
-//                         if error == 0 as i32 {
-//                             exi_basetypes_encoder_nbit_uint(
-//                                 stream,
-//                                 7 as i32 as usize,
-//                                 (*DC_EVChargeParameterType).FullSOC as u32,
-//                             );
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_encoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     0 as i32 as u32,
-//                                 );
-//                                 if error == 0 as i32 {
-//                                     grammar_id = 147 as i32;
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 } else if (*DC_EVChargeParameterType).BulkSOC_isUsed() == 1 as u32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 3 as i32 as usize, 2 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         exi_basetypes_encoder_nbit_uint(
-//                             stream,
-//                             1 as i32 as usize,
-//                             0 as i32 as u32,
-//                         );
-//                         if error == 0 as i32 {
-//                             exi_basetypes_encoder_nbit_uint(
-//                                 stream,
-//                                 7 as i32 as usize,
-//                                 (*DC_EVChargeParameterType).BulkSOC as u32,
-//                             );
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_encoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     0 as i32 as u32,
-//                                 );
-//                                 if error == 0 as i32 {
-//                                     grammar_id = 3 as i32;
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 } else {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 3 as i32 as usize, 3 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         done = 1 as i32;
-//                         grammar_id = 4 as i32;
-//                     }
-//                 }
-//             }
-//             146 => {
-//                 if (*DC_EVChargeParameterType).FullSOC_isUsed() == 1 as u32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 0 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         exi_basetypes_encoder_nbit_uint(
-//                             stream,
-//                             1 as i32 as usize,
-//                             0 as i32 as u32,
-//                         );
-//                         if error == 0 as i32 {
-//                             exi_basetypes_encoder_nbit_uint(
-//                                 stream,
-//                                 7 as i32 as usize,
-//                                 (*DC_EVChargeParameterType).FullSOC as u32,
-//                             );
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_encoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     0 as i32 as u32,
-//                                 );
-//                                 if error == 0 as i32 {
-//                                     grammar_id = 147 as i32;
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 } else if (*DC_EVChargeParameterType).BulkSOC_isUsed() == 1 as u32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 1 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         exi_basetypes_encoder_nbit_uint(
-//                             stream,
-//                             1 as i32 as usize,
-//                             0 as i32 as u32,
-//                         );
-//                         if error == 0 as i32 {
-//                             exi_basetypes_encoder_nbit_uint(
-//                                 stream,
-//                                 7 as i32 as usize,
-//                                 (*DC_EVChargeParameterType).BulkSOC as u32,
-//                             );
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_encoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     0 as i32 as u32,
-//                                 );
-//                                 if error == 0 as i32 {
-//                                     grammar_id = 3 as i32;
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 } else {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 2 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         done = 1 as i32;
-//                         grammar_id = 4 as i32;
-//                     }
-//                 }
-//             }
-//             147 => {
-//                 if (*DC_EVChargeParameterType).BulkSOC_isUsed() == 1 as u32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 0 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         exi_basetypes_encoder_nbit_uint(
-//                             stream,
-//                             1 as i32 as usize,
-//                             0 as i32 as u32,
-//                         );
-//                         if error == 0 as i32 {
-//                             exi_basetypes_encoder_nbit_uint(
-//                                 stream,
-//                                 7 as i32 as usize,
-//                                 (*DC_EVChargeParameterType).BulkSOC as u32,
-//                             );
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_encoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     0 as i32 as u32,
-//                                 );
-//                                 if error == 0 as i32 {
-//                                     grammar_id = 3 as i32;
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 } else {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 1 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         done = 1 as i32;
-//                         grammar_id = 4 as i32;
-//                     }
-//                 }
-//             }
-//             3 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     done = 1 as i32;
-//                     grammar_id = 4 as i32;
-//                 }
-//             }
-//             _ => {
-//                 error = -(130 as i32);
-//             }
-//         }
-//         if error != 0 {
-//             done = 1 as i32;
-//         }
+
+//     if let Some(departure_time) = &message.departure_time {
+//         exi_basetypes_encoder_nbit_uint(stream, 2, 0)?;
+//         exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//         exi_basetypes_encoder_uint_32(stream, *departure_time)?;
+//         exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+
+//         exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//     } else {
+//         exi_basetypes_encoder_nbit_uint(stream, 2, 1)?;
 //     }
-//     return error;
+
+//     encode_iso2_dc_ev_status(stream, &message.dc_ev_status)?;
+
+//     exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//     encode_iso2_physical_value(stream, &message.ev_maximum_current_limit)?;
+
+//     if let Some(ev_maximum_power_limit) = &message.ev_maximum_power_limit {
+//         exi_basetypes_encoder_nbit_uint(stream, 2, 0)?;
+//         encode_iso2_physical_value(stream, ev_maximum_power_limit)?;
+//         exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//     } else {
+//         exi_basetypes_encoder_nbit_uint(stream, 2, 1)?;
+//     }
+
+//     encode_iso2_physical_value(stream, &message.ev_maximum_voltage_limit)?;
+
+//     if let Some(ev_energy_capacity) = &message.ev_energy_capacity {
+//         exi_basetypes_encoder_nbit_uint(stream, 3, 0)?;
+//         encode_iso2_physical_value(stream, ev_energy_capacity)?;
+//     }
+//     // ev_energy_request branch
+//     else if let Some(ev_energy_request) = &message.ev_energy_request {
+//         exi_basetypes_encoder_nbit_uint(stream, 3, 1)?;
+//         encode_iso2_physical_value(stream, ev_energy_request)?;
+//     }
+//     // full_soc branch
+//     else if let Some(full_soc) = &message.full_soc {
+//         exi_basetypes_encoder_nbit_uint(stream, 3, 2)?;
+//         exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//         exi_basetypes_encoder_nbit_uint(stream, 7, *full_soc as u32)?;
+//         exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//     }
+//     // bulk_soc branch
+//     else if let Some(bulk_soc) = &message.bulk_soc {
+//         exi_basetypes_encoder_nbit_uint(stream, 3, 3)?;
+//         exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//         exi_basetypes_encoder_nbit_uint(stream, 7, *bulk_soc as u32)?;
+//         exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//         exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//         return Ok(()); // nothing more after bulk_soc here
+//     }
+//     // none present
+//     else {
+//         exi_basetypes_encoder_nbit_uint(stream, 3, 4)?;
+//         return Ok(());
+//     }
+
+//     // Secondary level: ev_energy_request / full_soc / bulk_soc after capacity or request
+//     if let Some(ev_energy_request) = &message.ev_energy_request {
+//         exi_basetypes_encoder_nbit_uint(stream, 3, 0)?;
+//         encode_iso2_physical_value(stream, ev_energy_request)?;
+//     }
+//     else if let Some(full_soc) = &message.full_soc {
+//         exi_basetypes_encoder_nbit_uint(stream, 3, 1)?;
+//         exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//         exi_basetypes_encoder_nbit_uint(stream, 7, *full_soc as u32)?;
+//         exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//     }
+//     else if let Some(bulk_soc) = &message.bulk_soc {
+//         exi_basetypes_encoder_nbit_uint(stream, 3, 2)?;
+//         exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//         exi_basetypes_encoder_nbit_uint(stream, 7, *bulk_soc as u32)?;
+//         exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//         exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//         return Ok(());
+//     }
+//     else {
+//         exi_basetypes_encoder_nbit_uint(stream, 3, 3)?;
+//         return Ok(());
+//     }
+
+//     // Final level: bulk_soc after full_soc
+//     if let Some(bulk_soc) = &message.bulk_soc {
+//         exi_basetypes_encoder_nbit_uint(stream, 2, 0)?;
+//         exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//         exi_basetypes_encoder_nbit_uint(stream, 7, *bulk_soc as u32)?;
+//         exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//         exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//     } else {
+//         exi_basetypes_encoder_nbit_uint(stream, 2, 1)?;
+//     }
+
+//     Ok(())
 // }
-// fn encode_iso2_EVChargeParameterType(
+
+// fn encode_iso2_evcharge_parameter(
 //     stream: &mut ExiBitstream,
-//     mut EVChargeParameterType: *const iso2_EVChargeParameterType,
+//     message: &Iso2EVChargeParameterType,
 // ) -> Result<(), ExiError> {
-//     let mut grammar_id: i32 = 148 as i32;
-//     let mut done: i32 = 0 as i32;
-//     let mut error: i32 = 0 as i32;
-//     while done == 0 {
-//         match grammar_id {
-//             148 => {
-//                 if (*EVChargeParameterType).DepartureTime_isUsed() == 1 as u32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 0 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         exi_basetypes_encoder_nbit_uint(
-//                             stream,
-//                             1 as i32 as usize,
-//                             0 as i32 as u32,
-//                         );
-//                         if error == 0 as i32 {
-//                             error = exi_basetypes_encoder_uint_32(
-//                                 stream,
-//                                 (*EVChargeParameterType).DepartureTime,
-//                             );
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_encoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     0 as i32 as u32,
-//                                 );
-//                                 if error == 0 as i32 {
-//                                     grammar_id = 149 as i32;
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 } else {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 1 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         error = encode_iso2_AC_EVChargeParameterType(
-//                             stream,
-//                             &(*EVChargeParameterType).AC_EVChargeParameter,
-//                         );
-//                         if error == 0 as i32 {
-//                             grammar_id = 150 as i32;
-//                         }
-//                     }
-//                 }
-//             }
-//             149 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     error = encode_iso2_AC_EVChargeParameterType(
-//                         stream,
-//                         &(*EVChargeParameterType).AC_EVChargeParameter,
-//                     );
-//                     if error == 0 as i32 {
-//                         grammar_id = 150 as i32;
-//                     }
-//                 }
-//             }
-//             150 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     error = encode_iso2_DC_EVChargeParameterType(
-//                         stream,
-//                         &(*EVChargeParameterType).DC_EVChargeParameter,
-//                     );
-//                     if error == 0 as i32 {
-//                         grammar_id = 3 as i32;
-//                     }
-//                 }
-//             }
-//             3 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     done = 1 as i32;
-//                     grammar_id = 4 as i32;
-//                 }
-//             }
-//             _ => {
-//                 error = -(130 as i32);
-//             }
-//         }
-//         if error != 0 {
-//             done = 1 as i32;
-//         }
+
+//     if let Some(departure_time) = message.departure_time {
+//         exi_basetypes_encoder_nbit_uint(stream, 2, 0)?;
+//         exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//         exi_basetypes_encoder_uint_32(stream, departure_time)?;
+//         exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//         exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//     } else {
+//         exi_basetypes_encoder_nbit_uint(stream, 2, 1)?;
 //     }
-//     return error;
+
+//     encode_iso2_ac_evcharge_parameter(stream, &message.ac_ev_charge_parameter)?;
+
+//     exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//     encode_iso2_dc_evcharge_parameter(stream, &message.dc_ev_charge_parameter)?;
+
+//     exi_basetypes_encoder_nbit_uint(stream, 1, 0)
+
 // }
+
 // fn encode_iso2_SASchedulesType(
 //     stream: &mut ExiBitstream,
 //     mut SASchedulesType: *const iso2_SASchedulesType,
@@ -6867,239 +5930,54 @@ fn encode_iso2_notification_type(
 //     }
 //     return error;
 // }
-// fn encode_iso2_ChargeServiceType(
-//     stream: &mut ExiBitstream,
-//     mut ChargeServiceType: *const iso2_ChargeServiceType,
-// ) -> Result<(), ExiError> {
-//     let mut grammar_id: i32 = 153 as i32;
-//     let mut done: i32 = 0 as i32;
-//     let mut error: i32 = 0 as i32;
-//     while done == 0 {
-//         match grammar_id {
-//             153 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                     if error == 0 as i32 {
-//                         error =
-//                             exi_basetypes_encoder_uint_16(stream, (*ChargeServiceType).ServiceID);
-//                         if error == 0 as i32 {
-//                             exi_basetypes_encoder_nbit_uint(
-//                                 stream,
-//                                 1 as i32 as usize,
-//                                 0 as i32 as u32,
-//                             );
-//                             if error == 0 as i32 {
-//                                 grammar_id = 154 as i32;
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//             154 => {
-//                 if (*ChargeServiceType).ServiceName_isUsed() == 1 as u32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 0 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         exi_basetypes_encoder_nbit_uint(
-//                             stream,
-//                             1 as i32 as usize,
-//                             0 as i32 as u32,
-//                         );
-//                         if error == 0 as i32 {
-//                             error = exi_basetypes_encoder_uint_16(
-//                                 stream,
-//                                 ((*ChargeServiceType).ServiceName.charactersLen as i32 + 2 as i32)
-//                                     as u16,
-//                             );
-//                             if error == 0 as i32 {
-//                                 error = exi_basetypes_encoder_characters(
-//                                     stream,
-//                                     (*ChargeServiceType).ServiceName.charactersLen as usize,
-//                                     ((*ChargeServiceType).ServiceName.characters).as_ptr(),
-//                                     (32 as i32 + 1 as i32) as usize,
-//                                 );
-//                                 if error == 0 as i32 {
-//                                     exi_basetypes_encoder_nbit_uint(
-//                                         stream,
-//                                         1 as i32 as usize,
-//                                         0 as i32 as u32,
-//                                     );
-//                                     if error == 0 as i32 {
-//                                         grammar_id = 155 as i32;
-//                                     }
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 } else {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 1 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         exi_basetypes_encoder_nbit_uint(
-//                             stream,
-//                             1 as i32 as usize,
-//                             0 as i32 as u32,
-//                         );
-//                         if error == 0 as i32 {
-//                             exi_basetypes_encoder_nbit_uint(
-//                                 stream,
-//                                 2 as i32 as usize,
-//                                 (*ChargeServiceType).ServiceCategory as u32,
-//                             );
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_encoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     0 as i32 as u32,
-//                                 );
-//                                 if error == 0 as i32 {
-//                                     grammar_id = 156 as i32;
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//             155 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                     if error == 0 as i32 {
-//                         exi_basetypes_encoder_nbit_uint(
-//                             stream,
-//                             2 as i32 as usize,
-//                             (*ChargeServiceType).ServiceCategory as u32,
-//                         );
-//                         if error == 0 as i32 {
-//                             exi_basetypes_encoder_nbit_uint(
-//                                 stream,
-//                                 1 as i32 as usize,
-//                                 0 as i32 as u32,
-//                             );
-//                             if error == 0 as i32 {
-//                                 grammar_id = 156 as i32;
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//             156 => {
-//                 if (*ChargeServiceType).ServiceScope_isUsed() == 1 as u32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 0 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         exi_basetypes_encoder_nbit_uint(
-//                             stream,
-//                             1 as i32 as usize,
-//                             0 as i32 as u32,
-//                         );
-//                         if error == 0 as i32 {
-//                             error = exi_basetypes_encoder_uint_16(
-//                                 stream,
-//                                 ((*ChargeServiceType).ServiceScope.charactersLen as i32 + 2 as i32)
-//                                     as u16,
-//                             );
-//                             if error == 0 as i32 {
-//                                 error = exi_basetypes_encoder_characters(
-//                                     stream,
-//                                     (*ChargeServiceType).ServiceScope.charactersLen as usize,
-//                                     ((*ChargeServiceType).ServiceScope.characters).as_ptr(),
-//                                     (64 as i32 + 1 as i32) as usize,
-//                                 );
-//                                 if error == 0 as i32 {
-//                                     exi_basetypes_encoder_nbit_uint(
-//                                         stream,
-//                                         1 as i32 as usize,
-//                                         0 as i32 as u32,
-//                                     );
-//                                     if error == 0 as i32 {
-//                                         grammar_id = 157 as i32;
-//                                     }
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 } else {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 1 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         exi_basetypes_encoder_nbit_uint(
-//                             stream,
-//                             1 as i32 as usize,
-//                             0 as i32 as u32,
-//                         );
-//                         if error == 0 as i32 {
-//                             error = exi_basetypes_encoder_bool(
-//                                 stream,
-//                                 (*ChargeServiceType).FreeService,
-//                             );
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_encoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     0 as i32 as u32,
-//                                 );
-//                                 if error == 0 as i32 {
-//                                     grammar_id = 158 as i32;
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//             157 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                     if error == 0 as i32 {
-//                         error =
-//                             exi_basetypes_encoder_bool(stream, (*ChargeServiceType).FreeService);
-//                         if error == 0 as i32 {
-//                             exi_basetypes_encoder_nbit_uint(
-//                                 stream,
-//                                 1 as i32 as usize,
-//                                 0 as i32 as u32,
-//                             );
-//                             if error == 0 as i32 {
-//                                 grammar_id = 158 as i32;
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//             158 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     error = encode_iso2_SupportedEnergyTransferModeType(
-//                         stream,
-//                         &(*ChargeServiceType).SupportedEnergyTransferMode,
-//                     );
-//                     if error == 0 as i32 {
-//                         grammar_id = 3 as i32;
-//                     }
-//                 }
-//             }
-//             3 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     done = 1 as i32;
-//                     grammar_id = 4 as i32;
-//                 }
-//             }
-//             _ => {
-//                 error = -(130 as i32);
-//             }
-//         }
-//         if error != 0 {
-//             done = 1 as i32;
-//         }
-//     }
-//     return error;
-// }
+fn encode_iso2_charge_service(
+    stream: &mut ExiBitstream,
+    message: &Iso2ChargeServiceType,
+) -> Result<(), ExiError> {
+    exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+    exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+    exi_basetypes_encoder_uint_16(stream, message.service_id)?;
+    exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+
+    if let Some(service_name) = &message.service_name {
+        exi_basetypes_encoder_nbit_uint(stream, 2, 0)?;
+        exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+
+        let len: u16 =
+            u16::try_from(service_name.len()).map_err(|_| ExiError::InvalidCharactersLength)?;
+        exi_basetypes_encoder_uint_16(stream, len + 2)?;
+        exi_basetypes_encoder_characters(stream, service_name)?;
+        exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+
+        exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+    } else {
+        exi_basetypes_encoder_nbit_uint(stream, 2, 1)?;
+    }
+    exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+    exi_basetypes_encoder_nbit_uint(stream, 2, message.service_category as u32)?;
+    exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+
+    if let Some(service_scope) = &message.service_scope {
+        exi_basetypes_encoder_nbit_uint(stream, 2, 0)?;
+        exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+        let len: u16 =
+            u16::try_from(service_scope.len()).map_err(|_| ExiError::InvalidCharactersLength)?;
+        exi_basetypes_encoder_uint_16(stream, len + 2)?;
+        exi_basetypes_encoder_characters(stream, service_scope)?;
+        exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+    } else {
+        exi_basetypes_encoder_nbit_uint(stream, 2, 1)?;
+    }
+
+    exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+    exi_basetypes_encoder_bool(stream, message.free_service)?;
+    exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+
+    exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+    encode_iso2_supported_energy_transfer_mode(stream, &message.supported_energy_transfer_mode)?;
+    exi_basetypes_encoder_nbit_uint(stream, 1, 0)
+}
+
 // fn encode_iso2_EVPowerDeliveryParameterType(
 //     stream: &mut ExiBitstream,
 //     mut EVPowerDeliveryParameterType: *const iso2_EVPowerDeliveryParameterType,
@@ -7120,7 +5998,7 @@ fn encode_iso2_notification_type(
 //             159 => {
 //                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
 //                 if error == 0 as i32 {
-//                     error = encode_iso2_DC_EVStatusType(
+//                     error = encode_iso2_message(
 //                         stream,
 //                         &(*DC_EVPowerDeliveryParameterType).DC_EVStatus,
 //                     );
@@ -7459,80 +6337,24 @@ fn encode_iso2_notification_type(
 //     }
 //     return error;
 // }
-// fn encode_iso2_ServiceListType(
-//     stream: &mut ExiBitstream,
-//     mut ServiceListType: *const iso2_ServiceListType,
-// ) -> Result<(), ExiError> {
-//     let mut grammar_id: i32 = 173 as i32;
-//     let mut done: i32 = 0 as i32;
-//     let mut error: i32 = 0 as i32;
-//     let mut Service_currentIndex: u16 = 0 as i32 as u16;
-//     while done == 0 {
-//         match grammar_id {
-//             173 => {
-//                 if (Service_currentIndex as i32) < (*ServiceListType).Service.arrayLen as i32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                     if error == 0 as i32 {
-//                         let fresh32 = Service_currentIndex;
-//                         Service_currentIndex = Service_currentIndex.wrapping_add(1);
-//                         error = encode_iso2_ServiceType(
-//                             stream,
-//                             &*((*ServiceListType).Service.array)
-//                                 .as_ptr()
-//                                 .offset(fresh32 as isize),
-//                         );
-//                         if error == 0 as i32 {
-//                             grammar_id = 174 as i32;
-//                         }
-//                     }
-//                 } else {
-//                     error = -(150 as i32);
-//                 }
-//             }
-//             174 => {
-//                 if (Service_currentIndex as i32) < (*ServiceListType).Service.arrayLen as i32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 0 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         let fresh33 = Service_currentIndex;
-//                         Service_currentIndex = Service_currentIndex.wrapping_add(1);
-//                         error = encode_iso2_ServiceType(
-//                             stream,
-//                             &*((*ServiceListType).Service.array)
-//                                 .as_ptr()
-//                                 .offset(fresh33 as isize),
-//                         );
-//                         if error == 0 as i32 {
-//                             grammar_id = 174 as i32;
-//                         }
-//                     }
-//                 } else {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 1 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         done = 1 as i32;
-//                         grammar_id = 4 as i32;
-//                     }
-//                 }
-//             }
-//             3 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     done = 1 as i32;
-//                     grammar_id = 4 as i32;
-//                 }
-//             }
-//             _ => {
-//                 error = -(130 as i32);
-//             }
-//         }
-//         if error != 0 {
-//             done = 1 as i32;
-//         }
-//     }
-//     return error;
-// }
+fn encode_iso2_service_list(
+    stream: &mut ExiBitstream,
+    message: &Iso2ServiceListType,
+) -> Result<(), ExiError> {
+    if message.service.is_empty() {
+        return Err(ExiError::ArrayOutOfBounds);
+    }
+
+    for (idx, service) in message.service.iter().enumerate() {
+        let bit_val = if idx == 0 { 1 } else { 2 };
+        exi_basetypes_encoder_nbit_uint(stream, bit_val, 0)?;
+        exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+        encode_iso2_service(stream, service)?;
+    }
+
+    exi_basetypes_encoder_nbit_uint(stream, 2, 1)
+}
+
 // fn encode_iso2_DiffieHellmanPublickeyType(
 //     stream: &mut ExiBitstream,
 //     mut DiffieHellmanPublickeyType: *const iso2_DiffieHellmanPublickeyType,
@@ -8276,7 +7098,7 @@ fn encode_iso2_notification_type(
 //     }
 //     return error;
 // }
-fn encode_iso2_message_header_type(
+fn encode_iso2_message_header(
     stream: &mut ExiBitstream,
     message: &Iso2MessageHeaderType,
 ) -> Result<(), ExiError> {
@@ -8293,11 +7115,11 @@ fn encode_iso2_message_header_type(
 
     if let Some(ref notification) = message.notification {
         exi_basetypes_encoder_nbit_uint(stream, 2, 0)?;
-        encode_iso2_notification_type(stream, notification)?;
+        encode_iso2_notification(stream, notification)?;
         if let Some(ref signature) = (message).signature {
             exi_basetypes_encoder_nbit_uint(stream, 2, 0)?;
             //TODO Fix this func when required
-            //encode_iso2_signature_type(stream, signature)?;
+            //encode_iso2_signature(stream, signature)?;
             exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
         } else {
             exi_basetypes_encoder_nbit_uint(stream, 2, 1)?;
@@ -9362,7 +8184,7 @@ fn encode_iso2_message_header_type(
 //             224 => {
 //                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
 //                 if error == 0 as i32 {
-//                     error = encode_iso2_DC_EVStatusType(stream, &(*PreChargeReqType).DC_EVStatus);
+//                     error = encode_iso2_message(stream, &(*PreChargeReqType).DC_EVStatus);
 //                     if error == 0 as i32 {
 //                         grammar_id = 225 as i32;
 //                     }
@@ -9652,7 +8474,7 @@ fn encode_iso2_message_header_type(
 //     }
 //     return error;
 // }
-fn encode_iso2_session_setup_res_type(
+fn encode_iso2_session_setup_res(
     stream: &mut ExiBitstream,
     message: &Iso2SessionSetupResType,
 ) -> Result<(), ExiError> {
@@ -9972,7 +8794,7 @@ fn encode_iso2_session_setup_res_type(
 //                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
 //                 if error == 0 as i32 {
 //                     error =
-//                         encode_iso2_DC_EVStatusType(stream, &(*CurrentDemandReqType).DC_EVStatus);
+//                         encode_iso2_message(stream, &(*CurrentDemandReqType).DC_EVStatus);
 //                     if error == 0 as i32 {
 //                         grammar_id = 251 as i32;
 //                     }
@@ -10837,154 +9659,39 @@ fn encode_iso2_session_setup_res_type(
 //     }
 //     return error;
 // }
-// fn encode_iso2_ChargeParameterDiscoveryReqType(
+// fn encode_iso2_charge_parameter_discovery_req(
 //     stream: &mut ExiBitstream,
-//     mut ChargeParameterDiscoveryReqType: *const iso2_ChargeParameterDiscoveryReqType,
+//     message: &Iso2ChargeParameterDiscoveryReqType,
 // ) -> Result<(), ExiError> {
-//     let mut grammar_id: i32 = 275 as i32;
-//     let mut done: i32 = 0 as i32;
-//     let mut error: i32 = 0 as i32;
-//     while done == 0 {
-//         match grammar_id {
-//             275 => {
-//                 if (*ChargeParameterDiscoveryReqType).MaxEntriesSAScheduleTuple_isUsed() == 1 as u32
-//                 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 0 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         exi_basetypes_encoder_nbit_uint(
-//                             stream,
-//                             1 as i32 as usize,
-//                             0 as i32 as u32,
-//                         );
-//                         if error == 0 as i32 {
-//                             error = exi_basetypes_encoder_uint_16(
-//                                 stream,
-//                                 (*ChargeParameterDiscoveryReqType).MaxEntriesSAScheduleTuple,
-//                             );
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_encoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     0 as i32 as u32,
-//                                 );
-//                                 if error == 0 as i32 {
-//                                     grammar_id = 276 as i32;
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 } else {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 1 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         exi_basetypes_encoder_nbit_uint(
-//                             stream,
-//                             1 as i32 as usize,
-//                             0 as i32 as u32,
-//                         );
-//                         if error == 0 as i32 {
-//                             exi_basetypes_encoder_nbit_uint(
-//                                 stream,
-//                                 3 as i32 as usize,
-//                                 (*ChargeParameterDiscoveryReqType).RequestedEnergyTransferMode
-//                                     as u32,
-//                             );
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_encoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     0 as i32 as u32,
-//                                 );
-//                                 if error == 0 as i32 {
-//                                     grammar_id = 277 as i32;
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//             276 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                     if error == 0 as i32 {
-//                         exi_basetypes_encoder_nbit_uint(
-//                             stream,
-//                             3 as i32 as usize,
-//                             (*ChargeParameterDiscoveryReqType).RequestedEnergyTransferMode as u32,
-//                         );
-//                         if error == 0 as i32 {
-//                             exi_basetypes_encoder_nbit_uint(
-//                                 stream,
-//                                 1 as i32 as usize,
-//                                 0 as i32 as u32,
-//                             );
-//                             if error == 0 as i32 {
-//                                 grammar_id = 277 as i32;
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//             277 => {
-//                 if (*ChargeParameterDiscoveryReqType).AC_EVChargeParameter_isUsed() == 1 as u32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 0 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         error = encode_iso2_AC_EVChargeParameterType(
-//                             stream,
-//                             &(*ChargeParameterDiscoveryReqType).AC_EVChargeParameter,
-//                         );
-//                         if error == 0 as i32 {
-//                             grammar_id = 3 as i32;
-//                         }
-//                     }
-//                 } else if (*ChargeParameterDiscoveryReqType).DC_EVChargeParameter_isUsed()
-//                     == 1 as u32
-//                 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 1 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         error = encode_iso2_DC_EVChargeParameterType(
-//                             stream,
-//                             &(*ChargeParameterDiscoveryReqType).DC_EVChargeParameter,
-//                         );
-//                         if error == 0 as i32 {
-//                             grammar_id = 3 as i32;
-//                         }
-//                     }
-//                 } else {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 2 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         error = encode_iso2_EVChargeParameterType(
-//                             stream,
-//                             &(*ChargeParameterDiscoveryReqType).EVChargeParameter,
-//                         );
-//                         if error == 0 as i32 {
-//                             grammar_id = 3 as i32;
-//                         }
-//                     }
-//                 }
-//             }
-//             3 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     done = 1 as i32;
-//                     grammar_id = 4 as i32;
-//                 }
-//             }
-//             _ => {
-//                 error = -(130 as i32);
-//             }
-//         }
-//         if error != 0 {
-//             done = 1 as i32;
-//         }
+//     if let Some(max_entries) = message.max_entries_sa_schedule_tuple {
+//         exi_basetypes_encoder_nbit_uint(stream, 2, 0)?;
+//         exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//         exi_basetypes_encoder_uint_16(stream, max_entries)?;
+//         exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+
+//         exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//         exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//         exi_basetypes_encoder_nbit_uint(stream, 3, message.requested_energy_transfer_mode as u32)?;
+//         exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//     } else {
+//         exi_basetypes_encoder_nbit_uint(stream, 2, 1)?;
+//         exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//         exi_basetypes_encoder_nbit_uint(stream, 3, message.requested_energy_transfer_mode as u32)?;
+//         exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
 //     }
-//     return error;
+
+//     if let Some(ref ac_param) = message.ac_ev_charge_parameter {
+//         exi_basetypes_encoder_nbit_uint(stream, 2, 0)?;
+//         encode_iso2_ac_evcharge_parameter(stream, ac_param)?;
+//     } else if let Some(ref dc_param) = message.dc_ev_charge_parameter {
+//         exi_basetypes_encoder_nbit_uint(stream, 2, 1)?;
+//         encode_iso2_dc_evcharge_parameter(stream, dc_param)?;
+//     } else if let Some(ref ev_param) = message.ev_charge_parameter {
+//         exi_basetypes_encoder_nbit_uint(stream, 2, 2)?;
+//         encode_iso2_evcharge_parameter(stream, ev_param)?;
+//     }
+
+//     exi_basetypes_encoder_nbit_uint(stream, 1, 0)
 // }
 // fn encode_iso2_CableCheckReqType(
 //     stream: &mut ExiBitstream,
@@ -10998,7 +9705,7 @@ fn encode_iso2_session_setup_res_type(
 //             278 => {
 //                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
 //                 if error == 0 as i32 {
-//                     error = encode_iso2_DC_EVStatusType(stream, &(*CableCheckReqType).DC_EVStatus);
+//                     error = encode_iso2_message(stream, &(*CableCheckReqType).DC_EVStatus);
 //                     if error == 0 as i32 {
 //                         grammar_id = 3 as i32;
 //                     }
@@ -11033,7 +9740,7 @@ fn encode_iso2_session_setup_res_type(
 //             279 => {
 //                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
 //                 if error == 0 as i32 {
-//                     error = encode_iso2_DC_EVStatusType(
+//                     error = encode_iso2_message(
 //                         stream,
 //                         &(*WeldingDetectionReqType).DC_EVStatus,
 //                     );
@@ -11563,153 +10270,44 @@ fn encode_iso2_session_setup_res_type(
 //     }
 //     return error;
 // }
-// fn encode_iso2_ServiceDiscoveryResType(
+fn encode_iso2_service_discovery_res(
+    stream: &mut ExiBitstream,
+    message: &Iso2ServiceDiscoveryResType,
+) -> Result<(), ExiError> {
+    exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+    exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+    exi_basetypes_encoder_nbit_uint(stream, 5, message.response_code as u32)?;
+    exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+
+    exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+    encode_iso2_payment_option_list(stream, &message.payment_option_list)?;
+
+    exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+    encode_iso2_charge_service(stream, &message.charge_service)?;
+
+    if let Some(service_list) = &message.service_list {
+        exi_basetypes_encoder_nbit_uint(stream, 2, 0)?;
+        encode_iso2_service_list(stream, &service_list)?;
+        exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+    } else {
+        exi_basetypes_encoder_nbit_uint(stream, 2, 1)?;
+    }
+
+    Ok(())
+}
+
+// fn encode_iso2_service_detail_req(
 //     stream: &mut ExiBitstream,
-//     mut ServiceDiscoveryResType: *const iso2_ServiceDiscoveryResType,
+//     message: &Iso2ServiceDetailReqType,
 // ) -> Result<(), ExiError> {
-//     let mut grammar_id: i32 = 293 as i32;
-//     let mut done: i32 = 0 as i32;
-//     let mut error: i32 = 0 as i32;
-//     while done == 0 {
-//         match grammar_id {
-//             293 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                     if error == 0 as i32 {
-//                         exi_basetypes_encoder_nbit_uint(
-//                             stream,
-//                             5 as i32 as usize,
-//                             (*ServiceDiscoveryResType).ResponseCode as u32,
-//                         );
-//                         if error == 0 as i32 {
-//                             exi_basetypes_encoder_nbit_uint(
-//                                 stream,
-//                                 1 as i32 as usize,
-//                                 0 as i32 as u32,
-//                             );
-//                             if error == 0 as i32 {
-//                                 grammar_id = 294 as i32;
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//             294 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     error = encode_iso2_PaymentOptionListType(
-//                         stream,
-//                         &(*ServiceDiscoveryResType).PaymentOptionList,
-//                     );
-//                     if error == 0 as i32 {
-//                         grammar_id = 295 as i32;
-//                     }
-//                 }
-//             }
-//             295 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     error = encode_iso2_ChargeServiceType(
-//                         stream,
-//                         &(*ServiceDiscoveryResType).ChargeService,
-//                     );
-//                     if error == 0 as i32 {
-//                         grammar_id = 296 as i32;
-//                     }
-//                 }
-//             }
-//             296 => {
-//                 if (*ServiceDiscoveryResType).ServiceList_isUsed() == 1 as u32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 0 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         error = encode_iso2_ServiceListType(
-//                             stream,
-//                             &(*ServiceDiscoveryResType).ServiceList,
-//                         );
-//                         if error == 0 as i32 {
-//                             grammar_id = 3 as i32;
-//                         }
-//                     }
-//                 } else {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 1 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         done = 1 as i32;
-//                         grammar_id = 4 as i32;
-//                     }
-//                 }
-//             }
-//             3 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     done = 1 as i32;
-//                     grammar_id = 4 as i32;
-//                 }
-//             }
-//             _ => {
-//                 error = -(130 as i32);
-//             }
-//         }
-//         if error != 0 {
-//             done = 1 as i32;
-//         }
-//     }
-//     return error;
-// }
-// fn encode_iso2_ServiceDetailReqType(
-//     stream: &mut ExiBitstream,
-//     mut ServiceDetailReqType: *const iso2_ServiceDetailReqType,
-// ) -> Result<(), ExiError> {
-//     let mut grammar_id: i32 = 297 as i32;
-//     let mut done: i32 = 0 as i32;
-//     let mut error: i32 = 0 as i32;
-//     while done == 0 {
-//         match grammar_id {
-//             297 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                     if error == 0 as i32 {
-//                         error = exi_basetypes_encoder_uint_16(
-//                             stream,
-//                             (*ServiceDetailReqType).ServiceID,
-//                         );
-//                         if error == 0 as i32 {
-//                             exi_basetypes_encoder_nbit_uint(
-//                                 stream,
-//                                 1 as i32 as usize,
-//                                 0 as i32 as u32,
-//                             );
-//                             if error == 0 as i32 {
-//                                 grammar_id = 3 as i32;
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//             3 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     done = 1 as i32;
-//                     grammar_id = 4 as i32;
-//                 }
-//             }
-//             _ => {
-//                 error = -(130 as i32);
-//             }
-//         }
-//         if error != 0 {
-//             done = 1 as i32;
-//         }
-//     }
-//     return error;
+//     exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//     exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//     exi_basetypes_encoder_uint_16(stream, message.service_id)?;
+//     exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+//     exi_basetypes_encoder_nbit_uint(stream, 1, 0)
 // }
 
-fn encode_iso2_session_setup_req_type(
+fn encode_iso2_session_setup_req(
     stream: &mut ExiBitstream,
     message: &Iso2SessionSetupReqType,
 ) -> Result<(), ExiError> {
@@ -11775,141 +10373,42 @@ fn encode_iso2_session_setup_req_type(
 //     }
 //     return error;
 // }
-// fn encode_iso2_ServiceDiscoveryReqType(
-//     stream: &mut ExiBitstream,
-//     mut ServiceDiscoveryReqType: *const iso2_ServiceDiscoveryReqType,
-// ) -> Result<(), ExiError> {
-//     let mut grammar_id: i32 = 300 as i32;
-//     let mut done: i32 = 0 as i32;
-//     let mut error: i32 = 0 as i32;
-//     while done == 0 {
-//         match grammar_id {
-//             300 => {
-//                 if (*ServiceDiscoveryReqType).ServiceScope_isUsed() == 1 as u32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 0 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         exi_basetypes_encoder_nbit_uint(
-//                             stream,
-//                             1 as i32 as usize,
-//                             0 as i32 as u32,
-//                         );
-//                         if error == 0 as i32 {
-//                             error = exi_basetypes_encoder_uint_16(
-//                                 stream,
-//                                 ((*ServiceDiscoveryReqType).ServiceScope.charactersLen as i32
-//                                     + 2 as i32) as u16,
-//                             );
-//                             if error == 0 as i32 {
-//                                 error = exi_basetypes_encoder_characters(
-//                                     stream,
-//                                     (*ServiceDiscoveryReqType).ServiceScope.charactersLen as usize,
-//                                     ((*ServiceDiscoveryReqType).ServiceScope.characters).as_ptr(),
-//                                     (64 as i32 + 1 as i32) as usize,
-//                                 );
-//                                 if error == 0 as i32 {
-//                                     exi_basetypes_encoder_nbit_uint(
-//                                         stream,
-//                                         1 as i32 as usize,
-//                                         0 as i32 as u32,
-//                                     );
-//                                     if error == 0 as i32 {
-//                                         grammar_id = 301 as i32;
-//                                     }
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 } else if (*ServiceDiscoveryReqType).ServiceCategory_isUsed() == 1 as u32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 1 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         exi_basetypes_encoder_nbit_uint(
-//                             stream,
-//                             1 as i32 as usize,
-//                             0 as i32 as u32,
-//                         );
-//                         if error == 0 as i32 {
-//                             exi_basetypes_encoder_nbit_uint(
-//                                 stream,
-//                                 2 as i32 as usize,
-//                                 (*ServiceDiscoveryReqType).ServiceCategory as u32,
-//                             );
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_encoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     0 as i32 as u32,
-//                                 );
-//                                 if error == 0 as i32 {
-//                                     grammar_id = 3 as i32;
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 } else {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 2 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         done = 1 as i32;
-//                         grammar_id = 4 as i32;
-//                     }
-//                 }
-//             }
-//             301 => {
-//                 if (*ServiceDiscoveryReqType).ServiceCategory_isUsed() == 1 as u32 {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 0 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         exi_basetypes_encoder_nbit_uint(
-//                             stream,
-//                             1 as i32 as usize,
-//                             0 as i32 as u32,
-//                         );
-//                         if error == 0 as i32 {
-//                             exi_basetypes_encoder_nbit_uint(
-//                                 stream,
-//                                 2 as i32 as usize,
-//                                 (*ServiceDiscoveryReqType).ServiceCategory as u32,
-//                             );
-//                             if error == 0 as i32 {
-//                                 exi_basetypes_encoder_nbit_uint(
-//                                     stream,
-//                                     1 as i32 as usize,
-//                                     0 as i32 as u32,
-//                                 );
-//                                 if error == 0 as i32 {
-//                                     grammar_id = 3 as i32;
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 } else {
-//                     error =
-//                         exi_basetypes_encoder_nbit_uint(stream, 2 as i32 as usize, 1 as i32 as u32);
-//                     if error == 0 as i32 {
-//                         done = 1 as i32;
-//                         grammar_id = 4 as i32;
-//                     }
-//                 }
-//             }
-//             3 => {
-//                 exi_basetypes_encoder_nbit_uint(stream, 1, 0);
-//                 if error == 0 as i32 {
-//                     done = 1 as i32;
-//                     grammar_id = 4 as i32;
-//                 }
-//             }
-//             _ => {
-//                 error = -(130 as i32);
-//             }
-//         }
-//         if error != 0 {
-//             done = 1 as i32;
-//         }
-//     }
-//     return error;
-// }
+fn encode_iso2_service_discovery_req(
+    stream: &mut ExiBitstream,
+    message: &Iso2ServiceDiscoveryReqType,
+) -> Result<(), ExiError> {
+    if let Some(service_scope) = &message.service_scope {
+        exi_basetypes_encoder_nbit_uint(stream, 2, 0)?;
+        exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+        let len: u16 =
+            u16::try_from(service_scope.len()).map_err(|_| ExiError::InvalidCharactersLength)?;
+        exi_basetypes_encoder_uint_16(stream, len + 2)?;
+        exi_basetypes_encoder_characters(stream, &service_scope)?;
+        exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+    } else if let Some(service_category) = &message.service_category {
+        exi_basetypes_encoder_nbit_uint(stream, 2, 1)?;
+        exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+        exi_basetypes_encoder_nbit_uint(stream, 2, *service_category as u32)?;
+        exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+        exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+    } else {
+        exi_basetypes_encoder_nbit_uint(stream, 2, 2)?;
+        return Ok(());
+    }
+
+    if let Some(service_category) = &message.service_category {
+        exi_basetypes_encoder_nbit_uint(stream, 2, 0)?;
+        exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+        exi_basetypes_encoder_nbit_uint(stream, 2, *service_category as u32)?;
+        exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+        exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
+    } else {
+        exi_basetypes_encoder_nbit_uint(stream, 2, 1)?;
+    }
+
+    Ok(())
+}
+
 // fn encode_iso2_AuthorizationResType(
 //     stream: &mut ExiBitstream,
 //     mut AuthorizationResType: *const iso2_AuthorizationResType,
@@ -12157,19 +10656,24 @@ fn encode_iso2_session_setup_req_type(
 //     }
 //     return error;
 // }
-fn encode_iso2_body_type(
-    stream: &mut ExiBitstream,
-    message: &Iso2v2gMessage,
-) -> Result<(), ExiError> {
+fn encode_iso2_body(stream: &mut ExiBitstream, message: &Iso2v2gMessage) -> Result<(), ExiError> {
     //TODO: Implement the rest of the messages, bit count is 6, value depends on message (can get from commented out code in decoder)
     match message.body {
+        Iso2BodyTypeEnum::ServiceDiscoveryReq(ref body) => {
+            exi_basetypes_encoder_nbit_uint(stream, 6, 27)?;
+            encode_iso2_service_discovery_req(stream, body)?;
+        }
+        Iso2BodyTypeEnum::ServiceDiscoveryRes(ref body) => {
+            exi_basetypes_encoder_nbit_uint(stream, 6, 28)?;
+            encode_iso2_service_discovery_res(stream, body)?;
+        }
         Iso2BodyTypeEnum::SessionSetupReq(ref body) => {
             exi_basetypes_encoder_nbit_uint(stream, 6, 29)?;
-            encode_iso2_session_setup_req_type(stream, body)?;
+            encode_iso2_session_setup_req(stream, body)?;
         }
         Iso2BodyTypeEnum::SessionSetupRes(ref body) => {
             exi_basetypes_encoder_nbit_uint(stream, 6, 30)?;
-            encode_iso2_session_setup_res_type(stream, body)?;
+            encode_iso2_session_setup_res(stream, body)?;
         }
         _ => {
             return Err(ExiError::UnknownBodyTypeForEncoding);
@@ -12184,9 +10688,9 @@ fn encode_iso2_v2g_message(
     message: &Iso2v2gMessage,
 ) -> Result<(), ExiError> {
     exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
-    encode_iso2_message_header_type(stream, &message.header)?;
+    encode_iso2_message_header(stream, &message.header)?;
     exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
-    encode_iso2_body_type(stream, message)?;
+    encode_iso2_body(stream, message)?;
     exi_basetypes_encoder_nbit_uint(stream, 1, 0)?;
     Ok(())
 }

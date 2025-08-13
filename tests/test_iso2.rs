@@ -1,5 +1,7 @@
 #[cfg(test)]
 mod tests {
+    use std::option;
+
     use heapless::Vec;
     use rustv2g::iso_2::iso2_datatypes::*;
 
@@ -119,34 +121,37 @@ mod tests {
             _ => panic!("Expected ServiceDiscoveryReq body type"),
         }
 
-        // // TODO: Implement Encoding
-        // let req: Iso2v2gMessage = Iso2v2gMessage {
-        //     header: Iso2MessageHeaderType {
-        //         session_id: session_id,
-        //         notification: None,
-        //         signature: None,
-        //     },
-        //     body: Iso2BodyTypeEnum::ServiceDiscoveryReq(Iso2ServiceDiscoveryReqType {
-        //         service_scope: Some(Vec::from_slice(service_list).unwrap()),
-        //         service_category: Some(Iso2ServiceCategoryType::EvCharging),
-        //     }),
-        // };
+        let req: Iso2v2gMessage = Iso2v2gMessage {
+            header: Iso2MessageHeaderType {
+                session_id: session_id,
+                notification: None,
+                signature: None,
+            },
+            body: Iso2BodyTypeEnum::ServiceDiscoveryReq(Iso2ServiceDiscoveryReqType {
+                service_scope: Some(Vec::from_slice(service_list).unwrap()),
+                service_category: Some(Iso2ServiceCategoryType::EvCharging),
+            }),
+        };
 
-        // let (encoded, len) = req
-        //     .to_exi_bytes::<2048>()
-        //     .expect("Failed to encode request");
-        // assert_eq!(encoded[..len], bytes);
+        let (encoded, len) = req
+            .to_exi_bytes::<2048>()
+            .expect("Failed to encode request");
+        assert_eq!(encoded[..len], bytes);
     }
 
     #[test]
     fn test_iso2_service_discovery_res() {
         // TODO: Replace with the correct EXI hex string for ServiceDiscoveryRes
-        let hex_data = "8098004011c00008004041050d7d110d7d0da185c99da5b99c0502400300f4661737420496e7465726e657409000200d4365727469666963617465110400";
+        let hex_data = "8098020c0c4c8ccd0d4d8dd1c00008004041050d7d110d7d0da185c99da5b99c05020c800601e8cc2e6e84092dce8cae4dccae812000401a86cae4e8d2ccd2c6c2e8ca2208";
         let bytes: Vec<u8, 2048> = hexstr_to_bytes(hex_data);
         let mut bytes_array = [0u8; 2048];
         bytes_array[..bytes.len()].copy_from_slice(&bytes);
         let v2g_msg = Iso2v2gMessage::try_from_bytes::<2048>(&mut bytes_array)
             .expect("Failed to decode Iso2ServiceDiscoveryRes");
+
+        let service_name = b"AC_DC_Charging";
+        let session_id_bytes = hexstr_to_bytes("3031323334353637");
+        let session_id: Vec<u8, 8> = Vec::from_slice(&session_id_bytes).unwrap();
 
         // TODO: Add assertions for the decoded response fields
         match v2g_msg.body {
@@ -158,25 +163,68 @@ mod tests {
                     Iso2ServiceCategoryType::EvCharging
                 );
                 assert_eq!(res.charge_service.service_id, 1);
+                assert_eq!(res.charge_service.service_name, Some(Vec::from_slice(service_name).unwrap()));
             }
             _ => panic!("Expected ServiceDiscoveryRes body type"),
         }
 
-        //     // TODO: Build a new response to test encoding (replace with actual fields)
-        //     let res: Iso2v2gMessage = Iso2v2gMessage {
-        //         header: Iso2MessageHeaderType {
-        //             session_id: Vec::new(), // Replace with actual session_id
-        //             notification: None,
-        //             signature: None,
-        //         },
-        //         body: Iso2BodyTypeEnum::ServiceDiscoveryRes{
+            // TODO: Build a new response to test encoding (replace with actual fields)
+            let res: Iso2v2gMessage = Iso2v2gMessage {
+                header: Iso2MessageHeaderType {
+                    session_id: session_id,
+                    notification: None,
+                    signature: None,
+                },
+                body: Iso2BodyTypeEnum::ServiceDiscoveryRes(Iso2ServiceDiscoveryResType {
+                    response_code: Iso2ResponseCodeType::Ok,
+                    payment_option_list: Iso2PaymentOptionListType {
+                        payment_option: {
+                            let mut options = heapless::Vec::<Iso2PaymentOptionType, 2>::new();
+                            options.push(Iso2PaymentOptionType::Contract).unwrap();
+                            options.push(Iso2PaymentOptionType::ExternalPayment).unwrap();
+                            options
+                        },
+                    },
+                    service_list: {
+                        let mut services = Vec::<Iso2ServiceType, 8>::new();
+                        let service1: Iso2ServiceType = Iso2ServiceType {
+                            service_id: 3,
+                            service_category: Iso2ServiceCategoryType::Internet,
+                            service_scope: None,
+                            service_name: Some(Vec::from_slice(b"Fast Internet").unwrap()),
+                            free_service: 0,
+                        };
+                        let service2: Iso2ServiceType = Iso2ServiceType {
+                            service_id: 2,
+                            service_category: Iso2ServiceCategoryType::ContractCertificate,
+                            service_scope: None,
+                            service_name: Some(Vec::from_slice(b"Contract Certificate").unwrap()),
+                            free_service: 0,
+                        };
+                        let _ = services.push(service1);
+                        let _ = services.push(service2);
+                        Some(Iso2ServiceListType { service: services })
+                    },
+                    charge_service: Iso2ChargeServiceType {
+                        free_service: 1,
+                        service_category: Iso2ServiceCategoryType::EvCharging,
+                        service_id: 1,
+                        service_scope: None,
+                        service_name: Some(Vec::from_slice(service_name).unwrap()),
+                        supported_energy_transfer_mode: Iso2SupportedEnergyTransferModeType {
+                            energy_transfer_mode: {
+                                let mut modes = heapless::Vec::<Iso2EnergyTransferModeType, 6>::new();
+                                modes.push(Iso2EnergyTransferModeType::AcThreePhaseCore).unwrap();
+                                modes
+                            }
+                        }
+                    },
+                }),
+            };
 
-        //         },
-        //     };
-
-        //     let (encoded, len) = res
-        //         .to_exi_bytes::<2048>()
-        //         .expect("Failed to encode response");
-        //     assert_eq!(encoded[..len], bytes);
+            let (encoded, len) = res
+                .to_exi_bytes::<2048>()
+                .expect("Failed to encode response");
+            assert_eq!(encoded[..len], bytes);
     }
 }

@@ -226,8 +226,8 @@ pub enum Iso2UnitSymbolType {
     Unknown = 255,
 }
 
-#[repr(u32)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
+#[repr(u32)]
 pub enum Iso2DcEvErrorCodeType {
     NoError = 0,
     FailedResstemperatureInhibit = 1,
@@ -386,8 +386,8 @@ impl TryFrom<u32> for Iso2ResponseCodeType {
     }
 }
 
-#[repr(u32)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
+#[repr(u32)]
 pub enum Iso2PaymentOptionType {
     Contract = 0,
     ExternalPayment = 1,

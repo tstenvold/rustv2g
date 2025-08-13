@@ -4535,7 +4535,8 @@ fn decode_iso2_supported_energy_transfer_mode(
                                         )?;
                                         message
                                             .energy_transfer_mode
-                                            .push(Iso2EnergyTransferModeType::try_from(value)?);
+                                            .push(Iso2EnergyTransferModeType::try_from(value)?)
+                                            .map_err(|_| ExiError::UnsupportedSubEvent)?;
                                     } else {
                                         return Err(ExiError::UnsupportedSubEvent);
                                     }
@@ -4585,7 +4586,8 @@ fn decode_iso2_supported_energy_transfer_mode(
                                         )?;
                                         message
                                             .energy_transfer_mode
-                                            .push(Iso2EnergyTransferModeType::try_from(value_0)?);
+                                            .push(Iso2EnergyTransferModeType::try_from(value_0)?)
+                                            .map_err(|_| ExiError::UnsupportedSubEvent)?;
                                     } else {
                                         return Err(ExiError::UnsupportedSubEvent);
                                     }
@@ -5225,7 +5227,8 @@ fn decode_iso2_payment_option_list(
                                     )?;
                                     message
                                         .payment_option
-                                        .push(Iso2PaymentOptionType::try_from(value)?);
+                                        .push(Iso2PaymentOptionType::try_from(value)?)
+                                        .map_err(|_| ExiError::UnsupportedSubEvent)?;
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
                                 }
@@ -5272,7 +5275,8 @@ fn decode_iso2_payment_option_list(
                                     )?;
                                     message
                                         .payment_option
-                                        .push(Iso2PaymentOptionType::try_from(value_0)?);
+                                        .push(Iso2PaymentOptionType::try_from(value_0)?)
+                                        .map_err(|_| ExiError::UnsupportedSubEvent)?;
                                 } else {
                                     return Err(ExiError::UnsupportedSubEvent);
                                 }
@@ -13318,52 +13322,52 @@ fn decode_iso2_body(
         // 0 => {
         //     let mut authorization_req: Iso2AuthorizationReqType = Default::default();
         //     decode_iso2_authorization_req(stream, &mut authorization_req)?;
-        //     message.body_type_component = Iso2BodyTypeEnum::AuthorizationReq(authorization_req);
+        //     message.body = Iso2BodyTypeEnum::AuthorizationReq(authorization_req);
         // }
         // 1 => {
         //     let mut authorization_res: Iso2AuthorizationResType = Default::default();
         //     decode_iso2_authorization_res(stream, &mut authorization_res)?;
-        //     message.body_type_component = Iso2BodyTypeEnum::AuthorizationRes(authorization_res);
+        //     message.body = Iso2BodyTypeEnum::AuthorizationRes(authorization_res);
         // }
         // 2 => {
         //     let mut body_element: Iso2BodyBaseType = Default::default();
         //     decode_iso2_body_base(stream, &mut body_element)?;
-        //     message.body_type_component = Iso2BodyTypeEnum::BodyElement(body_element);
+        //     message.body = Iso2BodyTypeEnum::BodyElement(body_element);
         // }
         // 3 => {
         //     let mut cable_check_req: Iso2CableCheckReqType = Default::default();
         //     decode_iso2_cable_check_req(stream, &mut cable_check_req)?;
-        //     message.body_type_component = Iso2BodyTypeEnum::CableCheckReq(cable_check_req);
+        //     message.body = Iso2BodyTypeEnum::CableCheckReq(cable_check_req);
         // }
         // 4 => {
         //     let mut cable_check_res: Iso2CableCheckResType = Default::default();
         //     decode_iso2_cable_check_res(stream, &mut cable_check_res)?;
-        //     message.body_type_component = Iso2BodyTypeEnum::CableCheckRes(cable_check_res);
+        //     message.body = Iso2BodyTypeEnum::CableCheckRes(cable_check_res);
         // }
         // 5 => {
         //     let mut certificate_installation_req: Iso2CertificateInstallationReqType =
         //         Default::default();
         //     decode_iso2_certificate_installation_req(stream, &mut certificate_installation_req)?;
-        //     message.body_type_component =
+        //     message.body =
         //         Iso2BodyTypeEnum::CertificateInstallationReq(certificate_installation_req);
         // }
         // 6 => {
         //     let mut certificate_installation_res: Iso2CertificateInstallationResType =
         //         Default::default();
         //     decode_iso2_certificate_installation_res(stream, &mut certificate_installation_res)?;
-        //     message.body_type_component =
+        //     message.body =
         //         Iso2BodyTypeEnum::CertificateInstallationRes(certificate_installation_res);
         // }
         // 7 => {
         //     let mut certificate_update_req: Iso2CertificateUpdateReqType = Default::default();
         //     decode_iso2_certificate_update_req(stream, &mut certificate_update_req)?;
-        //     message.body_type_component =
+        //     message.body =
         //         Iso2BodyTypeEnum::CertificateUpdateReq(certificate_update_req);
         // }
         // 8 => {
         //     let mut certificate_update_res: Iso2CertificateUpdateResType = Default::default();
         //     decode_iso2_certificate_update_res(stream, &mut certificate_update_res)?;
-        //     message.body_type_component =
+        //     message.body =
         //         Iso2BodyTypeEnum::CertificateUpdateRes(certificate_update_res);
         // }
         // 9 => {
@@ -13373,7 +13377,7 @@ fn decode_iso2_body(
         //         stream,
         //         &mut charge_parameter_discovery_req,
         //     )?;
-        //     message.body_type_component =
+        //     message.body =
         //         Iso2BodyTypeEnum::ChargeParameterDiscoveryReq(charge_parameter_discovery_req);
         // }
         // 10 => {
@@ -13383,94 +13387,94 @@ fn decode_iso2_body(
         //         stream,
         //         &mut charge_parameter_discovery_res,
         //     )?;
-        //     message.body_type_component =
+        //     message.body =
         //         Iso2BodyTypeEnum::ChargeParameterDiscoveryRes(charge_parameter_discovery_res);
         // }
         // 11 => {
         //     let mut charging_status_req: Iso2ChargingStatusReqType = Default::default();
         //     decode_iso2_charging_status_req(stream, &mut charging_status_req)?;
-        //     message.body_type_component = Iso2BodyTypeEnum::ChargingStatusReq(charging_status_req);
+        //     message.body = Iso2BodyTypeEnum::ChargingStatusReq(charging_status_req);
         // }
         // 12 => {
         //     let mut charging_status_res: Iso2ChargingStatusResType = Default::default();
         //     decode_iso2_charging_status_res(stream, &mut charging_status_res)?;
-        //     message.body_type_component = Iso2BodyTypeEnum::ChargingStatusRes(charging_status_res);
+        //     message.body = Iso2BodyTypeEnum::ChargingStatusRes(charging_status_res);
         // }
         // 13 => {
         //     let mut current_demand_req: Iso2CurrentDemandReqType = Default::default();
         //     decode_iso2_current_demand_req(stream, &mut current_demand_req)?;
-        //     message.body_type_component = Iso2BodyTypeEnum::CurrentDemandReq(current_demand_req);
+        //     message.body = Iso2BodyTypeEnum::CurrentDemandReq(current_demand_req);
         // }
         // 14 => {
         //     let mut current_demand_res: Iso2CurrentDemandResType = Default::default();
         //     decode_iso2_current_demand_res(stream, &mut current_demand_res)?;
-        //     message.body_type_component = Iso2BodyTypeEnum::CurrentDemandRes(current_demand_res);
+        //     message.body = Iso2BodyTypeEnum::CurrentDemandRes(current_demand_res);
         // }
         // 15 => {
         //     let mut metering_receipt_req: Iso2MeteringReceiptReqType = Default::default();
         //     decode_iso2_metering_receipt_req(stream, &mut metering_receipt_req)?;
-        //     message.body_type_component =
+        //     message.body =
         //         Iso2BodyTypeEnum::MeteringReceiptReq(metering_receipt_req);
         // }
         // 16 => {
         //     let mut metering_receipt_res: Iso2MeteringReceiptResType = Default::default();
         //     decode_iso2_metering_receipt_res(stream, &mut metering_receipt_res)?;
-        //     message.body_type_component =
+        //     message.body =
         //         Iso2BodyTypeEnum::MeteringReceiptRes(metering_receipt_res);
         // }
         // 17 => {
         //     let mut payment_details_req: Iso2PaymentDetailsReqType = Default::default();
         //     decode_iso2_payment_details_req(stream, &mut payment_details_req)?;
-        //     message.body_type_component = Iso2BodyTypeEnum::PaymentDetailsReq(payment_details_req);
+        //     message.body = Iso2BodyTypeEnum::PaymentDetailsReq(payment_details_req);
         // }
         // 18 => {
         //     let mut payment_details_res: Iso2PaymentDetailsResType = Default::default();
         //     decode_iso2_payment_details_res(stream, &mut payment_details_res)?;
-        //     message.body_type_component = Iso2BodyTypeEnum::PaymentDetailsRes(payment_details_res);
+        //     message.body = Iso2BodyTypeEnum::PaymentDetailsRes(payment_details_res);
         // }
         // 19 => {
         //     let mut payment_service_selection_req: Iso2PaymentServiceSelectionReqType =
         //         Default::default();
         //     decode_iso2_payment_service_selection_req(stream, &mut payment_service_selection_req)?;
-        //     message.body_type_component =
+        //     message.body =
         //         Iso2BodyTypeEnum::PaymentServiceSelectionReq(payment_service_selection_req);
         // }
         // 20 => {
         //     let mut payment_service_selection_res: Iso2PaymentServiceSelectionResType =
         //         Default::default();
         //     decode_iso2_payment_service_selection_res(stream, &mut payment_service_selection_res)?;
-        //     message.body_type_component =
+        //     message.body =
         //         Iso2BodyTypeEnum::PaymentServiceSelectionRes(payment_service_selection_res);
         // }
         // 21 => {
         //     let mut power_delivery_req: Iso2PowerDeliveryReqType = Default::default();
         //     decode_iso2_power_delivery_req(stream, &mut power_delivery_req)?;
-        //     message.body_type_component = Iso2BodyTypeEnum::PowerDeliveryReq(power_delivery_req);
+        //     message.body = Iso2BodyTypeEnum::PowerDeliveryReq(power_delivery_req);
         // }
         // 22 => {
         //     let mut power_delivery_res: Iso2PowerDeliveryResType = Default::default();
         //     decode_iso2_power_delivery_res(stream, &mut power_delivery_res)?;
-        //     message.body_type_component = Iso2BodyTypeEnum::PowerDeliveryRes(power_delivery_res);
+        //     message.body = Iso2BodyTypeEnum::PowerDeliveryRes(power_delivery_res);
         // }
         // 23 => {
         //     let mut pre_charge_req: Iso2PreChargeReqType = Default::default();
         //     decode_iso2_pre_charge_req(stream, &mut pre_charge_req)?;
-        //     message.body_type_component = Iso2BodyTypeEnum::PreChargeReq(pre_charge_req);
+        //     message.body = Iso2BodyTypeEnum::PreChargeReq(pre_charge_req);
         // }
         // 24 => {
         //     let mut pre_charge_res: Iso2PreChargeResType = Default::default();
         //     decode_iso2_pre_charge_res(stream, &mut pre_charge_res)?;
-        //     message.body_type_component = Iso2BodyTypeEnum::PreChargeRes(pre_charge_res);
+        //     message.body = Iso2BodyTypeEnum::PreChargeRes(pre_charge_res);
         // }
         // 25 => {
-        //     let mut service_detail_req: Iso2ServiceDetailReqType = Default::default();
+        //     let mut service_detail_req: Iso2ServiceDetailReqType = Iso2ServiceDetailReqType::default();
         //     decode_iso2_service_detail_req(stream, &mut service_detail_req)?;
-        //     message.body_type_component = Iso2BodyTypeEnum::ServiceDetailReq(service_detail_req);
+        //     message.body = Iso2BodyTypeEnum::ServiceDetailReq(service_detail_req);
         // }
         // 26 => {
-        //     let mut service_detail_res: Iso2ServiceDetailResType = Default::default();
+        //     let mut service_detail_res: Iso2ServiceDetailResType = Iso2ServiceDetailResType::default();
         //     decode_iso2_service_detail_res(stream, &mut service_detail_res)?;
-        //     message.body_type_component = Iso2BodyTypeEnum::ServiceDetailRes(service_detail_res);
+        //     message.body = Iso2BodyTypeEnum::ServiceDetailRes(service_detail_res);
         // }
         27 => {
             let mut service_discovery_req: Iso2ServiceDiscoveryReqType =
@@ -13497,23 +13501,23 @@ fn decode_iso2_body(
         // 31 => {
         //     let mut session_stop_req: Iso2SessionStopReqType = Default::default();
         //     decode_iso2_session_stop_req(stream, &mut session_stop_req)?;
-        //     message.body_type_component = Iso2BodyTypeEnum::SessionStopReq(session_stop_req);
+        //     message.body = Iso2BodyTypeEnum::SessionStopReq(session_stop_req);
         // }
         // 32 => {
         //     let mut session_stop_res: Iso2SessionStopResType = Default::default();
         //     decode_iso2_session_stop_res(stream, &mut session_stop_res)?;
-        //     message.body_type_component = Iso2BodyTypeEnum::SessionStopRes(session_stop_res);
+        //     message.body = Iso2BodyTypeEnum::SessionStopRes(session_stop_res);
         // }
         // 33 => {
         //     let mut welding_detection_req: Iso2WeldingDetectionReqType = Default::default();
         //     decode_iso2_welding_detection_req(stream, &mut welding_detection_req)?;
-        //     message.body_type_component =
+        //     message.body =
         //         Iso2BodyTypeEnum::WeldingDetectionReq(welding_detection_req);
         // }
         // 34 => {
         //     let mut welding_detection_res: Iso2WeldingDetectionResType = Default::default();
         //     decode_iso2_welding_detection_res(stream, &mut welding_detection_res)?;
-        //     message.body_type_component =
+        //     message.body =
         //         Iso2BodyTypeEnum::WeldingDetectionRes(welding_detection_res);
         // }
         _ => {
