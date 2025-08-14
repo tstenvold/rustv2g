@@ -157,6 +157,8 @@ pub fn exi_basetypes_encoder_characters<const N: usize>(
         let byte = ch;
         if byte > ASCII_MAX_VALUE {
             return Err(ExiError::UnsupportedCharacterValue);
+        } else if byte == 0 {
+            break;
         }
         stream.write_octet(byte)?;
     }
